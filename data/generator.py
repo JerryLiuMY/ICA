@@ -33,6 +33,7 @@ def nonlinearity(z, m, n, params):
     :return:
     """
 
+    # get activation function
     activation = params["activation"]
     activation_func = getattr(nn, activation)
 
