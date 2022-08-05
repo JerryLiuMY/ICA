@@ -1,41 +1,36 @@
 import numpy as np
+import pandas as pd
 import torch
 
 
-def generate(m, n, coeffs, params, size):
+def generate_data(m, n, coeffs, activation, size):
     """ Generate data for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param coeffs: coefficients for data generation
-    :param params: parameters for the non-linearity
+    :param activation: activation function for mlp
     :param size: number of samples
     :return: z and x
     """
 
     sigma = coeffs["sigma"]
+    w = coeffs["w"]
+    b = coeffs["b"]
+
     z = np.empty(shape=(0, m))
     x = np.empty(shape=(0, n))
+
+    np.random.seed(10)
     for _ in range(size):
         z_ = np.random.multivariate_normal(mean=np.zeros(m), cov=np.eye(m))
-        f_ = nonlinearity(z_, coeffs, params)
+        f_ = activation(torch.tensor(w @ z_ + b)).numpy()
         x_ = np.random.multivariate_normal(mean=f_, cov=(sigma**2)*np.eye(n))
         z = np.concatenate([z, z_.reshape(1, -1)], axis=0)
         x = np.concatenate([x, x_.reshape(1, -1)], axis=0)
 
-    return z, x
+    x_dict = {f"x{i}": x[:, i].reshape(-1) for i in range(x.shape[1])}
+    z_dict = {f"z{i}": z[:, i].reshape(-1) for i in range(z.shape[1])}
+    df_dict = {**x_dict, **z_dict}
+    data_df = pd.DataFrame(df_dict)
 
-
-def nonlinearity(z_, coeffs, params):
-    """ Non-linear function for nonlinear ICA
-    :param z_: latent vector
-    :param coeffs: coefficients for data generation
-    :param params: parameters for the non-linearity
-    :return: output from non-linearity
-    """
-
-    # generate non-linearity
-    w, b = coeffs["w"], coeffs["b"]
-    activation = params["activation"]
-    f = activation(torch.tensor(w @ z_ + b)).numpy()
-
-    return f
+    return data_df
