@@ -9,7 +9,7 @@ sns.set()
 
 
 def visualize():
-    """
+    """ Visualize latent variables z and the generated variables x
     :return:
     """
 
