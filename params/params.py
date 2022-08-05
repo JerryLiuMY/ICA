@@ -1,5 +1,7 @@
-import numpy as np
+from global_settings import DATA_PATH
 import pickle5 as pickle
+import numpy as np
+import os
 
 
 def save_params(m, n):
@@ -15,5 +17,5 @@ def save_params(m, n):
     b = 1 * np.random.rand(n)
     params = {"sigma": sigma, "w": w, "b": b}
 
-    with open("")
-
+    with open(os.path.join(DATA_PATH, f"params_{m}_{n}.pkl"), "wb") as handle:
+        pickle.dump(params, handle)
