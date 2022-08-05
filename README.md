@@ -1,4 +1,8 @@
 # MLE/VAE for nonlinear ICA
+<p>
+    <a href="https://www.python.org/">
+    <img src="https://img.shields.io/badge/python-v3-brightgreen.svg" alt="python"></a> &nbsp;
+</p>
 
 ## Data Generation
 <a href="https://drive.google.com/drive/folders/1Uep9CpOhQor72GXVWeb7ax2kO7O7wFco?usp=sharing" target="_blank">Repository</a> for the generated `weight` and `bias` of the single-layer MLP. Distribution of the latent variable `z` and the generated `x`
