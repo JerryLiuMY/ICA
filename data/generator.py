@@ -16,11 +16,11 @@ def generate(m, n, coeffs, params, size):
     z = np.empty(shape=(0, m))
     x = np.empty(shape=(0, n))
     for _ in range(size):
-        z_ = np.random.multivariate_normal(mean=np.zeros(m), cov=np.eye(m)).reshape(1, -1)
-        f_ = nonlinearity(z_, coeffs, params).reshape(-1)
-        x_ = np.random.multivariate_normal(mean=f_, cov=(sigma**2)*np.eye(n)).reshape(1, -1)
-        z = np.concatenate([z, z_], axis=0)
-        x = np.concatenate([x, x_], axis=0)
+        z_ = np.random.multivariate_normal(mean=np.zeros(m), cov=np.eye(m))
+        f_ = nonlinearity(z_, coeffs, params)
+        x_ = np.random.multivariate_normal(mean=f_, cov=(sigma**2)*np.eye(n))
+        z = np.concatenate([z, z_.reshape(1, -1)], axis=0)
+        x = np.concatenate([x, x_.reshape(1, -1)], axis=0)
 
     return z, x
 
@@ -34,8 +34,8 @@ def nonlinearity(z_, coeffs, params):
     """
 
     # generate non-linearity
-    activation = params["activation"]
     w, b = coeffs["w"], coeffs["b"]
+    activation = params["activation"]
     f = activation(torch.tensor(w @ z_ + b)).numpy()
 
     return f
