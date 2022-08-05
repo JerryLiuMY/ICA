@@ -3,19 +3,19 @@ import pandas as pd
 import torch
 
 
-def generate_data(m, n, coeffs, activation, size):
+def generate_data(m, n, params, activation, size):
     """ Generate data for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
-    :param coeffs: coefficients for data generation
+    :param params: coefficients for data generation
     :param activation: activation function for mlp
     :param size: number of samples
     :return: z and x
     """
 
-    sigma = coeffs["sigma"]
-    w = coeffs["w"]
-    b = coeffs["b"]
+    sigma = params["sigma"]
+    w = params["w"]
+    b = params["b"]
 
     z = np.empty(shape=(0, m))
     x = np.empty(shape=(0, n))
