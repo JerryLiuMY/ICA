@@ -1,26 +1,40 @@
 \section{Direct MLE Method}
-Directly solve the MLE problem by computing gradients of $\ell(\theta, \sigma)$ w.r.t $\theta$ and $\sigma$. This is, in general, intractable for arbitrary nonlinear ICA models but worst-case thinking does not apply to our special cases.
+In this section, we directly solve the MLE problem by computing gradients of $\ell(\theta, \sigma^{2})$ w.r.t $\theta$ and $\sigma^{2}$. This is, in general, intractable for arbitrary nonlinear ICA models but worst-case thinking does not apply to our special cases.
 
 \subsubsection*{Gradient w.r.t $\theta$}
-$$
+\begin{equation*}
 \begin{aligned}
-\nabla_{\theta} \ell(\theta, \sigma) &= \sum_{i=1}^{k} \int \nabla_{\theta} \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
-&= \sum_{i=1}^{k} \int \left(2\pi\sigma^{2}\right)^{-n/2} \nabla_{\theta} \exp \left(-\frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}}{2\sigma^{2}}\right) \varphi(z ; 0, I) dz \\
-&= \sum_{i=1}^{k} \int \nabla_{\theta} \left(-\frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}}{2\sigma^{2}}\right) \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
-&= \sum_{i=1}^{k} \int \left[\frac{1}{\sigma^{2}} \cdot{\left(x^{(i)} - g_{\theta}(z)\right)^{T} \nabla_{\theta} g_{\theta}(z)}\right] \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
+\nabla_{\theta} \ell(\theta, \sigma^{2}) &= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \nabla_{\theta} \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
+&= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \left(2\pi\sigma^{2}\right)^{-n/2} \nabla_{\theta} \exp \left(-\frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}}{2\sigma^{2}}\right) \varphi(z ; 0, I) dz \\
+&= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \nabla_{\theta} \left(-\frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}}{2\sigma^{2}}\right) \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
+&= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \left[\frac{1}{\sigma^{2}} \cdot{\left(x^{(i)} - g_{\theta}(z)\right)^{T} \nabla_{\theta} g_{\theta}(z)}\right] \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
 \end{aligned}
-$$
+\end{equation*}
 
 \subsubsection*{Gradient w.r.t $\sigma^{2}$}
-$$
+\begin{equation*}
 \begin{aligned}
-\nabla_{\sigma^{2}} \ell(\theta, \sigma) &= \sum_{i=1}^{k} \int \nabla_{\sigma^{2}} \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
-&= \sum_{i=1}^{k} \int \nabla_{\sigma^{2}} \left(2\pi\sigma^{2}\right)^{-n/2} \exp \left(-\frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}}{2\sigma^{2}}\right) \varphi(z ; 0, I) dz \\
-&= \sum_{i=1}^{k} \int \left[\frac{1}{2\sigma^{2}} \cdot \left(-n + \frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}} {\sigma^{2}}\right)\right] \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
+\nabla_{\sigma^{2}} \ell(\theta, \sigma^{2}) &= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \nabla_{\sigma^{2}} \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
+&= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \nabla_{\sigma^{2}} \left(2\pi\sigma^{2}\right)^{-n/2} \exp \left(-\frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}}{2\sigma^{2}}\right) \varphi(z ; 0, I) dz \\
+&= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \left[\frac{1}{2\sigma^{2}} \cdot \left(-n + \frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}} {\sigma^{2}}\right)\right] \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
 \end{aligned}
-$$
+\end{equation*}
 
 From the two results above, we can iteratively update $\theta$ and $\sigma^{2}$ via gradient descent. The integrals can be approximated via numerical integration.
 
-
-% iterative gradient descent
+\begin{algorithm}
+\caption{Direct MLE via Gradient Descent}
+\begin{algorithmic}
+\STATE $\bullet$ Initialise $\theta^{(0)}$ and ${\sigma^{2}}^{(0)}$ and set $t=0$
+\STATE $\bullet$ Repeat until convergence
+\STATE \hspace{0.5cm} $\triangleright$ Compute the gradient $\nabla_{\theta} \ell \left(\theta^{(t)}, {\sigma^{2}}^{(t)}\right)$ and update the parameters
+\begin{equation*}
+\theta^{(t+1)}=\theta^{(t)}-\eta_{1} \nabla_{\theta}  \ell \left(\theta^{(t)}, {\sigma^{2}}^{(t)}\right)
+\end{equation*}
+\STATE \hspace{0.5cm} $\triangleright$ Compute the gradient $\nabla_{\sigma^{2}} \ell \left(\theta^{(t+1)}, {\sigma^{2}}^{(t)}\right)$ and update the parameters
+\begin{equation*}
+{\sigma^{2}}^{(t+1)}={\sigma^{2}}^{(t)}-\eta_{2} \nabla_{\sigma^{2}} \ell \left(\theta^{(t+1)}, {\sigma^{2}}^{(t)}\right)
+\end{equation*}
+\STATE \hspace{0.5cm} $\triangleright$ Set $t \leftarrow t+1$
+\end{algorithmic}
+\end{algorithm}
