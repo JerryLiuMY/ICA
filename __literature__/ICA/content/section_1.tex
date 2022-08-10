@@ -1,0 +1,23 @@
+\section{Introduction}
+\subsubsection*{Problem Setup}
+Suppose $X \in \mathbb{R}^{n}$ and $Z \in \mathbb{R}^{m}$ with $X=f(Z)+\varepsilon$, where $f: \mathbb{R}^{m} \rightarrow \mathbb{R}^{n}$ and $\varepsilon \sim N\left(0, \sigma^{2} I\right)$. Assuming $Z$ is normally distributed with independent marginals, this is equivalent to the following latent variable model (a special case of the well-known \textit{nonlinear ICA} model):
+$$
+\begin{aligned}
+Z & \sim N\left(0, I\right) \\
+X \mid Z & \sim N\left(f(Z), \sigma^{2} I\right) .
+\end{aligned}
+$$
+
+Let $\varphi(u ; \mu, \Sigma)$ denote the density of a $N(\mu, \Sigma)$ random variable and $p(x, z)$ denote the joint density under the model. It is easy to see that
+$$
+\begin{aligned}
+p\left(x, z\right) &=p \left(x \mid z\right) p(z)=\varphi\left(x ; f(z), \sigma^{2} I\right) \varphi(z ; 0, I) \\
+p\left(x\right) &=\int \varphi\left(x ; f(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz
+\end{aligned}
+$$
+
+\subsubsection*{Marginal Density and Inference}
+Now, suppose we let $g_{\theta}$ denote a family of deep neural network distributions parametrized by $\theta$. To approximate the marginal density $p(x)$, we replace $f$ with $g_{\theta}$ and try to find the choice of $\theta$ that maximizes the observed data likelihood. Given $k$ observations $x^{(i)} \stackrel{\text{iid}}{\sim} p(x)$, we wish to solve the following maximum likelihood problem:
+$$
+\max_{\theta, \sigma} \underbrace{\sum_{i=1}^{k} \int \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz}_{:=\ell(\theta, \sigma)}
+$$
