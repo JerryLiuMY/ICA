@@ -1,5 +1,5 @@
-from data.generator import generate_data
-from data.loader import load_data
+from data_prep.generator import generate_data
+from data_prep.loader import load_data
 from global_settings import VAE_PATH
 from experiments.train_vae import train_vae
 from experiments.train_vae import valid_vae
