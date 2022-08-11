@@ -13,9 +13,9 @@ class VariationalAutoencoder(nn.Module):
     def forward(self, x):
         mu, logvar = self.encoder(x)
         latent = self.latent_sample(mu, logvar)
-        x_rec = self.decoder(latent)
+        mean, logs2 = self.decoder(latent)
 
-        return x_rec, mu, logvar
+        return mean, logs2, mu, logvar
 
     def latent_sample(self, mu, logvar):
         # the re-parameterization trick
@@ -52,7 +52,7 @@ class Encoder(Block):
         self.fc_logvar = nn.Linear(in_features=self.inter_size, out_features=self.hidden)
 
     def forward(self, x):
-        # convolution layers
+        # encoder layers
         x = F.relu(self.enc1(x))
         x = F.relu(self.enc2(x))
 
@@ -75,19 +75,17 @@ class Decoder(Encoder, Block):
         self.inter_size = self.inter_size * 2
 
         # second decoder layer -- m
-        self.dec1_m = nn.Linear(in_features=self.inter_size, out_features=self.inter_size * 2)
+        self.dec1_mean = nn.Linear(in_features=self.inter_size, out_features=self.inter_size * 2)
+        self.dec1_logs2 = nn.Linear(in_features=self.inter_size, out_features=1)
         self.output_size = self.self.inter_size * 2
-
-        # second decoder layer -- s
-        self.dec1_s = nn.Linear(in_features=self.inter_size, out_features=1)
 
     def forward(self, x):
         # linear layer
         x = self.fc(x)
 
-        # convolution layers
+        # decoder layers
         x = F.relu(self.dec2(x))
-        m = self.dec1_m(x)
-        logs2 = self.dec1_s(x)
+        mean = self.dec1_mean(x)
+        logs2 = self.dec1_logs2(x)
 
-        return m, logs2
+        return mean, logs2

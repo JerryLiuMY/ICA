@@ -1,4 +1,3 @@
-from torch.nn import functional as F
 from models.vae import VariationalAutoencoder
 from params.params import train_dict
 from global_settings import device
@@ -33,8 +32,8 @@ def train_vae(train_loader):
 
         for train_batch, _ in train_loader:
             train_batch = train_batch.to(device)
-            train_batch_recon, mu, logvar = model(train_batch)
-            loss = vae_loss(train_batch_recon, train_batch, mu, logvar, beta)
+            mean_batch, logs2_batch, mu, logvar = model(train_batch)
+            loss = vae_loss(train_batch, mean_batch, logs2_batch, mu, logvar, beta)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -55,18 +54,19 @@ def train_vae(train_loader):
     return model, train_loss
 
 
-def vae_loss(x_recon, x, mu, logvar, beta):
+def vae_loss(x, mean, logs2, mu, logvar, beta):
     """ Calculating loss for variational autoencoder
-    :param x_recon: reconstructed image
     :param x: original image
+    :param mean: mean in the output layer
+    :param logs2: log of the variance in the output layer
     :param mu: mean in the hidden layer
     :param logvar: log of the variance in the hidden layer
     :param beta: beta
     :return: reconstruction loss + KL
     """
 
-    # reconstruction loss (dependent of image resolution)
-    recon_loss = F.binary_cross_entropy(x_recon.view(-1, 784), x.view(-1, 784), reduction="sum")
+    # reconstruction loss
+    recon_loss = -torch.sum(logs2.mul(x.size(dim=1)/2) + torch.norm(x - mean, 2, dim=1).pow(2).div(logs2.exp().mul(2)))
 
     # KL-divergence
     kl_div = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
