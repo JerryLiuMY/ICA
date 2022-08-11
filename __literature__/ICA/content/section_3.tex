@@ -16,7 +16,7 @@ The term $\mathcal{L} \left(\theta, \phi ; x^{(i)} \right)$ is called the eviden
 $$
 \mathcal{L}(\theta, q)=\mathbb{E}_{z \sim q}\left[-\log q(z) + \log p_{\theta}(x, z)\right],
 $$
-where $q$ is any probability density/mass function over the latent variables $z$. The first term is the Shannon entropy $H(q)=-\mathbb{E}_{z \sim q} \log q(z)$ of the variational distribution $q(z)$, and does not depend on $\theta$. The second term is sometimes referred to as the energy.}
+where $q$ is any probability density/mass function over the latent variables $z$. The first term is the Shannon entropy $H(q)=-\mathbb{E}_{z \sim q} \log q(z)$ of the variational distribution $q(z)$ and does not depend on $\theta$. The second term is sometimes referred to as the energy.}
 
 We want to differentiate and optimize the lower bound $\mathcal{L}\left(\theta, \phi; x^{(i)}\right)$ w.r.t. both the variational parameters $\phi$ and generative parameters $\theta$. The KL-divergence $D_{K L}\left(q_{\boldsymbol{\phi}}\left(z^{(i)} \mid x^{(i)}\right) \| p_{\boldsymbol{\theta}} \left(z^{(i)}\right) \right)$ can be integrated analytically, such that only the reconstruction error $\mathbb{E}_{q_{\phi} \left(z^{(i)} \mid x^{(i)}\right)}\left[\log p_{\theta}\left(x^{(i)} \mid z^{(i)}\right)\right]$ requires estimation by sampling. The \textit{stochastic gradient variational bayes} (SGVB) estimator
 \begin{equation*}
@@ -37,13 +37,13 @@ When both the prior $p_{\theta}(z)=\mathcal{N} (0, I)$ and the posterior approxi
 In variational auto-encoders, neural networks are used as probabilistic encoders and decoders. For both the encoder and decoder, we use a MLP with Gaussian outputs. Let the decoder be a multivariate Gaussian with a diagonal covariance structure
 \begin{equation*}
 \begin{aligned}
-\log p\left(x \mid z\right) &=\log \mathcal{N}\left(x; m, {s^{2}}, I\right) \\
+\log p\left(x \mid z\right) &=\log \mathcal{N}\left(x; m, {s^{2}}I\right) \\
 \text{ where } h &= h \left(z\right) \\
 m &=W_{1}h+b_{1} \\
 \log {s^{2}} &=W_{2}h+b_{2}
 \end{aligned}
 \end{equation*}
-where $\left\{W_{1}, W_{2}, b_{1}, b_{2} \right\}$ are the weights and biases of the MLP (as part of $\theta$). The reconstruction error can be expanded as
+where $\left\{W_{1}, W_{2}, b_{1}, b_{2} \right\}$ are the weights and biases of the MLP (as part of $\theta$) with $m \in R^{n}$ and $s^{2} \in R$. The reconstruction error can be expanded as
 \begin{equation*}
 \log p\left(x \mid z\right) = -\frac{n}{2} \cdot \log \left(2\pi{s^{2}}\right) - \frac{\lVert x -  m \rVert_{2}^{2}} {2{s^{2}}}
 \end{equation*}
