@@ -1,4 +1,5 @@
 from global_settings import VAE_PATH
+import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -19,8 +20,11 @@ def plot_latent_2d(n):
         model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
         recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"))
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"))
-        sns.kdeplot(data=simu_df, x="z0", y="z1", fill=True, alpha=.5, label="true", ax=ax)
-        sns.kdeplot(data=recon_df, x="mu0", y="mu1", fill=True, alpha=.5, label="recon", ax=ax)
+        sns.kdeplot(data=simu_df, x="z0", y="z1", fill=True, alpha=1., label="True", ax=ax)
+        sns.kdeplot(data=recon_df, x="mu0", y="mu1", fill=True, alpha=.7, label="Recon", ax=ax)
+        ax_legend_true = mpatches.Patch(color="#A9A9A9", label=f"True")
+        ax_legend_recon = mpatches.Patch(color="#A9A9A9", label=f"Recon")
+        handles = [ax_legend_true, ax_legend_recon]
+        ax.legend(handles=handles, loc="upper left", handlelength=0.2, handletextpad=0.5)
         ax.set_xlabel("z0")
         ax.set_ylabel("z1")
-        ax.legend(loc="upper right")
