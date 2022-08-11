@@ -1,15 +1,37 @@
 \section{Variational Method}
 In this section, we consider variational inference and VAEs. We use the ELBO to obtain a lower bound on the likelihood $\ell(\theta, \sigma)$ and optimize the ELBO using SGD. The marginal likelihoods of individual datapoints can each be rewritten as
 \begin{equation*}
-\log p_{\theta}\left(x^{(i)}\right)=D_{K L}\left(q_{\phi}\left(z \mid x^{(i)}\right) \| p_{\theta}\left(z \mid x^{(i)} \right)\right)+ \mathcal{L}\left(\theta, \phi ; x^{(i)} \right)
+\log p_{\theta}\left(x^{(i)}\right)=D_{K L}\left(q_{\phi}\left(z^{(i)} \mid x^{(i)}\right) \| p_{\theta}\left(z^{(i)} \mid x^{(i)} \right)\right)+ \mathcal{L}\left(\theta, \phi ; x^{(i)} \right)
 \end{equation*}
 
-The second RHS term $\mathcal{L} \left(\theta, \phi ; x^{(i)} \right)$ is called the evidence lower bound on the marginal likelihood of datapoint $i$, and can be written as
+The term $\mathcal{L} \left(\theta, \phi ; x^{(i)} \right)$ is called the evidence lower bound on the marginal likelihood of datapoint $i$ and can be written as \footnotemark
 \begin{equation*}
 \begin{aligned}
-\log p_{\theta}\left(x^{(i)}\right) \geq \mathcal{L}\left(\theta, \phi ;x^{(i)}\right)&=\mathbb{E}_{q_{\phi}(z \mid x)}\left[-\log q_{\phi}(z \mid x)+\log p_{\theta}(x, z)\right] \\
-&=-D_{KL}\left(q_{\boldsymbol{\phi}}\left(\mathbf{z} \mid \mathbf{x}^{(i)}\right) \| p_{\boldsymbol{\theta}}(\mathbf{z})\right)+\mathbb{E}_{q_{\boldsymbol{\phi}}\left(\mathbf{z} \mid \mathbf{x}^{(i)}\right)}\left[\log p_{\boldsymbol{\theta}}\left(\mathbf{x}^{(i)} \mid \mathbf{z}\right)\right]
+\log p_{\theta}\left(x^{(i)}\right) \geq \mathcal{L}\left(\theta, \phi ;x^{(i)}\right) &=\mathbb{E}_{q_{\phi}(z^{(i)} \mid x^{(i)})}\left[-\log q_{\phi}\left(z^{(i)} \mid x^{(i)}\right)+\log p_{\theta}\left(x^{(i)}, z^{(i)}\right)\right] \\
+&=-D_{KL}\left(q_{\boldsymbol{\phi}}\left(z^{(i)} \mid x^{(i)}\right) \| p_{\theta}\left(z^{(i)}\right)\right) +\mathbb{E}_{q_{\phi}\left(z^{(i)} \mid x^{(i)}\right)}\left[\log p_{\theta}\left(x^{(i)} \mid z^{(i)}\right)\right]
 \end{aligned}
 \end{equation*}
 
-We want to differentiate and optimize the lower bound $\mathcal{L}\left(\boldsymbol{\theta}, \phi ; \mathbf{x}^{(i)}\right)$ w.r.t. both the variational parameters $\phi$ and generative parameters $\theta$.
+\footnotetext{An equivalent concept to ELBO is the variational free energy. The variational free energy in a latent variable model $p_{\theta}(x, z)$ is defined as
+$$
+\mathcal{L}(\theta, q)=\mathbb{E}_{z \sim q}\left[-\log q(z) + \log p_{\theta}(x, z)\right],
+$$
+where $q$ is any probability density/mass function over the latent variables $z$. The first term is the Shannon entropy $H(q)=-\mathbb{E}_{q} \log q(z)$ of the variational distribution $q(z)$, and does not depend on $\theta$. The second term is sometimes referred to as the energy.}
+
+We want to differentiate and optimize the lower bound $\mathcal{L}\left(\theta, \phi; x^{(i)}\right)$ w.r.t. both the variational parameters $\phi$ and generative parameters $\theta$. The KL-divergence $D_{K L}\left(q_{\boldsymbol{\phi}}\left(z^{(i)} \mid x^{(i)}\right) \| p_{\boldsymbol{\theta}}(z^{(i)}) \right)$ can be integrated analytically, such that only the reconstruction error $\mathbb{E}_{q_{\phi} \left(z^{(i)} \mid x^{(i)}\right)}\left[\log p_{\theta}\left(x^{(i)} \mid z^{(i)}\right)\right]$ requires estimation by sampling. The \textit{stochastic gradient variational bayes} (SGVB) estimator
+\begin{equation*}
+\widetilde{\mathcal{L}}\left(\theta, \phi; x^{(i)}\right)=-D_{KL} \left(q_{\phi}\left(z^{(i)} \mid x^{(i)}\right)|| p_{\theta}\left(z^{(i)}\right)\right) + \frac{1}{L} \sum_{l=1}^{L}\log p_{\theta} \left(x^{(i)} \mid z^{(i, l)}\right)
+\end{equation*}
+
+\subsubsection*{KL-divergence}
+When both the prior $p_{\theta}(z)=\mathcal{N} (0, I)$ and the posterior approximation $q_{\phi} \left(z^{(i)} \mid x^{(i)}\right)$ are Gaussian, the KL term that can be integrated analytically. Let $J$ be the dimensionality of $z$. Let $\mu$ and $\sigma$ denote the variational mean and std evaluated at datapoint $i$, and let $\mu_{j}$ and $\sigma_{j}$ denote the $j$-th element of these vectors.
+\begin{equation*}
+\begin{aligned}
+-D_{KL}\left(q_{\phi}(z) \| p_{\theta}(z)\right)
+&=\int q_{\phi}(z)\left(\log p_{\theta}(z)-\log q_{\phi}(z)\right) dz \\
+&=\frac{1}{2} \sum_{j=1}^{J}\left(1+\log \left(\left(\sigma_{j}\right)^{2}\right)-\left(\mu_{j}\right)^{2}-\left(\sigma_{j}\right)^{2}\right)
+\end{aligned}
+\end{equation*}
+
+\subsubsection*{Probabilistic encoders and decoders}
+In variational auto-encoders, neural networks are used as probabilistic encoders and decoders. There are many possible choices of encoders and decoders, depending on the type of data and model. In our example we used relatively simple neural networks, namely multi-layered perceptrons (MLPs). For the encoder we used a MLP with Gaussian output, while for the decoder we used MLPs with either Gaussian or Bernoulli outputs, depending on the type of data.
