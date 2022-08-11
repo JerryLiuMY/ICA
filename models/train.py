@@ -19,7 +19,7 @@ def train_vae(train_loader):
     model = VariationalAutoencoder()
     model = model.to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.8)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)
     num_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Number of parameters: {num_params}")
 
@@ -27,7 +27,8 @@ def train_vae(train_loader):
     model.train()
     train_loss = []
     for epoch in range(epoch):
-        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Training on epoch {epoch}...")
+        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Training on epoch {epoch} "
+              f"[lr={round(scheduler.get_last_lr()[0], 6)}]...")
         epoch_loss, nbatch = 0., 0
 
         for train_batch, _ in train_loader:
@@ -39,7 +40,7 @@ def train_vae(train_loader):
             optimizer.step()
 
             # update loss and nbatch
-            epoch_loss += loss.item()
+            epoch_loss += loss.item() / train_batch.size(dim=0)
             nbatch += 1
 
         scheduler.step()
@@ -74,7 +75,7 @@ def valid_vae(model, valid_loader):
             loss = elbo_loss(valid_batch, valid_batch_mean, valid_batch_logs2, mu, logvar, beta)
 
             # update loss and nbatch
-            valid_loss += loss.item()
+            valid_loss += loss.item() / valid_batch.size(dim=0)
             nbatch += 1
 
     # report validation loss

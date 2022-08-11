@@ -1,6 +1,6 @@
 from data.generator import generate_data
 from data.loader import load_data
-from global_settings import OUTPUT_PATH
+from global_settings import VAE_PATH
 from models.train import train_vae
 from models.train import valid_vae
 import torch
@@ -23,7 +23,7 @@ def experiment(m, n, activation, train_size, valid_size):
     model, train_loss = train_vae(train_loader)
     valid_loss = valid_vae(model, valid_loader)
 
-    model_path = os.path.join(OUTPUT_PATH, f"m{m}_n{n}_{''.join([_ for _ in str(activation) if _.isalpha()])}")
+    model_path = os.path.join(VAE_PATH, f"m{m}_n{n}_{''.join([_ for _ in str(activation) if _.isalpha()])}")
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
 

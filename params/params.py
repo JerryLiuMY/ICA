@@ -5,7 +5,7 @@ import os
 
 batch_size = 128
 params_dict = {"m": 10, "n": 20}
-train_dict = {"epoch": 50, "lr": 0.001, "beta": 1}
+train_dict = {"epoch": 200, "lr": 0.001, "beta": 1}
 
 
 def save_params(m, n):
