@@ -1,4 +1,5 @@
 from global_settings import DATA_PATH
+from params.params import save_params
 from datetime import datetime
 import pickle5 as pickle
 import numpy as np
@@ -23,7 +24,7 @@ def generate_data(m, n, activation, train_size, valid_size):
 
     params_path = os.path.join(DATA_PATH, f"params_{m}_{n}.pkl")
     if not os.path.isfile(params_path):
-        raise ValueError("The params file does not exist")
+        save_params(m, n)
 
     with open(params_path, "rb") as handle:
         params = pickle.load(handle)

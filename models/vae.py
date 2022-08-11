@@ -74,7 +74,7 @@ class Decoder(Encoder, Block):
         self.dec2 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size)
 
         # second decoder layer -- mean and logs2
-        self.output_size = self.self.inter_size
+        self.output_size = self.inter_size
         self.dec1_mean = nn.Linear(in_features=self.inter_size, out_features=self.output_size)
         self.dec1_logs2 = nn.Linear(in_features=self.inter_size, out_features=1)
 

@@ -2,6 +2,7 @@ from params.params import batch_size
 from datetime import datetime
 from torch.utils.data import TensorDataset
 from torch.utils.data import DataLoader
+import numpy as np
 import torch
 
 
@@ -15,15 +16,15 @@ def load_data(train_df, valid_df):
     # get x and z values for train dataset
     x_train_cols = [col for col in train_df.columns if "x" in col]
     z_train_cols = [col for col in train_df.columns if "z" in col]
-    x_train = torch.tensor(train_df[x_train_cols].values)
-    z_train = torch.tensor(train_df[z_train_cols].values)
+    x_train = torch.tensor(train_df[x_train_cols].values.astype(np.float32))
+    z_train = torch.tensor(train_df[z_train_cols].values.astype(np.float32))
     train_data = TensorDataset(x_train, z_train)
 
     # get x and z values for valid dataset
     x_valid_cols = [col for col in valid_df.columns if "x" in col]
     z_valid_cols = [col for col in valid_df.columns if "z" in col]
-    x_valid = torch.tensor(valid_df[x_valid_cols].values)
-    z_valid = torch.tensor(valid_df[z_valid_cols].values)
+    x_valid = torch.tensor(valid_df[x_valid_cols].values.astype(np.float32))
+    z_valid = torch.tensor(valid_df[z_valid_cols].values.astype(np.float32))
     valid_data = TensorDataset(x_valid, z_valid)
 
     # build dataset

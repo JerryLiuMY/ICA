@@ -95,10 +95,13 @@ def elbo_loss(x, mean, logs2, mu, logvar, beta):
     :return: reconstruction loss + KL
     """
 
+    # KL-divergence
+    kl_div = 0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+
     # reconstruction loss
     recon_loss = -torch.sum(logs2.mul(x.size(dim=1)/2) + torch.norm(x - mean, 2, dim=1).pow(2).div(logs2.exp().mul(2)))
 
-    # KL-divergence
-    kl_div = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+    # loss
+    loss = - beta * kl_div + recon_loss
 
-    return recon_loss + beta * kl_div
+    return loss
