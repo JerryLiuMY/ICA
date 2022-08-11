@@ -8,7 +8,7 @@ import torch
 import os
 
 
-def generate_data(m, n, activation, train_size, valid_size):
+def generate_data(m, n, activation, train_size=1000, valid_size=200):
     """ Generate data for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
