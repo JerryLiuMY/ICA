@@ -1,4 +1,4 @@
-from data.generator import generate_data
+from data_prep.generator import generate_data
 from global_settings import DATA_PATH
 import matplotlib.pyplot as plt
 from torch import nn

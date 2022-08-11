@@ -7,7 +7,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 DESKTOP_PATH = str(Path(os.getcwd()).parent.absolute())
 if DESKTOP_PATH == "/Users/mingyu/Desktop":
     DRIVE_PATH = "/Volumes/Sumsung_1T/Projects/ICA"
-    DATA_PATH = os.path.join(DRIVE_PATH, "data")
+    DATA_PATH = os.path.join(DRIVE_PATH, "data_prep")
     MLE_PATH = os.path.join(DRIVE_PATH, "mle")
     VAE_PATH = os.path.join(DRIVE_PATH, "vae")
 else:
