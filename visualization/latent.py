@@ -13,7 +13,6 @@ def plot_latent_2d(n):
     :return: dataframe of z and x
     """
 
-    # initialize figure
     fig, axes = plt.subplots(1, 4, figsize=(16, 4))
     activations = ["ReLU", "Sigmoid", "Tanh", "GELU"]
     for ax, activation in zip(axes, activations):
@@ -22,9 +21,11 @@ def plot_latent_2d(n):
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"))
         sns.kdeplot(data=simu_df, x="z0", y="z1", fill=True, alpha=1., label="True", ax=ax)
         sns.kdeplot(data=recon_df, x="mu0", y="mu1", fill=True, alpha=.7, label="Recon", ax=ax)
-        ax_legend_true = mpatches.Patch(color="#A9A9A9", label=f"True")
-        ax_legend_recon = mpatches.Patch(color="#A9A9A9", label=f"Recon")
+        ax_legend_true = mpatches.Patch(color=sns.color_palette()[0], label=f"True", alpha=0.8)
+        ax_legend_recon = mpatches.Patch(color=sns.color_palette()[1], label=f"Recon", alpha=0.8)
         handles = [ax_legend_true, ax_legend_recon]
-        ax.legend(handles=handles, loc="upper left", handlelength=0.2, handletextpad=0.5)
+        ax.legend(handles=handles, loc="upper right", handlelength=0.2, handletextpad=0.5)
+        ax.set_title(f"Latent space of {activation}")
         ax.set_xlabel("z0")
         ax.set_ylabel("z1")
+    fig.savefig(os.path.join(VAE_PATH, "latent.pdf"), bbox_inches="tight")
