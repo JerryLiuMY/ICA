@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1660179436 "main.tex" "main.pdf" "main" 1660179592
+["pdflatex"] 1660185250 "main.tex" "main.pdf" "main" 1660185251
   "/usr/local/texlive/2020/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2020/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy6.tfm" 1246382020 1124 14ccf5552bc7f77ca02a8a402bea8bfb ""
   "/usr/local/texlive/2020/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy8.tfm" 1246382020 1120 200be8b775682cdf80acad4be5ef57e4 ""
@@ -116,12 +116,12 @@
   "/usr/local/texlive/2020/texmf.cnf" 1587227420 577 d60164b4589a341208aff7a667fbbdcb ""
   "content/section_1.tex" 1660178661 1766 ebcc70d244a0002ce450951ada888c3a ""
   "content/section_2.tex" 1660168185 3322 50ab0724b62098dcea4086e723e62835 ""
-  "content/section_3.tex" 1660179590 4120 bf968661297906696dbc39df7e5f5408 ""
-  "main.aux" 1660179436 1393 df53a129f611c29ae2fef6c261b05343 "pdflatex"
-  "main.out" 1660179436 281 88e8cee9d86d9a0d158ace8bc635ce21 "pdflatex"
+  "content/section_3.tex" 1660185249 4272 6e59dd6de41be309856497f267601dc7 ""
+  "main.aux" 1660185251 1393 df53a129f611c29ae2fef6c261b05343 "pdflatex"
+  "main.out" 1660185251 281 88e8cee9d86d9a0d158ace8bc635ce21 "pdflatex"
   "main.tex" 1660165712 480 3e87aa5b8791649f0e8fd98c24fe72b4 ""
   (generated)
-  "main.aux"
   "main.pdf"
-  "main.out"
   "main.log"
+  "main.out"
+  "main.aux"
