@@ -32,8 +32,8 @@ def train_vae(train_loader):
 
         for train_batch, _ in train_loader:
             train_batch = train_batch.to(device)
-            mean_batch, logs2_batch, mu, logvar = model(train_batch)
-            loss = vae_loss(train_batch, mean_batch, logs2_batch, mu, logvar, beta)
+            train_batch_mean, train_batch_logs2, mu, logvar = model(train_batch)
+            loss = elbo_loss(train_batch, train_batch_mean, train_batch_logs2, mu, logvar, beta)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -54,7 +54,37 @@ def train_vae(train_loader):
     return model, train_loss
 
 
-def vae_loss(x, mean, logs2, mu, logvar, beta):
+def valid_vae(model, valid_loader):
+    """ Training VAE with the specified image dataset
+    :param model: trained VAE model
+    :param valid_loader: validation image dataset loader
+    :return: validation loss
+    """
+
+    # load parameters
+    beta = train_dict["beta"]
+
+    # set to evaluation mode
+    model.eval()
+    valid_loss, nbatch = 0., 0.
+    for valid_batch, _ in valid_loader:
+        with torch.no_grad():
+            valid_batch = valid_batch.to(device)
+            valid_batch_mean, valid_batch_logs2, mu, logvar = model(valid_batch)
+            loss = elbo_loss(valid_batch, valid_batch_mean, valid_batch_logs2, mu, logvar, beta)
+
+            # update loss and nbatch
+            valid_loss += loss.item()
+            nbatch += 1
+
+    # report validation loss
+    valid_loss = valid_loss / nbatch
+    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish validation with loss {valid_loss}")
+
+    return valid_loss
+
+
+def elbo_loss(x, mean, logs2, mu, logvar, beta):
     """ Calculating loss for variational autoencoder
     :param x: original image
     :param mean: mean in the output layer

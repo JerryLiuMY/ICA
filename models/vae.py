@@ -9,6 +9,8 @@ class VariationalAutoencoder(nn.Module):
         super(VariationalAutoencoder, self).__init__()
         self.encoder = Encoder()
         self.decoder = Decoder()
+        if not self.encoder.input_size == self.decoder.output_size:
+            raise ValueError("Input size does not match with output size")
 
     def forward(self, x):
         mu, logvar = self.encoder(x)
@@ -40,14 +42,12 @@ class Encoder(Block):
 
         # first encoder layer
         self.inter_size = self.input_size
-        self.enc1 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size // 2)
+        self.enc1 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size)
 
         # second encoder layer
-        self.inter_size = self.inter_size // 2
-        self.enc2 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size // 2)
+        self.enc2 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size)
 
         # map to mu and variance
-        self.inter_size = self.inter_size // 2
         self.fc_mu = nn.Linear(in_features=self.inter_size, out_features=self.hidden)
         self.fc_logvar = nn.Linear(in_features=self.inter_size, out_features=self.hidden)
 
@@ -71,13 +71,12 @@ class Decoder(Encoder, Block):
         self.fc = nn.Linear(in_features=self.hidden, out_features=self.inter_size)
 
         # first decoder layer
-        self.dec2 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size * 2)
-        self.inter_size = self.inter_size * 2
+        self.dec2 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size)
 
-        # second decoder layer -- m
-        self.dec1_mean = nn.Linear(in_features=self.inter_size, out_features=self.inter_size * 2)
+        # second decoder layer -- mean and logs2
+        self.output_size = self.self.inter_size
+        self.dec1_mean = nn.Linear(in_features=self.inter_size, out_features=self.output_size)
         self.dec1_logs2 = nn.Linear(in_features=self.inter_size, out_features=1)
-        self.output_size = self.self.inter_size * 2
 
     def forward(self, x):
         # linear layer

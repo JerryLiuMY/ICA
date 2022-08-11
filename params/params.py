@@ -3,7 +3,7 @@ import pickle5 as pickle
 import numpy as np
 import os
 
-
+batch_size = 128
 params_dict = {"m": 10, "n": 20}
 train_dict = {"epoch": 50, "lr": 0.001, "beta": 1}
 
