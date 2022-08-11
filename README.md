@@ -6,9 +6,9 @@
 
 <a href="./__resources__/ICA/main.pdf" target="_blank">Link</a> to the updated write-up of the project.
 
-## Data Information
 Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/params.py
 
+## Data Information
 <a href="https://drive.google.com/drive/folders/1Uep9CpOhQor72GXVWeb7ax2kO7O7wFco?usp=sharing" target="_blank">Repository</a> for the generated `weight` and `bias` of the single-layer MLP.
 
 ```python
