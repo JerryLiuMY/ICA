@@ -44,5 +44,3 @@ def main(m, n, activation):
     # save simulation and reconstruction dataframes
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
-
-    return model
