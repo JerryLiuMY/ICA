@@ -1,5 +1,5 @@
 from models.vae import VariationalAutoencoder
-from params.params import train_dict
+from params.params import vae_train_dict as train_dict
 from global_settings import device
 from datetime import datetime
 import torch
@@ -63,7 +63,7 @@ def valid_vae(model, valid_loader):
     """
 
     # load parameters
-    beta = train_dict["beta"]
+    beta = vae_train_dict["beta"]
 
     # set to evaluation mode
     model.eval()
