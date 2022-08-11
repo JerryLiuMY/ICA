@@ -31,4 +31,4 @@ valid_loss = valid_vae(model, valid_loader)
 ![alt text](./__resources__/data_dist.jpg?raw=true "Title")
 
 ## VAE
-<a href="https://drive.google.com/drive/folders/1bsV12MWuyU7GMA-fr8vcPiayjUOFEOgt?usp=sharing">Folder</a> for the trained VAE model and visualizations.
+<a href="https://drive.google.com/drive/folders/1HNsTgwhNfs60Dx9ef7eQuOsU6ftaono8?usp=sharing">Folder</a> for the trained VAE model and visualizations.
