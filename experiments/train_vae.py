@@ -34,7 +34,7 @@ def train_vae(train_loader):
         for train_batch, _ in train_loader:
             train_batch = train_batch.to(device)
             train_batch_mean, train_batch_logs2, mu, logvar = model(train_batch)
-            loss = elbo_loss(train_batch, train_batch_mean, train_batch_logs2, mu, logvar, beta)
+            loss = elbo_gaussian(train_batch, train_batch_mean, train_batch_logs2, mu, logvar, beta)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -63,7 +63,7 @@ def valid_vae(model, valid_loader):
     """
 
     # load parameters
-    beta = vae_train_dict["beta"]
+    beta = train_dict["beta"]
 
     # set to evaluation mode
     model.eval()
@@ -72,7 +72,7 @@ def valid_vae(model, valid_loader):
         with torch.no_grad():
             valid_batch = valid_batch.to(device)
             valid_batch_mean, valid_batch_logs2, mu, logvar = model(valid_batch)
-            loss = elbo_loss(valid_batch, valid_batch_mean, valid_batch_logs2, mu, logvar, beta)
+            loss = elbo_gaussian(valid_batch, valid_batch_mean, valid_batch_logs2, mu, logvar, beta)
 
             # update loss and nbatch
             valid_loss += loss.item() / valid_batch.size(dim=0)
@@ -85,7 +85,7 @@ def valid_vae(model, valid_loader):
     return valid_loss
 
 
-def elbo_loss(x, mean, logs2, mu, logvar, beta):
+def elbo_gaussian(x, mean, logs2, mu, logvar, beta):
     """ Calculating loss for variational autoencoder
     :param x: original image
     :param mean: mean in the output layer
