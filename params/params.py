@@ -4,8 +4,8 @@ import numpy as np
 import os
 
 batch_size = 128
-params_dict = {"m": 10, "n": 20}
-vae_train_dict = {"epoch": 200, "lr": 0.001, "beta": 1}
+vae_dict = {"epoch": 200, "lr": 0.001, "beta": 1}
+exp_dict = {"train_size": 10000, "valid_size": 2000, "simu_size": 5000}
 
 
 def save_params(m, n):

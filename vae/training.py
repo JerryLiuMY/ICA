@@ -1,13 +1,15 @@
-from models.vae import VariationalAutoencoder
-from params.params import vae_train_dict as train_dict
+from vae.vae import VariationalAutoencoder
+from params.params import vae_dict as train_dict
 from global_settings import device
 from datetime import datetime
 import torch
 import numpy as np
 
 
-def train_vae(train_loader):
+def train_vae(m, n, train_loader):
     """ Training VAE with the specified image dataset
+    :param m: dimension of the latent variable
+    :param n: dimension of the target variable
     :param train_loader: training image dataset loader
     :return: trained model and training loss history
     """
@@ -16,7 +18,7 @@ def train_vae(train_loader):
     epoch, lr, beta = train_dict["epoch"], train_dict["lr"], train_dict["beta"]
 
     # building VAE
-    model = VariationalAutoencoder()
+    model = VariationalAutoencoder(m, n)
     model = model.to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)

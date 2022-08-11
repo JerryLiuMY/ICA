@@ -13,12 +13,16 @@ Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/par
 
 ```python
 from torch import nn
-from data.generator import generate_data
-from data.loader import load_data
+from data_prep.generator import generate_data
+from data_prep.loader import load_data
+from params.params import exp_dict
 
-m, n, activation, train_size, valid_size = 10, 20, nn.ReLU(), 10000, 2000
-train_df, valid_df = generate_data(m, n, activation, train_size, valid_size)
-train_loader, valid_loader = load_data(train_df, valid_df)
+m, n, activation = 10, 20, nn.ReLU()
+train_size, valid_size = exp_dict["train_size"], exp_dict["valid_size"]
+train_df = generate_data(m, n, activation, train_size)
+valid_df = generate_data(m, n, activation, valid_size)
+train_loader = load_data(train_df)
+valid_loader = load_data(valid_df)
 ```
 
 Distribution of the latent variable `z` and the generated `x`
@@ -28,12 +32,12 @@ Distribution of the latent variable `z` and the generated `x`
 ![alt text](./__resources__/data_dist.jpg?raw=true "Title")
 
 ## VAE
-<a href="https://drive.google.com/drive/folders/1HNsTgwhNfs60Dx9ef7eQuOsU6ftaono8?usp=sharing">Folder</a> for the trained VAE models. <a href="./models/vae.py">Link</a> to the model architecture and <a href="./experiments/train_vae.py">link</a> to the training loop (<a href="https://github.com/JerryLiuMY/ICA/blob/955ad3fc26c19cfb9b6da82a528254e3094cbca2/experiments/train_vae.py#L88">ELBO</a> with Gaussian MLP as decoder).
+<a href="https://drive.google.com/drive/folders/1HNsTgwhNfs60Dx9ef7eQuOsU6ftaono8?usp=sharing">Folder</a> for the trained VAE models. <a href="./vae/vae.py">Link</a> to the model architecture and <a href="./vae/training.py">link</a> to the training loop (<a href="https://github.com/JerryLiuMY/ICA/blob/955ad3fc26c19cfb9b6da82a528254e3094cbca2/experiments/train_vae.py#L88">ELBO</a> with Gaussian MLP as decoder).
 
 ```python
-from experiments.train_vae import train_vae
-from experiments.train_vae import valid_vae
+from vae.training import train_vae
+from vae.training import valid_vae
 
-model, train_loss = train_vae(train_loader)
+model, train_loss = train_vae(m, n, train_loader)
 valid_loss = valid_vae(model, valid_loader)
 ```

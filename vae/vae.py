@@ -1,14 +1,13 @@
 import torch.nn.functional as F
-from params.params import params_dict
 import torch.nn as nn
 import torch
 
 
 class VariationalAutoencoder(nn.Module):
-    def __init__(self):
+    def __init__(self, m, n):
         super(VariationalAutoencoder, self).__init__()
-        self.encoder = Encoder()
-        self.decoder = Decoder()
+        self.encoder = Encoder(m, n)
+        self.decoder = Decoder(m, n)
         if not self.encoder.input_size == self.decoder.output_size:
             raise ValueError("Input size does not match with output size")
 
@@ -30,15 +29,15 @@ class VariationalAutoencoder(nn.Module):
 
 
 class Block(nn.Module):
-    def __init__(self):
+    def __init__(self, m, n):
         super(Block, self).__init__()
-        self.input_size = params_dict["n"]
-        self.hidden = params_dict["m"]
+        self.input_size = n
+        self.hidden = m
 
 
 class Encoder(Block):
-    def __init__(self):
-        super(Encoder, self).__init__()
+    def __init__(self, m, n):
+        super(Encoder, self).__init__(m, n)
 
         # first encoder layer
         self.inter_size = self.input_size
@@ -64,8 +63,8 @@ class Encoder(Block):
 
 
 class Decoder(Encoder, Block):
-    def __init__(self):
-        super(Decoder, self).__init__()
+    def __init__(self, m, n):
+        super(Decoder, self).__init__(m, n)
 
         # linear layer
         self.fc = nn.Linear(in_features=self.hidden, out_features=self.inter_size)
