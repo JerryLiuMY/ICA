@@ -48,4 +48,6 @@ valid_loss = valid_vae(model, valid_loader)
 recon_df = simu_vae(m, n, model, simu_loader)
 ```
 
+Distribution of the original and reconstructed latent variable `z` with `m=2, n=20` for different types of activation functions
+
 ![alt text](./__resources__/vae_latent.jpg?raw=true "Title")
