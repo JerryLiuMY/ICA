@@ -39,8 +39,7 @@ def main(m, n, activation):
     # build reconstruction
     simu_df = generate_data(m, n, activation, simu_size)
     simu_loader = load_data(simu_df)
-
-    recon_df = simu_vae(m, n, model, activation, simu_size)
+    recon_df = simu_vae(model, simu_loader)
 
     # save simulation and reconstruction dataframes
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))

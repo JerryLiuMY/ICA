@@ -10,7 +10,7 @@ def train_vae(m, n, train_loader):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
-    :param train_loader: training image dataset loader
+    :param train_loader: training dataset loader
     :return: trained model and training loss history
     """
 
@@ -60,7 +60,7 @@ def train_vae(m, n, train_loader):
 def valid_vae(model, valid_loader):
     """ Training VAE with the specified image dataset
     :param model: trained VAE model
-    :param valid_loader: validation image dataset loader
+    :param valid_loader: validation dataset loader
     :return: validation loss
     """
 

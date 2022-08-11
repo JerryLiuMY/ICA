@@ -24,8 +24,8 @@ if not os.path.isdir(VAE_PATH):
     os.mkdir(VAE_PATH)
 
 
+# save reconstruction -- mu, logvar, mean, logs2
 # plot latent space
-# check reconstruction / variance
 # ICA formulation
 
 # check derivation for MLE
