@@ -27,8 +27,8 @@ We want to differentiate and optimize the lower bound $\mathcal{L}\left(\theta, 
 When both the prior $p_{\theta}(z)=\mathcal{N} (0, I)$ and the posterior approximation $q_{\phi} \left(z^{(i)} \mid x^{(i)}\right)$ are Gaussian, the KL term that can be integrated analytically. Let $J$ be the dimensionality of $z$. Let $\mu$ and $\sigma$ denote the variational mean and std evaluated at datapoint $i$, and let $\mu_{j}$ and $\sigma_{j}$ denote the $j$-th element of these vectors.
 \begin{equation*}
 \begin{aligned}
--D_{KL}\left(q_{\phi}(z) \| p_{\theta}(z)\right)
-&=\int q_{\phi}(z)\left(\log p_{\theta}(z)-\log q_{\phi}(z)\right) dz \\
+-D_{KL}\left(q_{\phi}(z \mid x) \| p_{\theta}(z)\right)
+&=\int q_{\phi}(z\mid x)\left(\log p_{\theta}(z)-\log q_{\phi}(z \mid x)\right) dz \\
 &=\frac{1}{2} \sum_{j=1}^{J}\left(1+\log \left(\left(\sigma_{j}\right)^{2}\right)-\left(\mu_{j}\right)^{2}-\left(\sigma_{j}\right)^{2}\right)
 \end{aligned}
 \end{equation*}
