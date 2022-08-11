@@ -13,6 +13,4 @@
 
 ![alt text](./__resources__/data_dist.jpg?raw=true "Title")
 
-## MLE
-
 ## VAE
