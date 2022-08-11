@@ -4,12 +4,13 @@
     <img src="https://img.shields.io/badge/python-v3-brightgreen.svg" alt="python"></a> &nbsp;
 </p>
 
-<a href="./__resources__/ICA/main.pdf" target="_blank">Link</a> to the updated write-up of the project.  
-
-Dictionary of parameters: https://github.com/JerryLiuMY/VAE/blob/main/params/params.py
+<a href="./__resources__/ICA/main.pdf" target="_blank">Link</a> to the updated write-up of the project.
 
 ## Data Information
-<a href="https://drive.google.com/drive/folders/1Uep9CpOhQor72GXVWeb7ax2kO7O7wFco?usp=sharing" target="_blank">Repository</a> for the generated `weight` and `bias` of the single-layer MLP. 
+Dictionary of parameters: https://github.com/JerryLiuMY/VAE/blob/main/params/params.py
+
+<a href="https://drive.google.com/drive/folders/1Uep9CpOhQor72GXVWeb7ax2kO7O7wFco?usp=sharing" target="_blank">Repository</a> for the generated `weight` and `bias` of the single-layer MLP.
+
 ```python
 from data.generator import generate_data
 from data.loader import load_data
@@ -28,6 +29,7 @@ Distribution of the latent variable `z` and the generated `x`
 
 ## VAE
 <a href="https://drive.google.com/drive/folders/1HNsTgwhNfs60Dx9ef7eQuOsU6ftaono8?usp=sharing">Folder</a> for the trained VAE models. <a href="./models/vae.py">Link</a> to the model architecture and <a href="./experiments/train_vae.py">link</a> to the training loop and loss function. 
+
 ```python
 from experiments.train_vae import train_vae
 from experiments.train_vae import valid_vae
