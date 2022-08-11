@@ -18,7 +18,8 @@ def experiment(m, n, activation, train_size, valid_size):
     :return: dataframe of z and x
     """
 
-    train_df, valid_df = generate_data(m, n, activation, train_size, valid_size)
+    train_df = generate_data(m, n, activation, train_size)
+    valid_df = generate_data(m, n, activation, valid_size)
     train_loader, valid_loader = load_data(train_df, valid_df)
     model, train_loss = train_vae(train_loader)
     valid_loss = valid_vae(model, valid_loader)
