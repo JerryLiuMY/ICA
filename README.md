@@ -11,8 +11,8 @@ Dictionary of parameters: https://github.com/JerryLiuMY/VAE/blob/main/params/par
 ```python
 from data.generator import generate_data
 from data.loader import load_data
-from models.train import train_vae
-from models.train import valid_vae
+from vae.train import train_vae
+from vae.train import valid_vae
 from torch import nn
 
 # load data and perform training & validation
