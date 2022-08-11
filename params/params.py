@@ -4,6 +4,10 @@ import numpy as np
 import os
 
 
+params_dict = {"m": 10, "n": 20}
+train_dict = {"epoch": 50, "lr": 0.001, "beta": 1}
+
+
 def save_params(m, n):
     """ save parameters for neural network
     :param m: dimension of the latent variable

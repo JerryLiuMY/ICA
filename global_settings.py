@@ -1,5 +1,7 @@
 from pathlib import Path
+import torch
 import os
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # define directories
 DESKTOP_PATH = str(Path(os.getcwd()).parent.absolute())
