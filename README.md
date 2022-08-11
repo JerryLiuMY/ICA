@@ -18,11 +18,15 @@ from data_prep.loader import load_data
 from params.params import exp_dict
 
 m, n, activation = 10, 20, nn.ReLU()
-train_size, valid_size = exp_dict["train_size"], exp_dict["valid_size"]
+train_size = exp_dict["train_size"]
+valid_size = exp_dict["valid_size"]
+simu_size = exp_dict["simu_size"]
 train_df = generate_data(m, n, activation, train_size)
 valid_df = generate_data(m, n, activation, valid_size)
+simu_df = generate_data(m, n, activation, simu_size)
 train_loader = load_data(train_df)
 valid_loader = load_data(valid_df)
+simu_loader = load_data(simu_df)
 ```
 
 Distribution of the latent variable `z` and the generated `x`
@@ -37,7 +41,11 @@ Distribution of the latent variable `z` and the generated `x`
 ```python
 from vae.training import train_vae
 from vae.training import valid_vae
+from vae.simulation import simu_vae
 
 model, train_loss = train_vae(m, n, train_loader)
 valid_loss = valid_vae(model, valid_loader)
+recon_df = simu_vae(m, n, model, simu_loader)
 ```
+
+![alt text](./__resources__/vae_latent.jpg?raw=true "Title")
