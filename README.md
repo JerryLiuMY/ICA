@@ -32,7 +32,7 @@ Distribution of the latent variable `z` and the generated `x`
 ![alt text](./__resources__/data_dist.jpg?raw=true "Title")
 
 ## VAE
-<a href="https://drive.google.com/drive/folders/1HNsTgwhNfs60Dx9ef7eQuOsU6ftaono8?usp=sharing">Folder</a> for the trained VAE models. <a href="./vae/vae.py">Link</a> to the model architecture and <a href="./vae/training.py">link</a> to the training loop (<a href="https://github.com/JerryLiuMY/ICA/blob/955ad3fc26c19cfb9b6da82a528254e3094cbca2/experiments/train_vae.py#L88">ELBO</a> with Gaussian MLP as decoder).
+<a href="https://drive.google.com/drive/folders/1HNsTgwhNfs60Dx9ef7eQuOsU6ftaono8?usp=sharing">Folder</a> for the trained VAE models. <a href="./vae/vae.py">Link</a> to the model architecture and <a href="./vae/training.py">link</a> to the training loop (<a href="https://github.com/JerryLiuMY/ICA/blob/2c7748a05fac87e021c789e7202e89d3814cb2a1/vae/training.py#L90">ELBO</a> with Gaussian MLP as decoder).
 
 ```python
 from vae.training import train_vae
