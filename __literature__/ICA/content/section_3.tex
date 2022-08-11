@@ -34,4 +34,13 @@ When both the prior $p_{\theta}(z)=\mathcal{N} (0, I)$ and the posterior approxi
 \end{equation*}
 
 \subsubsection*{Probabilistic encoders and decoders}
-In variational auto-encoders, neural networks are used as probabilistic encoders and decoders. There are many possible choices of encoders and decoders, depending on the type of data and model. In our example we used relatively simple neural networks, namely multi-layered perceptrons (MLPs). For the encoder we used a MLP with Gaussian output, while for the decoder we used MLPs with either Gaussian or Bernoulli outputs, depending on the type of data.
+In variational auto-encoders, neural networks are used as probabilistic encoders and decoders. For the encoder we use a MLP with Gaussian output. For the decoder, we also use MLPs with Gaussian outputs with different mean and variance. Let decoder be a multivariate Gaussian with a diagonal covariance structure
+\begin{equation*}
+\begin{aligned}
+\log p\left(x \mid z\right) &=\log \mathcal{N}\left(x; \mu, \sigma^{2}, I\right) \\
+\text{ where } h &= h \left(z\right) \\
+\mu &=W_{1}h+b_{1} \\
+\log \sigma^{2} &=W_{2}h+b_{2}
+\end{aligned}
+\end{equation*}
+where $\left\{W_{1}, W_{2}, b_{1}, b_{2} \right\}$ are the weights and biases of the MLP (as part of $\theta$).
