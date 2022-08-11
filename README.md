@@ -4,7 +4,7 @@
     <img src="https://img.shields.io/badge/python-v3-brightgreen.svg" alt="python"></a> &nbsp;
 </p>
 
-<a href="https://drive.google.com/drive/folders/1Uep9CpOhQor72GXVWeb7ax2kO7O7wFco?usp=sharing" target="_blank">Link</a> to the updated write-up of the project.  
+<a href="./__resources__/ICA/main.pdf" target="_blank">Link</a> to the updated write-up of the project.  
 
 ## Data Generation
 <a href="https://drive.google.com/drive/folders/1Uep9CpOhQor72GXVWeb7ax2kO7O7wFco?usp=sharing" target="_blank">Repository</a> for the generated `weight` and `bias` of the single-layer MLP. Distribution of the latent variable `z` and the generated `x`
