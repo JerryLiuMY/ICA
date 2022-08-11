@@ -13,7 +13,7 @@ def plot_latent_2d(n):
     :return: dataframe of z and x
     """
 
-    fig, axes = plt.subplots(1, 4, figsize=(12, 3))
+    fig, axes = plt.subplots(1, 4, figsize=(16, 4))
     activations = ["ReLU", "Sigmoid", "Tanh", "GELU"]
     for ax, activation in zip(axes, activations):
         model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
