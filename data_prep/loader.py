@@ -9,7 +9,7 @@ import torch
 def load_data(data_df):
     """ Load data from the specified dataset as data loader
     :param data_df: dataframe of z and x
-    :return: dataset loader and input shape
+    :return: dataset loader for z and x
     """
 
     # get x and z values for train dataset

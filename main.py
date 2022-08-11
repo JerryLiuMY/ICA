@@ -32,15 +32,17 @@ def main(m, n, activation):
     model, train_loss = train_vae(m, n, train_loader)
     valid_loss = valid_vae(model, valid_loader)
 
-    torch.save(model, os.path.join(model_path, "model.pth"))
+    torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
     np.save(os.path.join(model_path, "train_loss.npy"), train_loss)
     np.save(os.path.join(model_path, "valid_loss.npy"), valid_loss)
 
     # build reconstruction
     simu_df = generate_data(m, n, activation, simu_size)
     simu_loader = load_data(simu_df)
-    recon_df = simu_vae(model, simu_loader)
+    recon_df = simu_vae(m, n, model, simu_loader)
 
     # save simulation and reconstruction dataframes
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
+
+    return model

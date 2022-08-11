@@ -87,3 +87,26 @@ class Decoder(Encoder, Block):
         logs2 = self.dec1_logs2(x)
 
         return mean, logs2
+
+
+def elbo_gaussian(x, mean, logs2, mu, logvar, beta):
+    """ Calculating loss for variational autoencoder
+    :param x: original image
+    :param mean: mean in the output layer
+    :param logs2: log of the variance in the output layer
+    :param mu: mean in the hidden layer
+    :param logvar: log of the variance in the hidden layer
+    :param beta: beta
+    :return: reconstruction loss + KL
+    """
+
+    # KL-divergence
+    kl_div = - 0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+
+    # reconstruction loss
+    recon_loss = - torch.sum(logs2.mul(x.size(dim=1)/2) + torch.norm(x - mean, 2, dim=1).pow(2).div(logs2.exp().mul(2)))
+
+    # loss
+    loss = - beta * kl_div + recon_loss
+
+    return -loss

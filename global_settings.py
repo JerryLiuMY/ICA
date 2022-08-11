@@ -27,4 +27,4 @@ if not os.path.isdir(VAE_PATH):
 # save reconstruction -- mu, logvar, mean, logs2
 # plot latent space
 
-# check derivation for MLE
+# MLE gradient descent

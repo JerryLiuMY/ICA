@@ -1,4 +1,4 @@
-from vae.vae import VariationalAutoencoder
+from vae.vae import VariationalAutoencoder, elbo_gaussian
 from params.params import vae_dict as train_dict
 from global_settings import device
 from datetime import datetime
@@ -31,18 +31,16 @@ def train_vae(m, n, train_loader):
     for epoch in range(epoch):
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Training on epoch {epoch} "
               f"[lr={round(scheduler.get_last_lr()[0], 6)}]...")
-        epoch_loss, nbatch = 0., 0
 
-        for train_batch, _ in train_loader:
-            train_batch = train_batch.to(device)
-            train_batch_mean, train_batch_logs2, mu, logvar = model(train_batch)
-            loss = elbo_gaussian(train_batch, train_batch_mean, train_batch_logs2, mu, logvar, beta)
+        epoch_loss, nbatch = 0., 0
+        for x_batch, _ in train_loader:
+            x_batch = x_batch.to(device)
+            mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
+            loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-
-            # update loss and nbatch
-            epoch_loss += loss.item() / train_batch.size(dim=0)
+            epoch_loss += loss.item() / x_batch.size(dim=0)
             nbatch += 1
 
         scheduler.step()
@@ -69,15 +67,13 @@ def valid_vae(model, valid_loader):
 
     # set to evaluation mode
     model.eval()
-    valid_loss, nbatch = 0., 0.
-    for valid_batch, _ in valid_loader:
+    valid_loss, nbatch = 0., 0
+    for x_batch, _ in valid_loader:
         with torch.no_grad():
-            valid_batch = valid_batch.to(device)
-            valid_batch_mean, valid_batch_logs2, mu, logvar = model(valid_batch)
-            loss = elbo_gaussian(valid_batch, valid_batch_mean, valid_batch_logs2, mu, logvar, beta)
-
-            # update loss and nbatch
-            valid_loss += loss.item() / valid_batch.size(dim=0)
+            x_batch = x_batch.to(device)
+            mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
+            loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
+            valid_loss += loss.item() / x_batch.size(dim=0)
             nbatch += 1
 
     # report validation loss
@@ -85,26 +81,3 @@ def valid_vae(model, valid_loader):
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish validation with loss {valid_loss}")
 
     return valid_loss
-
-
-def elbo_gaussian(x, mean, logs2, mu, logvar, beta):
-    """ Calculating loss for variational autoencoder
-    :param x: original image
-    :param mean: mean in the output layer
-    :param logs2: log of the variance in the output layer
-    :param mu: mean in the hidden layer
-    :param logvar: log of the variance in the hidden layer
-    :param beta: beta
-    :return: reconstruction loss + KL
-    """
-
-    # KL-divergence
-    kl_div = - 0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-
-    # reconstruction loss
-    recon_loss = - torch.sum(logs2.mul(x.size(dim=1)/2) + torch.norm(x - mean, 2, dim=1).pow(2).div(logs2.exp().mul(2)))
-
-    # loss
-    loss = - beta * kl_div + recon_loss
-
-    return -loss
