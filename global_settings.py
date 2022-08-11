@@ -22,3 +22,10 @@ if not os.path.isdir(MLE_PATH):
 
 if not os.path.isdir(VAE_PATH):
     os.mkdir(VAE_PATH)
+
+
+# plot latent space
+# check reconstruction / variance
+# ICA formulation
+# check ELBO
+# check derivation for MLE
