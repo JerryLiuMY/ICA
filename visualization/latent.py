@@ -19,8 +19,8 @@ def plot_latent_2d(n):
         model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
         recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"))
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"))
-        sns.kdeplot(data=simu_df, x="z0", y="z1", fill=True, alpha=1., label="True", ax=ax)
-        sns.kdeplot(data=recon_df, x="mu0", y="mu1", fill=True, alpha=.7, label="Recon", ax=ax)
+        sns.kdeplot(data=simu_df, x="z0", y="z1", fill=True, alpha=1., label="Original", ax=ax)
+        sns.kdeplot(data=recon_df, x="mu0", y="mu1", fill=True, alpha=.7, label="VAE_Recon", ax=ax)
         ax_legend_true = mpatches.Patch(color=sns.color_palette()[0], label=f"True", alpha=0.8)
         ax_legend_recon = mpatches.Patch(color=sns.color_palette()[1], label=f"Recon", alpha=0.8)
         handles = [ax_legend_true, ax_legend_recon]
