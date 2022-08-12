@@ -31,4 +31,4 @@ def plot_latent_2d(n):
         ax.set_title(f"Latent space of {activation}")
         ax.set_xlabel("z0")
         ax.set_ylabel("z1")
-    fig.savefig(os.path.join(VAE_PATH, "latent.pdf"), bbox_inches="tight")
+    fig.savefig(os.path.join(VAE_PATH, f"latent_m2_n{n}.pdf"), bbox_inches="tight")
