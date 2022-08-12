@@ -50,6 +50,6 @@ recon_df = simu_vae(m, n, model, simu_loader)
 
 Distribution of the original and reconstructed latent variables `z` with `m=2, n=20, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
-![alt text](./__resources__/vae_latent.jpg?raw=true "Title")
+![alt text](./__resources__/latent_m2_n20.jpg?raw=true "Title")
 
 ## MLE with Gradient Descent

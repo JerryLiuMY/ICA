@@ -25,7 +25,7 @@ def plot_latent_2d(n):
         s2 = np.round(np.mean(np.exp(recon_df["logs2"])), 3)
         ax_legend_true = mpatches.Patch(color=sns.color_palette()[0], label="Original", alpha=0.8)
         ax_legend_recon = mpatches.Patch(color=sns.color_palette()[1], label="VAE_Recon", alpha=0.8)
-        ax_legend_s2 = mpatches.Patch(color=sns.color_palette()[7], label=f"$\sigma^2$={s2}", alpha=0.8)
+        ax_legend_s2 = mpatches.Patch(color=sns.color_palette()[7], label="$\widehat{\sigma}^2$"+f"={s2}", alpha=0.8)
         handles = [ax_legend_true, ax_legend_recon, ax_legend_s2]
         ax.legend(handles=handles, loc="upper right", handlelength=0.2, handletextpad=0.5)
         ax.set_title(f"Latent space of {activation}")
