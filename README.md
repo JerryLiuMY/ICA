@@ -52,4 +52,4 @@ Distribution of the original and reconstructed latent variables `z` with `m=2, n
 
 ![alt text](./__resources__/vae_latent.jpg?raw=true "Title")
 
-## Direct MLE Method
+## MLE with Gradient Descent
