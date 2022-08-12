@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.4.19)  11 AUG 2022 17:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.4.19)  11 AUG 2022 20:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -422,6 +422,15 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 19.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 (./content/section_1.tex
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@ifnextchar' on input line 25.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 25.
+
+
 Overfull \hbox (8.79771pt too wide) in paragraph at lines 29--31
 \OT1/cmr/m/n/10.95 where $\OML/cmm/m/it/10.95 z$ \OT1/cmr/m/n/10.95 are as-sume
 d to fol-low a fac-tor-ized (but typ-i-cally un-known) dis-tri-bu-tion $\OML/cm
@@ -458,14 +467,14 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 24.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 24.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 24.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 0EB69654D35E87BD2FE3CBBC33F399E1;343.
+(rerunfilecheck)             Checksum: 980D5159CE887047C2EFAFB823798093;356.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 24.
  ) 
 Here is how much of TeX's memory you used:
- 7767 strings out of 480607
- 113912 string characters out of 5903581
+ 7768 strings out of 480607
+ 113927 string characters out of 5903581
  396974 words of memory out of 5000000
- 23470 multiletter control sequences out of 15000+600000
+ 23471 multiletter control sequences out of 15000+600000
  545048 words of font info for 71 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  34i,13n,34p,941b,368s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -488,10 +497,10 @@ e/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/
 20/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2020
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2020/
 texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (4 pages, 213362 bytes).
+Output written on main.pdf (4 pages, 213711 bytes).
 PDF statistics:
- 148 PDF objects out of 1000 (max. 8388607)
- 121 compressed objects within 2 object streams
+ 149 PDF objects out of 1000 (max. 8388607)
+ 122 compressed objects within 2 object streams
  26 named destinations out of 1000 (max. 500000)
  49 words of extra memory for PDF output out of 10000 (max. 10000000)
 
