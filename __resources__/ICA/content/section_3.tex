@@ -8,7 +8,7 @@ The term $\mathcal{L} \left(\theta, \phi ; x^{(i)} \right)$ is called the eviden
 \begin{equation*}
 \begin{aligned}
 \log p_{\theta}\left(x^{(i)}\right) \geq \mathcal{L}\left(\theta, \phi ;x^{(i)}\right) &=\mathbb{E}_{q_{\phi}(z^{(i)} \mid x^{(i)})}\left[-\log q_{\phi}\left(z^{(i)} \mid x^{(i)}\right)+\log p_{\theta}\left(x^{(i)}, z^{(i)}\right)\right] \\
-&=-D_{KL}\left(q_{\boldsymbol{\phi}}\left(z^{(i)} \mid x^{(i)}\right) \| p_{\theta}\left(z^{(i)}\right)\right) +\mathbb{E}_{q_{\phi}\left(z^{(i)} \mid x^{(i)}\right)}\left[\log p_{\theta}\left(x^{(i)} \mid z^{(i)}\right)\right]
+&=-D_{KL}\left(q_{\phi}\left(z^{(i)} \mid x^{(i)}\right) \| p_{\theta}\left(z^{(i)}\right)\right) +\mathbb{E}_{q_{\phi}\left(z^{(i)} \mid x^{(i)}\right)}\left[\log p_{\theta}\left(x^{(i)} \mid z^{(i)}\right)\right]
 \end{aligned}
 \end{equation*}
 
@@ -18,7 +18,7 @@ $$
 $$
 where $q$ is any probability density/mass function over the latent variables $z$. The first term is the Shannon entropy $H(q)=-\mathbb{E}_{z \sim q} \log q(z)$ of the variational distribution $q(z)$ and does not depend on $\theta$. The second term is sometimes referred to as the energy.}
 
-We want to differentiate and optimize the lower bound $\mathcal{L}\left(\theta, \phi; x^{(i)}\right)$ w.r.t. both the variational parameters $\phi$ and generative parameters $\theta$. The KL-divergence $D_{K L}\left(q_{\boldsymbol{\phi}}\left(z^{(i)} \mid x^{(i)}\right) \| p_{\boldsymbol{\theta}} \left(z^{(i)}\right) \right)$ can be integrated analytically, such that only the reconstruction error $\mathbb{E}_{q_{\phi} \left(z^{(i)} \mid x^{(i)}\right)}\left[\log p_{\theta}\left(x^{(i)} \mid z^{(i)}\right)\right]$ requires estimation by sampling. The \textit{stochastic gradient variational bayes} (SGVB) estimator
+We want to differentiate and optimize the lower bound $\mathcal{L}\left(\theta, \phi; x^{(i)}\right)$ w.r.t. both the variational parameters $\phi$ and generative parameters $\theta$. The KL-divergence $D_{K L}\left(q_{\phi}\left(z^{(i)} \mid x^{(i)}\right) \| p_{\theta} \left(z^{(i)}\right) \right)$ can be integrated analytically, such that only the reconstruction error $\mathbb{E}_{q_{\phi} \left(z^{(i)} \mid x^{(i)}\right)}\left[\log p_{\theta}\left(x^{(i)} \mid z^{(i)}\right)\right]$ requires estimation by sampling. The \textit{stochastic gradient variational bayes} (SGVB) estimator
 \begin{equation*}
 \widetilde{\mathcal{L}}\left(\theta, \phi; x^{(i)}\right)=-D_{KL} \left(q_{\phi}\left(z^{(i)} \mid x^{(i)}\right)|| p_{\theta}\left(z^{(i)}\right)\right) + \frac{1}{L} \sum_{l=1}^{L}\log p_{\theta} \left(x^{(i)} \mid z^{(i, l)}\right)
 \end{equation*}
