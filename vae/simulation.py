@@ -37,7 +37,7 @@ def simu_vae(m, n, model, simu_loader):
     mean, logs2 = mean.cpu().detach().numpy(), logs2.cpu().detach().numpy()
     mu, logvar = mu.cpu().detach().numpy(), logvar.cpu().detach().numpy()
     mean_dict = {f"mean{i}": mean[:, i].reshape(-1) for i in range(mean.shape[1])}
-    logs2_dict = {f"logs2{i}": logs2[:, i].reshape(-1) for i in range(logs2.shape[1])}
+    logs2_dict = {f"logs2": logs2[:, 0].reshape(-1)}
     mu_dict = {f"mu{i}": mu[:, i].reshape(-1) for i in range(mu.shape[1])}
     logvar_dict = {f"logvar{i}": logvar[:, i].reshape(-1) for i in range(logvar.shape[1])}
     recon_dict = {**mean_dict, **logs2_dict, **mu_dict, **logvar_dict}

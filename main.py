@@ -5,6 +5,7 @@ from vae.training import train_vae
 from vae.training import valid_vae
 from vae.simulation import simu_vae
 from params.params import exp_dict
+from visualization.latent import plot_latent_2d
 import torch
 import numpy as np
 import os
@@ -42,3 +43,12 @@ def main(m, n, activation):
     recon_df = simu_vae(m, n, model, simu_loader)
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
+
+
+if __name__ == "__main__":
+    # from torch import nn
+    # main(m=2, n=20, activation=nn.ReLU())
+    # main(m=2, n=20, activation=nn.Sigmoid())
+    # main(m=2, n=20, activation=nn.Tanh())
+    # main(m=2, n=20, activation=nn.GELU())
+    plot_latent_2d(n=20)
