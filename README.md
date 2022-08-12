@@ -4,7 +4,7 @@
     <img src="https://img.shields.io/badge/python-v3-brightgreen.svg" alt="python"></a> &nbsp;
 </p>
 
-<a href="./__resources__/ICA/main.pdf" target="_blank">Link</a> to the updated write-up of the project.
+<a href="./__resources__/ICA/main.pdf" target="_blank">Link</a> to the up-to-date write-up of the project.
 
 Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/params.py
 
