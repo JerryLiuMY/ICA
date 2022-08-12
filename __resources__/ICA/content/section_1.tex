@@ -22,7 +22,7 @@ Now, suppose we let $g_{\theta}$ denote a family of deep neural network distribu
 \max_{\theta, \sigma^{2}} \underbrace{\sum_{i=1}^{k} \log \int \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz}_{:=\ell(\theta, \sigma^{2})}
 \end{equation*}
 
-\subsection{Nonlinear ICA}
+\subsection{Nonlinear ICA \cite{nonlinear_ICA}}
 Now we show how the model above is closely related to previous work on nonlinear ICA. In nonlinear ICA, we assume observations $x \in \mathbb{R}^{d}$, which are the result of an unknown (but invertible) transformation $f$ of latent variables $z \in \mathbb{R}^{d}$:
 \begin{equation*}
 x=f(z)
