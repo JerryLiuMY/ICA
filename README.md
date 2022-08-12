@@ -4,7 +4,7 @@
     <img src="https://img.shields.io/badge/python-v3-brightgreen.svg" alt="python"></a> &nbsp;
 </p>
 
-<a href="./__resources__/ICA/main.pdf" target="_blank">Link</a> to the up-to-date write-up of the project.
+The up-to-date <a href="./__resources__/ICA/main.pdf" target="_blank">write-up</a> and the <a href="https://www.overleaf.com/project/62e45e862465cfc8d3bc6aed" target="_blank">overleaf</a> project.
 
 Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/params.py
 
