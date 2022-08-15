@@ -2,7 +2,7 @@ from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from global_settings import VAE_PATH
 from vae.training import train_vae
-from vae.training import valid_vae
+from visualization.callback import plot_callback
 from vae.simulation import simu_vae
 from params.params import exp_dict
 from visualization.latent import plot_latent_2d
@@ -30,26 +30,31 @@ def main(m, n, activation):
     valid_df = generate_data(m, n, activation, valid_size)
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
-    model, train_history, valid_history = train_vae(m, n, train_loader, valid_loader)
-    valid_loss = valid_vae(model, valid_loader, eval_model=True)
+    model, history, llh = train_vae(m, n, train_loader, valid_loader)
+    [train_history, valid_history] = history
+    [train_llh, valid_llh] = llh
 
-    torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
-    np.save(os.path.join(model_path, "train_history.npy"), train_history)
-    np.save(os.path.join(model_path, "valid_history.npy"), valid_history)
-    np.save(os.path.join(model_path, "valid_loss.npy"), valid_loss)
-
-    # build reconstruction
+    # plot callback and reconstruction
+    callback_fig = plot_callback(history, llh)
     simu_df = generate_data(m, n, activation, simu_size)
     simu_loader = load_data(simu_df)
     recon_df = simu_vae(m, n, model, simu_loader)
+
+    # save reconstruction
+    torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
+    np.save(os.path.join(model_path, "train_history.npy"), train_history)
+    np.save(os.path.join(model_path, "valid_history.npy"), valid_history)
+    np.save(os.path.join(model_path, "train_llh.npy"), train_llh)
+    np.save(os.path.join(model_path, "valid_llh.npy"), valid_llh)
+    callback_fig.savefig(os.path.join(model_path, "callback.pdf"))
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
 
 if __name__ == "__main__":
-    # from torch import nn
-    # main(m=2, n=20, activation=nn.ReLU())
-    # main(m=2, n=20, activation=nn.Sigmoid())
-    # main(m=2, n=20, activation=nn.Tanh())
-    # main(m=2, n=20, activation=nn.GELU())
+    from torch import nn
+    main(m=2, n=20, activation=nn.ReLU())
+    main(m=2, n=20, activation=nn.Sigmoid())
+    main(m=2, n=20, activation=nn.Tanh())
+    main(m=2, n=20, activation=nn.GELU())
     plot_latent_2d(n=20)

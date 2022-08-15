@@ -1,9 +1,10 @@
 from vae.vae import VariationalAutoencoder, elbo_gaussian
 from params.params import vae_dict as train_dict
+from funcs.likelihood import get_llh_batch
 from global_settings import device
 from datetime import datetime
-import torch
 import numpy as np
+import torch
 
 
 def train_vae(m, n, train_loader, valid_loader):
@@ -28,15 +29,15 @@ def train_vae(m, n, train_loader, valid_loader):
 
     # training loop
     model.train()
-    train_history = []
-    valid_history = []
+    train_loss_li, train_llh_li = [], []
+    valid_loss_li, valid_llh_li = [], []
     for epoch in range(epoch):
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Training on epoch {epoch} "
               f"[lr={round(scheduler.get_last_lr()[0], 6)}]...")
 
         # training and get training loss
-        train_loss, nbatch = 0., 0
-        for x_batch, _ in train_loader:
+        train_loss, train_llh, nbatch = 0., 0., 0
+        for i, (x_batch, _) in enumerate(train_loader):
             x_batch = x_batch.to(device)
             mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
@@ -44,38 +45,48 @@ def train_vae(m, n, train_loader, valid_loader):
             loss.backward()
             optimizer.step()
             train_loss += loss.item() / x_batch.size(dim=0)
+            input_batch = [x_batch, mean_batch, logs2_batch]
+            train_llh += get_llh_batch(m, input_batch, model)
             nbatch += 1
 
         scheduler.step()
         train_loss = train_loss / nbatch
-        train_history.append(train_loss)
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish epoch {epoch} with loss {train_loss}")
+        train_loss_li.append(train_loss)
+        train_llh_li.append(train_llh)
 
         # validation and get validation loss
-        valid_loss = valid_vae(model, valid_loader, eval_model=False)
-        valid_history.append(valid_loss)
+        valid_loss = valid_vae(m, valid_loader, model, eval_model=False)
+        valid_loss_li.append(valid_loss)
 
-    train_history = np.array(train_history)
-    valid_history = np.array(valid_history)
+    # return train/valid history and log-likelihoods
+    train_loss_arr = np.array(train_loss_li)
+    valid_loss_arr = np.array(valid_loss_li)
+    train_llh_arr = np.array(train_llh_li)
+    valid_llh_arr = np.array(valid_llh_li)
 
-    return model, train_history, valid_history
+    loss = [train_loss_arr, valid_loss_arr]
+    llh = [train_llh_arr, valid_llh_arr]
+
+    return model, loss, llh
 
 
-def valid_vae(model, valid_loader, eval_model):
+def valid_vae(m, valid_loader, model, eval_model):
     """ Training VAE with the specified image dataset
+    :param m: dimension of the latent variable
     :param model: trained VAE model
     :param valid_loader: validation dataset loader
     :param eval_model: whether set to evaluation model
     :return: validation loss
     """
 
-    # load parameters
+    # load parameters and set evaluation mode
     beta = train_dict["beta"]
-
-    # set to evaluation mode
     if eval_model:
         model.eval()
-    valid_loss, nbatch = 0., 0
+
+    # get validation loss
+    valid_loss, valid_llh, nbatch = 0., 0., 0
     for x_batch, _ in valid_loader:
         with torch.no_grad():
             x_batch = x_batch.to(device)
@@ -84,7 +95,9 @@ def valid_vae(model, valid_loader, eval_model):
             valid_loss += loss.item() / x_batch.size(dim=0)
             nbatch += 1
 
-    # report validation loss
+        input_batch = [x_batch, mean_batch, logs2_batch]
+        valid_llh += get_llh_batch(m, input_batch, model)
+
     valid_loss = valid_loss / nbatch
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish validation with loss {valid_loss}")
 
