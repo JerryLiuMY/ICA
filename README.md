@@ -12,7 +12,7 @@ Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/par
 <a href="https://drive.google.com/drive/folders/1Uep9CpOhQor72GXVWeb7ax2kO7O7wFco?usp=sharing" target="_blank">Repository</a> for the generated `weight` and `bias` of the single-layer MLP.
 
 ```python
-from torch import nn
+
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from params.params import exp_dict
