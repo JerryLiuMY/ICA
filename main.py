@@ -30,11 +30,12 @@ def main(m, n, activation):
     valid_df = generate_data(m, n, activation, valid_size)
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
-    model, train_loss = train_vae(m, n, train_loader)
-    valid_loss = valid_vae(model, valid_loader)
+    model, train_history, valid_history = train_vae(m, n, train_loader, valid_loader)
+    valid_loss = valid_vae(model, valid_loader, eval_model=True)
 
     torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
-    np.save(os.path.join(model_path, "train_loss.npy"), train_loss)
+    np.save(os.path.join(model_path, "train_history.npy"), train_history)
+    np.save(os.path.join(model_path, "valid_history.npy"), valid_history)
     np.save(os.path.join(model_path, "valid_loss.npy"), valid_loss)
 
     # build reconstruction

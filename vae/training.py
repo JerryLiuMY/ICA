@@ -6,11 +6,12 @@ import torch
 import numpy as np
 
 
-def train_vae(m, n, train_loader):
+def train_vae(m, n, train_loader, valid_loader):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param train_loader: training dataset loader
+    :param valid_loader: validation dataset loader
     :return: trained model and training loss history
     """
 
@@ -27,12 +28,14 @@ def train_vae(m, n, train_loader):
 
     # training loop
     model.train()
-    train_loss = []
+    train_history = []
+    valid_history = []
     for epoch in range(epoch):
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Training on epoch {epoch} "
               f"[lr={round(scheduler.get_last_lr()[0], 6)}]...")
 
-        epoch_loss, nbatch = 0., 0
+        # training and get training loss
+        train_loss, nbatch = 0., 0
         for x_batch, _ in train_loader:
             x_batch = x_batch.to(device)
             mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
@@ -40,25 +43,29 @@ def train_vae(m, n, train_loader):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            epoch_loss += loss.item() / x_batch.size(dim=0)
+            train_loss += loss.item() / x_batch.size(dim=0)
             nbatch += 1
 
         scheduler.step()
+        train_loss = train_loss / nbatch
+        train_history.append(train_loss)
+        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish epoch {epoch} with loss {train_loss}")
 
-        # append training loss
-        epoch_loss = epoch_loss / nbatch
-        train_loss.append(epoch_loss)
-        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish epoch {epoch} with loss {epoch_loss}")
+        # validation and get validation loss
+        valid_loss = valid_vae(model, valid_loader, eval_model=False)
+        valid_history.append(valid_loss)
 
-    train_loss = np.array(train_loss)
+    train_history = np.array(train_history)
+    valid_history = np.array(valid_history)
 
-    return model, train_loss
+    return model, train_history, valid_history
 
 
-def valid_vae(model, valid_loader):
+def valid_vae(model, valid_loader, eval_model):
     """ Training VAE with the specified image dataset
     :param model: trained VAE model
     :param valid_loader: validation dataset loader
+    :param eval_model: whether set to evaluation model
     :return: validation loss
     """
 
@@ -66,7 +73,8 @@ def valid_vae(model, valid_loader):
     beta = train_dict["beta"]
 
     # set to evaluation mode
-    model.eval()
+    if eval_model:
+        model.eval()
     valid_loss, nbatch = 0., 0
     for x_batch, _ in valid_loader:
         with torch.no_grad():

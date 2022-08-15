@@ -19,7 +19,7 @@ def load_data(data_df):
     z_train = torch.tensor(data_df[z_train_cols].values.astype(np.float32))
     train_data = TensorDataset(x_train, z_train)
 
-    # build dataset
+    # build dataloader (reusable)
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     input_size = train_data[0][0].shape[0]
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Loaded data with input_shape={input_size}")
