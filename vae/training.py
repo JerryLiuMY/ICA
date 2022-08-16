@@ -28,14 +28,14 @@ def train_vae(m, n, train_loader, valid_loader):
 
     # training loop
     model.train()
-    train_loss_li, train_llh_li = [], []
-    valid_loss_li, valid_llh_li = [], []
+    train_loss_li = []
+    valid_loss_li = []
     for epoch in range(epoch):
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Training on epoch {epoch} "
               f"[lr={round(scheduler.get_last_lr()[0], 6)}]...")
 
         # training and get training loss
-        train_loss, train_llh, nbatch = 0., 0., 0
+        train_loss, nbatch = 0., 0
         for x_batch, _ in train_loader:
             x_batch = x_batch.to(device)
             mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
@@ -50,7 +50,6 @@ def train_vae(m, n, train_loader, valid_loader):
         train_loss = train_loss / nbatch
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish epoch {epoch} with loss {train_loss}")
         train_loss_li.append(train_loss)
-        train_llh_li.append(train_llh)
 
         # validation and get validation loss
         valid_loss = valid_vae(valid_loader, model, eval_model=False)
@@ -59,12 +58,9 @@ def train_vae(m, n, train_loader, valid_loader):
     # return train/valid history and log-likelihoods
     train_loss_arr = np.array(train_loss_li)
     valid_loss_arr = np.array(valid_loss_li)
-    train_llh_arr = np.array(train_llh_li)
-    valid_llh_arr = np.array(valid_llh_li)
     loss = [train_loss_arr, valid_loss_arr]
-    llh = [train_llh_arr, valid_llh_arr]
 
-    return model, loss, llh
+    return model, loss
 
 
 def valid_vae(valid_loader, model, eval_model):
@@ -81,7 +77,7 @@ def valid_vae(valid_loader, model, eval_model):
         model.eval()
 
     # get validation loss
-    valid_loss, valid_llh, nbatch = 0., 0., 0
+    valid_loss, nbatch = 0., 0
     for x_batch, _ in valid_loader:
         with torch.no_grad():
             x_batch = x_batch.to(device)

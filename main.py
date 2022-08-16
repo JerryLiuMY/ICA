@@ -30,12 +30,11 @@ def main(m, n, activation):
     valid_df = generate_data(m, n, activation, valid_size)
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
-    model, history, llh = train_vae(m, n, train_loader, valid_loader)
+    model, history = train_vae(m, n, train_loader, valid_loader)
     [train_history, valid_history] = history
-    [train_llh, valid_llh] = llh
 
     # plot callback and reconstruction
-    callback_fig = plot_callback(history, llh)
+    callback_fig = plot_callback(history)
     simu_df = generate_data(m, n, activation, simu_size)
     simu_loader = load_data(simu_df)
     recon_df = simu_vae(m, n, model, simu_loader)
@@ -44,9 +43,7 @@ def main(m, n, activation):
     torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
     np.save(os.path.join(model_path, "train_history.npy"), train_history)
     np.save(os.path.join(model_path, "valid_history.npy"), valid_history)
-    np.save(os.path.join(model_path, "train_llh.npy"), train_llh)
-    np.save(os.path.join(model_path, "valid_llh.npy"), valid_llh)
-    callback_fig.savefig(os.path.join(model_path, "callback.pdf"))
+    callback_fig.savefig(os.path.join(model_path, "callback.pdf"), bbox_inches="tight")
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
