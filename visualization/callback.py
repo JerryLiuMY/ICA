@@ -3,17 +3,17 @@ import seaborn as sns
 sns.set()
 
 
-def plot_callback(history):
+def plot_callback(loss):
     """ Plot training and validation history
-    :param history: training and validation history
+    :param loss: training and validation history
     :return:
     """
 
-    train_history, valid_history = history
+    train_loss, valid_loss = loss
 
     fig, ax = plt.subplots(1, 1, figsize=(8, 4))
-    ax.plot(train_history, label="train_loss")
-    ax.plot(valid_history, label="valid_loss")
+    ax.plot(train_loss, label="train_loss")
+    ax.plot(valid_loss, label="valid_loss")
     ax.set_xlabel("Epochs")
     ax.set_ylabel("ELBO")
     ax.legend(loc="upper right")

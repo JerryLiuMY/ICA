@@ -25,5 +25,4 @@ if not os.path.isdir(VAE_PATH):
 
 
 # MLE gradient descent
-# Reconstruction error
 # Log-likelihood
