@@ -36,15 +36,15 @@ Distribution of the latent variable `z` and the generated `x`
 ![alt text](./__resources__/data_dist.jpg?raw=true "Title")
 
 ## Variational Method
-<a href="https://drive.google.com/drive/folders/1HNsTgwhNfs60Dx9ef7eQuOsU6ftaono8?usp=sharing">Folder</a> for the trained VAE models. <a href="./vae/vae.py">Link</a> to the model architecture (<a href="https://github.com/JerryLiuMY/ICA/blob/8adb6fcbe68ba727bb4856913fe99bbad84640f7/vae/vae.py#L92">ELBO</a> with Gaussian MLP as decoder), <a href="./vae/training.py">link</a> to the training loop and <a href="./vae/simulation.py">link</a> to the simulation.
+<a href="https://drive.google.com/drive/folders/1HNsTgwhNfs60Dx9ef7eQuOsU6ftaono8?usp=sharing">Folder</a> for the trained VAE models. <a href="./vae.py">Link</a> to the model architecture, training loop and simulation (<a href="https://github.com/JerryLiuMY/ICA/blob/8adb6fcbe68ba727bb4856913fe99bbad84640f7/vae/vae.py#L92">ELBO</a> with Gaussian MLP as decoder).
 
 ```python
 from vae.training import train_vae
 from vae.training import valid_vae
 from vae.simulation import simu_vae
 
-model, train_loss = train_vae(m, n, train_loader)
-valid_loss = valid_vae(valid_loader, model, )
+model, train_loss = train_vae(m, n, train_loader, valid_loader)
+valid_loss = valid_vae(valid_loader, model, eval_model=False)
 recon_df = simu_vae(m, n, model, simu_loader)
 ```
 
