@@ -1,6 +1,5 @@
 from vae.vae import VariationalAutoencoder, elbo_gaussian
 from params.params import vae_dict as train_dict
-from funcs.likelihood import get_llh_batch
 from global_settings import device
 from datetime import datetime
 import numpy as np
@@ -47,9 +46,6 @@ def train_vae(m, n, train_loader, valid_loader):
             train_loss += loss.item() / x_batch.size(dim=0)
             nbatch += 1
 
-            input_batch = [x_batch, mean_batch, logs2_batch]
-            train_llh += get_llh_batch(m, n, input_batch, model)
-
         scheduler.step()
         train_loss = train_loss / nbatch
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish epoch {epoch} with loss {train_loss}")
@@ -57,7 +53,7 @@ def train_vae(m, n, train_loader, valid_loader):
         train_llh_li.append(train_llh)
 
         # validation and get validation loss
-        valid_loss = valid_vae(m, n, valid_loader, model, eval_model=False)
+        valid_loss = valid_vae(valid_loader, model, eval_model=False)
         valid_loss_li.append(valid_loss)
 
     # return train/valid history and log-likelihoods
@@ -71,10 +67,8 @@ def train_vae(m, n, train_loader, valid_loader):
     return model, loss, llh
 
 
-def valid_vae(m, n, valid_loader, model, eval_model):
+def valid_vae(valid_loader, model, eval_model):
     """ Training VAE with the specified image dataset
-    :param m: dimension of the latent variable
-    :param n: dimension of the target variable
     :param model: trained VAE model
     :param valid_loader: validation dataset loader
     :param eval_model: whether set to evaluation model
@@ -95,9 +89,6 @@ def valid_vae(m, n, valid_loader, model, eval_model):
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
             valid_loss += loss.item() / x_batch.size(dim=0)
             nbatch += 1
-
-            input_batch = [x_batch, mean_batch, logs2_batch]
-            valid_llh += get_llh_batch(m, n, input_batch, model)
 
     valid_loss = valid_loss / nbatch
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish validation with loss {valid_loss}")

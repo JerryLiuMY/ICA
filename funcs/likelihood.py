@@ -1,5 +1,5 @@
-from global_settings import device
 from torch.distributions import MultivariateNormal
+from global_settings import device
 import itertools
 import numpy as np
 import torch
