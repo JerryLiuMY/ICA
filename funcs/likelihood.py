@@ -46,8 +46,8 @@ def get_llh_batch(m, n, input_batch, model):
     # perform numerical integration
     log_prob_1 = get_normpdf(x, x_recon, s2_cov)
     log_prob_2 = get_normpdf(z_grid, torch.zeros(z_grid.shape[-1]), torch.eye(z_grid.shape[-1]))
-    llh = log_prob_1 * log_prob_2 * volume
-    llh_sample = llh.sum(dim=1)
+    llh = log_prob_1 + log_prob_2 + np.log(volume)
+    llh_sample = llh.exp().sum(dim=1).log()
     llh_batch = llh_sample.sum(dim=0)
     llh_batch = llh_batch.cpu().detach().numpy().tolist()
 
