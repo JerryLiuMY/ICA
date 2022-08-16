@@ -53,3 +53,4 @@ Distribution of the original and reconstructed latent variables `z` with `m=2, n
 ![alt text](./__resources__/latent_m2_n20.jpg?raw=true "Title")
 
 ## MLE with Gradient Descent
+<a href="./funcs/likelihood.py">Link</a> to numerical integration for the likelihood function. 
