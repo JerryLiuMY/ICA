@@ -7,7 +7,7 @@ In this section, we directly solve the MLE problem by computing gradients of $\e
 \nabla_{\theta} \ell(\theta, \sigma^{2}) &= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \nabla_{\theta} \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
 &= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \left(2\pi\sigma^{2}\right)^{-n/2} \nabla_{\theta} \exp \left(-\frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}}{2\sigma^{2}}\right) \varphi(z ; 0, I) dz \\
 &= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \nabla_{\theta} \left(-\frac{{\lVert x^{(i)} - g_{\theta}(z) \rVert}_{2}^{2}}{2\sigma^{2}}\right) \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
-&= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \left[\frac{1}{\sigma^{2}} \cdot{\left(x^{(i)} - g_{\theta}(z)\right)^{T} \nabla_{\theta} g_{\theta}(z)}\right] \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
+&= \sum_{i=1}^{k} \frac{1}{L \left(\theta, \sigma^{2}; x^{(i)} \right)} \int \left[\frac{1}{\sigma^{2}} \cdot{\nabla_{\theta}^{T} g_{\theta}(z) \left(x^{(i)} - g_{\theta}(z)\right)}\right] \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz \\
 \end{aligned}
 \end{equation*}
 

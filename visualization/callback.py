@@ -11,11 +11,11 @@ def plot_callback(history):
 
     train_history, valid_history = history
 
-    fig, ax = plt.subplots(1, 1, figsize=(3, 6))
+    fig, ax = plt.subplots(1, 1, figsize=(8, 4))
     ax.plot(train_history, label="train_loss")
     ax.plot(valid_history, label="valid_loss")
     ax.set_xlabel("Epochs")
-    ax.set_ylabel("Loss")
-    ax.set_ylabel("Log-likelihood")
+    ax.set_ylabel("ELBO")
+    ax.legend(loc="upper right")
 
     return fig
