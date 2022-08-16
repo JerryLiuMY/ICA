@@ -18,7 +18,7 @@ def get_llh_batch(m, n, input_batch, model):
     x_batch, mean_batch, logs2_batch = input_batch
 
     # prepare for numerical integration
-    min_lim, max_lim, space = -3, 3, 31
+    min_lim, max_lim, space = -2, 2, 21
     lin_space = np.linspace(min_lim, max_lim, space)
     grid_space = np.array([0.5 * (lin_space[i] + lin_space[i + 1]) for i in range(len(lin_space) - 1)])
     volume = ((max_lim - min_lim) / (space - 1)) ** m
@@ -44,8 +44,8 @@ def get_llh_batch(m, n, input_batch, model):
     s2_cov = s2 * eye
 
     # perform numerical integration
-    log_prob_1 = get_normpdf(x, x_recon, s2_cov)
-    log_prob_2 = get_normpdf(z_grid, torch.zeros(z_grid.shape[-1]), torch.eye(z_grid.shape[-1]))
+    log_prob_1 = get_log_prob(x, x_recon, s2_cov)
+    log_prob_2 = get_log_prob(z_grid, torch.zeros(z_grid.shape[-1]), torch.eye(z_grid.shape[-1]))
     llh = log_prob_1 + log_prob_2 + np.log(volume)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_batch = llh_sample.sum(dim=0)
@@ -54,7 +54,7 @@ def get_llh_batch(m, n, input_batch, model):
     return llh_batch
 
 
-def get_normpdf(x, mean, cov):
+def get_log_prob(x, mean, cov):
     """ Get pdf from multivariate gaussian
     :param x: input value
     :param mean: mean of multivariate normal
