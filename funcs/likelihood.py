@@ -1,12 +1,14 @@
-from scipy.stats import multivariate_normal
 from global_settings import device
+from torch.distributions import MultivariateNormal
+import itertools
 import numpy as np
 import torch
 
 
-def get_llh_batch(m, input_batch, model):
+def get_llh_batch(m, n, input_batch, model):
     """ Find log-likelihood from data and trained model
     :param m: latent dimension
+    :param n: observed dimension
     :param input_batch: inputs related to observation [batch_size x dimension]
     :param model: trained model
     :return: log-likelihood
@@ -14,44 +16,53 @@ def get_llh_batch(m, input_batch, model):
 
     # define input
     x_batch, mean_batch, logs2_batch = input_batch
-    batch_size = x_batch.shape[0]
 
-    # get numerical integration
-    min_lim, max_lim, space = -10, 10, 101
+    # prepare for numerical integration
+    min_lim, max_lim, space = -3, 3, 31
     lin_space = np.linspace(min_lim, max_lim, space)
     grid_space = np.array([0.5 * (lin_space[i] + lin_space[i + 1]) for i in range(len(lin_space) - 1)])
     volume = ((max_lim - min_lim) / (space - 1)) ** m
 
-    llh_batch = 0.
-    for batch in range(batch_size):
-        x, mean, logs2 = x_batch[batch, :], mean_batch[batch, :], logs2_batch[batch, :]
-        s2 = logs2.exp()
-        x = x.cpu().detach().numpy()
-        s2 = s2.cpu().detach().numpy()
+    # get the tensors
+    x, mean, logs2 = x_batch, mean_batch, logs2_batch
+    s2 = logs2.exp()
 
-        llh_sample = 0.
-        for z_grid in zip(*[list(grid_space) for _ in range(m)]):
-            z_grid = torch.tensor(np.array(z_grid).astype(np.float32))
-            z_grid = z_grid.to(device)
-            x_recon = model.decoder(z_grid)[0]
-            z_grid = z_grid.cpu().detach().numpy()
-            x_recon = x_recon.cpu().detach().numpy()
+    z_grid = itertools.product(*[list(grid_space) for _ in range(m)])
+    z_grid = np.array(list(z_grid)).astype(np.float32)
+    z_grid = torch.tensor(z_grid).to(device)
+    x_recon = model.decoder(z_grid)[0]
 
-            # perform numerical integration
-            normpdf = get_normpdf(x, x_recon, s2[0]) * get_normpdf(z_grid, 0, 1)
-            llh_sample += normpdf * volume
+    # reshape the tensors
+    batch_size = x_batch.shape[0]
+    grid_size = z_grid.shape[0]
+    x_recon = x_recon.repeat(batch_size, 1).reshape(batch_size, grid_size, n)
+    z_grid = z_grid.repeat(batch_size, 1).reshape(batch_size, grid_size, m)
+    x = x.repeat(1, grid_size).reshape(batch_size, grid_size, n)
+    s2 = s2.repeat(1, grid_size).reshape(batch_size, grid_size, 1)
+    s2 = s2.repeat(1, 1, n * n).reshape(batch_size, grid_size, n, n)
+    eye = torch.eye(n).repeat(batch_size * grid_size, 1).reshape(batch_size, grid_size, n, n)
+    s2_cov = s2 * eye
 
-        llh_batch += llh_sample
+    # perform numerical integration
+    log_prob_1 = get_normpdf(x, x_recon, s2_cov)
+    log_prob_2 = get_normpdf(z_grid, torch.zeros(z_grid.shape[-1]), torch.eye(z_grid.shape[-1]))
+    llh = log_prob_1 * log_prob_2 * volume
+    llh_sample = llh.sum(dim=1)
+    llh_batch = llh_sample.sum(dim=0)
+    llh_batch = llh_batch.cpu().detach().numpy().tolist()
 
     return llh_batch
 
 
-def get_normpdf(x, mean, s2):
+def get_normpdf(x, mean, cov):
     """ Get pdf from multivariate gaussian
-    :param:
+    :param x: input value
+    :param mean: mean of multivariate normal
+    :param cov: covariance matrix
     :return:
     """
 
-    normpdf = multivariate_normal.pdf(x=x, mean=mean, cov=s2)
+    dist = MultivariateNormal(loc=mean, covariance_matrix=cov)
+    log_prob = dist.log_prob(value=x)
 
-    return normpdf
+    return log_prob

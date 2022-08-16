@@ -37,7 +37,7 @@ def train_vae(m, n, train_loader, valid_loader):
 
         # training and get training loss
         train_loss, train_llh, nbatch = 0., 0., 0
-        for i, (x_batch, _) in enumerate(train_loader):
+        for x_batch, _ in train_loader:
             x_batch = x_batch.to(device)
             mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
@@ -45,9 +45,10 @@ def train_vae(m, n, train_loader, valid_loader):
             loss.backward()
             optimizer.step()
             train_loss += loss.item() / x_batch.size(dim=0)
-            input_batch = [x_batch, mean_batch, logs2_batch]
-            train_llh += get_llh_batch(m, input_batch, model)
             nbatch += 1
+
+            input_batch = [x_batch, mean_batch, logs2_batch]
+            train_llh += get_llh_batch(m, n, input_batch, model)
 
         scheduler.step()
         train_loss = train_loss / nbatch
@@ -56,7 +57,7 @@ def train_vae(m, n, train_loader, valid_loader):
         train_llh_li.append(train_llh)
 
         # validation and get validation loss
-        valid_loss = valid_vae(m, valid_loader, model, eval_model=False)
+        valid_loss = valid_vae(m, n, valid_loader, model, eval_model=False)
         valid_loss_li.append(valid_loss)
 
     # return train/valid history and log-likelihoods
@@ -64,16 +65,16 @@ def train_vae(m, n, train_loader, valid_loader):
     valid_loss_arr = np.array(valid_loss_li)
     train_llh_arr = np.array(train_llh_li)
     valid_llh_arr = np.array(valid_llh_li)
-
     loss = [train_loss_arr, valid_loss_arr]
     llh = [train_llh_arr, valid_llh_arr]
 
     return model, loss, llh
 
 
-def valid_vae(m, valid_loader, model, eval_model):
+def valid_vae(m, n, valid_loader, model, eval_model):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
+    :param n: dimension of the target variable
     :param model: trained VAE model
     :param valid_loader: validation dataset loader
     :param eval_model: whether set to evaluation model
@@ -95,8 +96,8 @@ def valid_vae(m, valid_loader, model, eval_model):
             valid_loss += loss.item() / x_batch.size(dim=0)
             nbatch += 1
 
-        input_batch = [x_batch, mean_batch, logs2_batch]
-        valid_llh += get_llh_batch(m, input_batch, model)
+            input_batch = [x_batch, mean_batch, logs2_batch]
+            valid_llh += get_llh_batch(m, n, input_batch, model)
 
     valid_loss = valid_loss / nbatch
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish validation with loss {valid_loss}")
