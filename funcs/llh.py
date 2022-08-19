@@ -1,11 +1,12 @@
 from torch.distributions import MultivariateNormal
 from global_settings import device
+from params.params import mc
 import itertools
 import numpy as np
 import torch
 
 
-def get_llh_batch(m, n, input_batch, model):
+def get_llh_grid(m, n, input_batch, model):
     """ Find log-likelihood from data and trained model
     :param m: latent dimension
     :param n: observed dimension
@@ -47,6 +48,44 @@ def get_llh_batch(m, n, input_batch, model):
     log_prob_1 = get_log_prob(x, x_recon, s2_cov)
     log_prob_2 = get_log_prob(z_grid, torch.zeros(z_grid.shape[-1]), torch.eye(z_grid.shape[-1]))
     llh = log_prob_1 + log_prob_2 + np.log(volume)
+    llh_sample = llh.exp().sum(dim=1).log()
+    llh_batch = llh_sample.sum(dim=0)
+    llh_batch = llh_batch.cpu().detach().numpy().tolist()
+
+    return llh_batch
+
+
+def get_llh_mc(m, n, input_batch, model):
+    """ Find log-likelihood from data and trained model
+    :param m: latent dimension
+    :param n: observed dimension
+    :param input_batch: inputs related to observation [batch_size x dimension]
+    :param model: trained model
+    :return: log-likelihood
+    """
+
+    # define input
+    x_batch, mean_batch, logs2_batch = input_batch
+
+    # get the tensors
+    x, mean, logs2 = x_batch, mean_batch, logs2_batch
+    s2 = logs2.exp()
+
+    x_recon = torch.empty(mc, m)
+    for _ in range(mc):
+        sampler = MultivariateNormal(torch.ones(1), torch.eye(1))
+        z_mc = sampler.sample()
+        x_recon_mc = model.decoder(z_mc)[0]
+        x_recon = torch.cat([x_recon, x_recon_mc], dim=0)
+
+    # reshape the tensors
+    s2 = s2.repeat(mc, 1).reshape(mc, 1)
+    s2 = s2.repeat(1, 1, n * n).reshape(mc, n, n)
+    eye = torch.eye(n).repeat(mc, 1).reshape(mc, n, n)
+    s2_cov = s2 * eye
+
+    # perform numerical integration
+    llh = get_log_prob(x, x_recon, s2_cov)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_batch = llh_sample.sum(dim=0)
     llh_batch = llh_batch.cpu().detach().numpy().tolist()
