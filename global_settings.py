@@ -25,5 +25,8 @@ if not os.path.isdir(VAE_PATH):
 
 
 # Find likelihood -- a) sparse grid b) monte carlo
-# MLE gradient descent
-# MLE gradient descent
+# Find gradient -- a) SGD b) MLE gradient descent
+# Compare generated images with reconstruction
+# Compare latent variable p(z|x) with estimates
+# Compare latent variable p(z) with estimates
+# Modify modification to derived gradient of likelihood
