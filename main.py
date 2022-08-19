@@ -1,6 +1,6 @@
+from global_settings import VAE_PATH
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
-from global_settings import VAE_PATH
 from vae.training import train_vae
 from visualization.callback import plot_callback
 from vae.simulation import simu_vae
@@ -49,7 +49,9 @@ def main(m, n, activation):
 
 
 if __name__ == "__main__":
+    from visualization.exploration import visualize
     from torch import nn
+    visualize()
     main(m=2, n=20, activation=nn.ReLU())
     main(m=2, n=20, activation=nn.Sigmoid())
     main(m=2, n=20, activation=nn.Tanh())

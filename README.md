@@ -9,7 +9,7 @@ The up-to-date <a href="./__resources__/ICA/main.pdf" target="_blank">write-up</
 Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/params.py
 
 ## Data Information
-<a href="https://drive.google.com/drive/folders/1Uep9CpOhQor72GXVWeb7ax2kO7O7wFco?usp=sharing" target="_blank">Repository</a> for the generated `weight` and `bias` of the single-layer MLP.
+Repository for the generated `weight` and `bias` of the single-layer MLP.
 
 ```python
 from torch import nn
@@ -36,7 +36,7 @@ Distribution of the latent variable `z` and the generated `x`
 ![alt text](./__resources__/data_dist.jpg?raw=true "Title")
 
 ## Variational Method
-<a href="https://drive.google.com/drive/folders/1HNsTgwhNfs60Dx9ef7eQuOsU6ftaono8?usp=sharing">Folder</a> for the trained VAE models. <a href="./vae">Link</a> to the model architecture, training loop and simulation (<a href="https://github.com/JerryLiuMY/ICA/blob/8adb6fcbe68ba727bb4856913fe99bbad84640f7/vae/vae.py#L92">ELBO</a> with Gaussian MLP as decoder).
+Folder for the trained VAE models. <a href="./vae">Link</a> to the model architecture, training loop and simulation (<a href="https://github.com/JerryLiuMY/ICA/blob/8adb6fcbe68ba727bb4856913fe99bbad84640f7/vae/vae.py#L92">ELBO</a> with Gaussian MLP as decoder).
 
 ```python
 from vae.training import train_vae
