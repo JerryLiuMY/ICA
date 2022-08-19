@@ -24,5 +24,6 @@ if not os.path.isdir(VAE_PATH):
     os.mkdir(VAE_PATH)
 
 
+# Find likelihood -- a) sparse grid b) monte carlo
 # MLE gradient descent
-# Log-likelihood
+# MLE gradient descent
