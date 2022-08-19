@@ -71,9 +71,9 @@ def get_llh_mc(m, n, input_batch, model):
     x, mean, logs2 = x_batch, mean_batch, logs2_batch
     s2 = logs2.exp()
 
-    x_recon = torch.empty(mc, m)
+    x_recon = torch.empty(mc, n)
     for _ in range(mc):
-        sampler = MultivariateNormal(torch.ones(1), torch.eye(1))
+        sampler = MultivariateNormal(torch.ones(m), torch.eye(m))
         z_mc = sampler.sample()
         x_recon_mc = model.decoder(z_mc)[0]
         x_recon = torch.cat([x_recon, x_recon_mc], dim=0)
