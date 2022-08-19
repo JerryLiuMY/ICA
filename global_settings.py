@@ -30,3 +30,7 @@ if not os.path.isdir(VAE_PATH):
 # Compare latent variable p(z|x) with estimates
 # Compare latent variable p(z) with estimates
 # Modify modification to derived gradient of likelihood
+
+
+# Underestimation of variance
+# Think about identification requirements
