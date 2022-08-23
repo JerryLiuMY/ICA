@@ -1,7 +1,10 @@
+from datetime import datetime
 from pathlib import Path
 import torch
 import os
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Available GPU devices cuda:{os.environ['CUDA_VISIBLE_DEVICES']}")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # define directories
 DESKTOP_PATH = str(Path(os.getcwd()).parent.absolute())
