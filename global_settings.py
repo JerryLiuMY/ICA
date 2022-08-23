@@ -31,7 +31,7 @@ if not os.path.isdir(VAE_PATH):
 # Compare generated images with reconstruction
 # Compare latent variable p(z|x) with estimates
 # Compare latent variable p(z) with estimates
-# Modify modification to derived gradient of likelihood
+# Modification to derived gradient of likelihood
 
 
 # Underestimation of variance
