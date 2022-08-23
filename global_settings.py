@@ -1,9 +1,8 @@
-from datetime import datetime
 from pathlib import Path
 import torch
 import os
 
-print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Available GPU devices cuda:{os.environ['CUDA_VISIBLE_DEVICES']}")
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # define directories
