@@ -14,7 +14,6 @@ def plot_callback(loss, llh):
     train_llh, valid_llh = llh
 
     fig, ax = plt.subplots(1, 1, figsize=(8, 4))
-
     ax.plot(train_loss, color=sns.color_palette()[0], label="train_loss")
     ax.plot(valid_loss, color=sns.color_palette()[1], label="valid_loss")
     ax.set_xlabel("Epoch")
