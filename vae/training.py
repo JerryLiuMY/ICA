@@ -35,7 +35,7 @@ def train_vae(m, n, train_loader, valid_loader):
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Training on epoch {epoch} "
               f"[lr={round(scheduler.get_last_lr()[0], 6)}]...")
 
-        # training and get training loss
+        # training loop
         train_loss, train_llh, nbatch = 0., 0., 0
         for x_batch, _ in train_loader:
             x_batch = x_batch.to(device)
@@ -50,6 +50,7 @@ def train_vae(m, n, train_loader, valid_loader):
             train_llh += get_llh_mc(m, n, input_batch, model) / x_batch.size(dim=0)
             nbatch += 1
 
+        # get training loss
         scheduler.step()
         train_loss = train_loss / nbatch
         train_llh = train_llh / nbatch
@@ -58,7 +59,7 @@ def train_vae(m, n, train_loader, valid_loader):
         train_loss_li.append(train_loss)
         train_llh_li.append(train_llh)
 
-        # validation and get validation loss
+        # get validation loss
         valid_loss, valid_llh = valid_vae(m, n, valid_loader, model, eval_mode=False)
         valid_loss_li.append(valid_loss)
         valid_llh_li.append(valid_llh)
