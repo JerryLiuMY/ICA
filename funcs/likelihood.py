@@ -44,6 +44,7 @@ def get_llh_mc(m, n, input_batch, model):
 
     # perform numerical integration
     llh = get_norm_lp(x, x_recon, s2_cov)
+    llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_batch = llh_sample.sum(dim=0)
     llh_batch = llh_batch.numpy().tolist()
@@ -96,6 +97,7 @@ def get_llh_grid(m, n, input_batch, model):
     log_prob_1 = get_norm_lp(x, x_recon, s2_cov)
     log_prob_2 = get_norm_lp(z_grid, torch.zeros(z_grid.shape[-1]), torch.eye(z_grid.shape[-1]))
     llh = log_prob_1 + log_prob_2 + torch.log(volume)
+    llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_batch = llh_sample.sum(dim=0)
     llh_batch = llh_batch.numpy().tolist()

@@ -54,7 +54,6 @@ def main(m, n, activation):
 if __name__ == "__main__":
     from visualization.exploration import visualize
     from torch import nn
-    visualize()
     main(m=2, n=20, activation=nn.ReLU())
     main(m=2, n=20, activation=nn.Sigmoid())
     main(m=2, n=20, activation=nn.Tanh())
