@@ -82,7 +82,7 @@ def get_llh_grid(m, n, input_batch, model):
     x_recon = model.decoder(z_grid)[0]
     x_recon = x_recon.cpu().detach()
 
-    # get covariance -- batch_size x grid_size x m x m
+    # get covariance -- batch_size x grid_size x n x n
     s2 = s2.repeat(1, n * n).reshape(batch_size, n, n)
     s2 = s2.repeat(1, grid_size, 1, 1).reshape(batch_size, grid_size, n, n)
     eye = torch.eye(n).repeat(grid_size, 1, 1).reshape(grid_size, n, n)
