@@ -53,7 +53,8 @@ def train_vae(m, n, train_loader, valid_loader):
         scheduler.step()
         train_loss = train_loss / nbatch
         train_llh = train_llh / nbatch
-        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish epoch {epoch} with loss {train_loss}")
+        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish epoch {epoch} "
+              f"with loss={round(train_loss, 2)} and llh={round(train_llh, 2)}")
         train_loss_li.append(train_loss)
         train_llh_li.append(train_llh)
 
@@ -100,6 +101,7 @@ def valid_vae(m, n, valid_loader, model, eval_mode):
 
     valid_loss = valid_loss / nbatch
     valid_llh = valid_llh / nbatch
-    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish validation with loss {valid_loss}")
+    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish validation "
+          f"with loss={round(valid_loss, 2)} and llh={round(valid_llh, 2)}")
 
     return valid_loss, valid_llh
