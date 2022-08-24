@@ -19,14 +19,20 @@ from data_prep.loader import load_data
 from params.params import exp_dict
 
 m, n, activation = 10, 20, nn.ReLU()
+
+# training data
 train_size = exp_dict["train_size"]
-valid_size = exp_dict["valid_size"]
-simu_size = exp_dict["simu_size"]
 train_df = generate_data(m, n, activation, train_size)
-valid_df = generate_data(m, n, activation, valid_size)
-simu_df = generate_data(m, n, activation, simu_size)
 train_loader = load_data(train_df)
+
+# validation data
+valid_size = exp_dict["valid_size"]
+valid_df = generate_data(m, n, activation, valid_size)
 valid_loader = load_data(valid_df)
+
+# simulation data
+simu_size = exp_dict["simu_size"]
+simu_df = generate_data(m, n, activation, simu_size)
 simu_loader = load_data(simu_df)
 ```
 
@@ -45,7 +51,7 @@ from vae.training import valid_vae
 from vae.simulation import simu_vae
 
 model, train_loss = train_vae(m, n, train_loader, valid_loader)
-valid_loss = valid_vae(valid_loader, model, eval_mode=True)
+valid_loss = valid_vae(m, n, valid_loader, model, eval_mode=True)
 recon_df = simu_vae(m, n, model, simu_loader)
 ```
 
@@ -57,14 +63,17 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 #### Prior and Posterior
 ![alt text](./__resources__/latent_m2_n2.jpg?raw=true "Title")
 
+#### Learning Curve
 
-#### Setting with `m=2, n=20`
+### Setting with `m=2, n=20`
 Distribution of the original and reconstructed latent variables `z` with `m=2, n=20, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 #### Observation and Reconstruction
 
 #### Prior and Posterior
 ![alt text](./__resources__/latent_m2_n20.jpg?raw=true "Title")
+
+#### Learning Curve
 
 ## MLE with Gradient Descent
 <a href="./funcs/likelihood.py">Link</a> to numerical integration for the likelihood function. 
