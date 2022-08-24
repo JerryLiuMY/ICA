@@ -3,9 +3,10 @@ import seaborn as sns
 sns.set()
 
 
-def plot_callback(loss):
+def plot_callback(loss, llh):
     """ Plot training and validation history
-    :param loss: training and validation history
+    :param loss: training and validation loss
+    :param llh: training and validation llh
     :return:
     """
 

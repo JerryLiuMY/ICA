@@ -66,9 +66,12 @@ def train_vae(m, n, train_loader, valid_loader):
     # return train/valid history and log-likelihoods
     train_loss_arr = np.array(train_loss_li)
     valid_loss_arr = np.array(valid_loss_li)
+    train_llh_arr = np.array(train_llh_li)
+    valid_llh_arr = np.array(valid_llh_li)
     loss = [train_loss_arr, valid_loss_arr]
+    llh = [train_llh_arr, valid_llh_arr]
 
-    return model, loss
+    return model, loss, llh
 
 
 def valid_vae(m, n, valid_loader, model, eval_mode):
