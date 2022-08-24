@@ -1,4 +1,5 @@
 from pathlib import Path
+from utils.tools import get_dir
 import torch
 import os
 
@@ -9,21 +10,13 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 DESKTOP_PATH = str(Path(os.getcwd()).parent.absolute())
 if DESKTOP_PATH == "/Users/mingyu/Desktop":
     DRIVE_PATH = "/Volumes/Sumsung_1T/ICA"
-    DATA_PATH = os.path.join(DRIVE_PATH, "data_prep")
-    MLE_PATH = os.path.join(DRIVE_PATH, "mle")
-    VAE_PATH = os.path.join(DRIVE_PATH, "vae")
+    DATA_PATH = get_dir(os.path.join(DRIVE_PATH, "data_prep"))
+    MLE_PATH = get_dir(os.path.join(DRIVE_PATH, "mle"))
+    VAE_PATH = get_dir(os.path.join(DRIVE_PATH, "vae"))
 else:
-    raise ValueError("Invalid path")
-
-# make directories
-if not os.path.isdir(DATA_PATH):
-    os.mkdir(DATA_PATH)
-
-if not os.path.isdir(MLE_PATH):
-    os.mkdir(MLE_PATH)
-
-if not os.path.isdir(VAE_PATH):
-    os.mkdir(VAE_PATH)
+    DATA_PATH = get_dir(os.path.join(DESKTOP_PATH, "data_prep"))
+    MLE_PATH = get_dir(os.path.join(DESKTOP_PATH, "mle"))
+    VAE_PATH = get_dir(os.path.join(DESKTOP_PATH, "vae"))
 
 
 # Find likelihood -- a) sparse grid b) monte carlo
