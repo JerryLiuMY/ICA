@@ -33,17 +33,18 @@ def get_llh_mc(m, n, input_batch, model):
     x_recon = x_recon.cpu().detach()
 
     # get covariance -- batch_size x mc x n x n
-    s2 = s2.repeat(1, n * n).reshape(batch_size, n, n)
-    s2 = s2.repeat(1, mc, 1, 1).reshape(batch_size, mc, n, n)
+    s2_sqrt = s2.sqrt()
+    s2_sqrt = s2_sqrt.repeat(1, n * n).reshape(batch_size, n, n)
+    s2_sqrt = s2_sqrt.repeat(1, mc, 1, 1).reshape(batch_size, mc, n, n)
     eye = torch.eye(n).repeat(mc, 1, 1).reshape(mc, n, n)
     eye = eye.repeat(batch_size, 1, 1, 1).reshape(batch_size, mc, n, n)
-    s2_cov = s2 * eye
+    s2_cov_tril = s2_sqrt * eye
 
     # get input x -- batch_size x mc x n
     x = x.repeat(1, mc).reshape(batch_size, mc, n)
 
     # perform numerical integration
-    llh = get_norm_lp(x, x_recon, s2_cov)
+    llh = get_norm_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
     llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_batch = llh_sample.sum(dim=0)
@@ -84,17 +85,18 @@ def get_llh_grid(m, n, input_batch, model):
     x_recon = x_recon.cpu().detach()
 
     # get covariance -- batch_size x grid_size x n x n
-    s2 = s2.repeat(1, n * n).reshape(batch_size, n, n)
-    s2 = s2.repeat(1, grid_size, 1, 1).reshape(batch_size, grid_size, n, n)
+    s2_sqrt = s2.sqrt()
+    s2_sqrt = s2_sqrt.repeat(1, n * n).reshape(batch_size, n, n)
+    s2_sqrt = s2_sqrt.repeat(1, grid_size, 1, 1).reshape(batch_size, grid_size, n, n)
     eye = torch.eye(n).repeat(grid_size, 1, 1).reshape(grid_size, n, n)
     eye = eye.repeat(batch_size, 1, 1, 1).reshape(batch_size, grid_size, n, n)
-    s2_cov = s2 * eye
+    s2_cov_tril = s2_sqrt * eye
 
     # get input x -- batch_size x grid_size x n
     x = x.repeat(1, grid_size).reshape(batch_size, grid_size, n)
 
     # perform numerical integration
-    log_prob_1 = get_norm_lp(x, x_recon, s2_cov)
+    log_prob_1 = get_norm_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
     log_prob_2 = get_norm_lp(z_grid, torch.zeros(z_grid.shape[-1]), torch.eye(z_grid.shape[-1]))
     llh = log_prob_1 + log_prob_2 + torch.log(volume)
     llh = llh.to(torch.float64)

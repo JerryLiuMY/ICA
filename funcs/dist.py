@@ -1,15 +1,16 @@
 from torch.distributions import MultivariateNormal
 
 
-def get_norm_lp(x, mean, cov):
+def get_norm_lp(x, loc, cov_tril):
     """ Get log pdf from multivariate gaussian
     :param x: input value
-    :param mean: mean of multivariate normal
-    :param cov: covariance matrix
+    :param loc: location of multivariate normal
+    :param cov_tril: lower-triangular factor of covariance
     :return:
     """
 
-    dist = MultivariateNormal(loc=mean, covariance_matrix=cov)
+    # use lower-triangular factor for faster computation
+    dist = MultivariateNormal(loc=loc, scale_tril=cov_tril)
     log_prob = dist.log_prob(value=x)
 
     return log_prob
