@@ -47,6 +47,7 @@ def get_llh_mc(m, n, input_batch, model):
     llh = get_norm_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
     llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
+    llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
     llh_batch = llh_sample.sum(dim=0)
     llh_batch = llh_batch.numpy().tolist()
 
@@ -101,6 +102,7 @@ def get_llh_grid(m, n, input_batch, model):
     llh = log_prob_1 + log_prob_2 + torch.log(volume)
     llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
+    llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
     llh_batch = llh_sample.sum(dim=0)
     llh_batch = llh_batch.numpy().tolist()
 
