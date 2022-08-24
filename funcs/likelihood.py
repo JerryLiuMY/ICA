@@ -18,7 +18,7 @@ def get_llh_mc(m, n, input_batch, model):
 
     # define input
     x_batch, logs2_batch = input_batch
-    x, s2 = x_batch.cpu().detach(), logs2_batch.exp().cpu().detach()
+    x, s2 = x_batch, logs2_batch.exp()
     batch_size = x_batch.shape[0]
 
     # get reconstruction -- batch_size x mc x n
@@ -30,7 +30,6 @@ def get_llh_mc(m, n, input_batch, model):
     z_mc = sampler.sample()
     z_mc = z_mc.to(device)
     x_recon = model.decoder(z_mc)[0]
-    x_recon = x_recon.cpu().detach()
 
     # get covariance -- batch_size x mc x n x n
     s2_sqrt = s2.sqrt()
@@ -38,6 +37,7 @@ def get_llh_mc(m, n, input_batch, model):
     s2_sqrt = s2_sqrt.repeat(1, mc, 1, 1).reshape(batch_size, mc, n, n)
     eye = torch.eye(n).repeat(mc, 1, 1).reshape(mc, n, n)
     eye = eye.repeat(batch_size, 1, 1, 1).reshape(batch_size, mc, n, n)
+    eye = eye.to(device)
     s2_cov_tril = s2_sqrt * eye
 
     # get input x -- batch_size x mc x n
@@ -49,7 +49,7 @@ def get_llh_mc(m, n, input_batch, model):
     llh_sample = llh.exp().sum(dim=1).log()
     llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
     llh_batch = llh_sample.sum(dim=0)
-    llh_batch = llh_batch.numpy().tolist()
+    llh_batch = llh_batch.cpu().detach().numpy().tolist()
 
     return llh_batch
 
