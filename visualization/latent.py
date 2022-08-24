@@ -23,8 +23,8 @@ def plot_latent_2d(n):
         sns.kdeplot(data=simu_df, x="z0", y="z1", fill=True, alpha=1., ax=ax)
         sns.kdeplot(data=recon_df, x="mu0", y="mu1", fill=True, alpha=.7, ax=ax)
         s2 = np.round(np.mean(np.exp(recon_df["logs2"])), 3)
-        ax_legend_true = mpatches.Patch(color=sns.color_palette()[0], label="Original", alpha=0.8)
-        ax_legend_recon = mpatches.Patch(color=sns.color_palette()[1], label="VAE_Recon", alpha=0.8)
+        ax_legend_true = mpatches.Patch(color=sns.color_palette()[0], label="Prior $p(z)$", alpha=0.8)
+        ax_legend_recon = mpatches.Patch(color=sns.color_palette()[1], label="Posterior $\widehat{p}(z|x)$", alpha=0.8)
         ax_legend_s2 = mpatches.Patch(color=sns.color_palette()[7], label="$\widehat{\sigma}^2$"+f"={s2}", alpha=0.8)
         handles = [ax_legend_true, ax_legend_recon, ax_legend_s2]
         ax.legend(handles=handles, loc="upper right", handlelength=0.2, handletextpad=0.5)

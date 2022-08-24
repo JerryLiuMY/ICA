@@ -45,7 +45,7 @@ from vae.training import valid_vae
 from vae.simulation import simu_vae
 
 model, train_loss = train_vae(m, n, train_loader, valid_loader)
-valid_loss = valid_vae(valid_loader, model, eval_model=True)
+valid_loss = valid_vae(valid_loader, model, eval_mode=True)
 recon_df = simu_vae(m, n, model, simu_loader)
 ```
 

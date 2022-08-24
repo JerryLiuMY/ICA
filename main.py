@@ -19,7 +19,7 @@ def main(m, n, activation):
     :return: dataframe of z and x
     """
 
-    # define path and laod parameters
+    # define path and load parameters
     train_size, valid_size, simu_size = exp_dict["train_size"], exp_dict["valid_size"], exp_dict["simu_size"]
     model_path = os.path.join(VAE_PATH, f"m{m}_n{n}_{''.join([_ for _ in str(activation) if _.isalpha()])}")
     if not os.path.isdir(model_path):
@@ -51,9 +51,9 @@ def main(m, n, activation):
 if __name__ == "__main__":
     from visualization.exploration import visualize
     from torch import nn
-    visualize()
-    main(m=2, n=20, activation=nn.ReLU())
-    main(m=2, n=20, activation=nn.Sigmoid())
-    main(m=2, n=20, activation=nn.Tanh())
-    main(m=2, n=20, activation=nn.GELU())
+    # visualize()
+    # main(m=2, n=20, activation=nn.ReLU())
+    # main(m=2, n=20, activation=nn.Sigmoid())
+    # main(m=2, n=20, activation=nn.Tanh())
+    # main(m=2, n=20, activation=nn.GELU())
     plot_latent_2d(n=20)
