@@ -18,8 +18,7 @@ def get_llh_mc(m, n, input_batch, model):
 
     # define input
     x_batch, logs2_batch = input_batch
-    x, logs2 = x_batch, logs2_batch
-    s2 = logs2.exp()
+    x, s2 = x_batch.cpu().detach(), logs2_batch.exp().cpu().detach()
     batch_size = x_batch.shape[0]
 
     # get reconstruction -- batch_size x mc x n
@@ -31,6 +30,7 @@ def get_llh_mc(m, n, input_batch, model):
     z_mc = sampler.sample()
     z_mc = z_mc.to(device)
     x_recon = model.decoder(z_mc)[0]
+    x_recon = x_recon.cpu().detach()
 
     # get covariance -- batch_size x mc x n x n
     s2 = s2.repeat(1, n * n).reshape(batch_size, n, n)
@@ -62,8 +62,7 @@ def get_llh_grid(m, n, input_batch, model):
 
     # define input
     x_batch, logs2_batch = input_batch
-    x, logs2 = x_batch, logs2_batch
-    s2 = logs2.exp()
+    x, s2 = x_batch.cpu().detach(), logs2_batch.exp().cpu().detach()
     batch_size = x_batch.shape[0]
 
     # prepare for numerical integration
@@ -80,6 +79,7 @@ def get_llh_grid(m, n, input_batch, model):
     z_grid = z_grid.repeat(batch_size, 1, 1).reshape(batch_size, grid_size, m)
     z_grid = z_grid.to(device)
     x_recon = model.decoder(z_grid)[0]
+    x_recon = x_recon.cpu().detach()
 
     # get covariance -- batch_size x grid_size x m x m
     s2 = s2.repeat(1, n * n).reshape(batch_size, n, n)
