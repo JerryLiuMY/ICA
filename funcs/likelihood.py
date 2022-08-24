@@ -46,7 +46,7 @@ def get_llh_mc(m, n, input_batch, model):
     llh = get_norm_lp(x, x_recon, s2_cov)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_batch = llh_sample.sum(dim=0)
-    llh_batch = llh_batch.cpu().detach().numpy().tolist()
+    llh_batch = llh_batch.numpy().tolist()
 
     return llh_batch
 
@@ -97,6 +97,6 @@ def get_llh_grid(m, n, input_batch, model):
     llh = log_prob_1 + log_prob_2 + np.log(volume)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_batch = llh_sample.sum(dim=0)
-    llh_batch = llh_batch.cpu().detach().numpy().tolist()
+    llh_batch = llh_batch.numpy().tolist()
 
     return llh_batch
