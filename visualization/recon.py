@@ -35,7 +35,8 @@ def plot_recon_2d(n):
         ax_legend_recon = mpatches.Patch(color=palette[1], label="Recon $\widehat{p}(x|z)$", alpha=0.8)
         handles = [ax_legend_true, ax_legend_recon]
         ax.legend(handles=handles, loc="upper right", handlelength=0.2, handletextpad=0.5)
-        ax.set_title(f"Original space of {activation}")
+        ax.set_title(f"Reconstruction of {activation}")
         ax.set_xlabel("PC0")
         ax.set_ylabel("PC1")
-    fig.savefig(os.path.join(VAE_PATH, f"recon_m2_n{n}.pdf"), bbox_inches="tight")
+
+    return fig

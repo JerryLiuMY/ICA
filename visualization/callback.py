@@ -39,4 +39,5 @@ def plot_callback(n):
         ax.legend(h + h_, l + l_, loc="upper right")
 
     plt.tight_layout()
-    fig.savefig(os.path.join(VAE_PATH, f"callback_m2_n{n}.pdf"), bbox_inches="tight")
+
+    return fig
