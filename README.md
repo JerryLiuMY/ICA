@@ -55,16 +55,6 @@ valid_loss = valid_vae(m, n, valid_loader, model, eval_mode=True)
 recon_df = simu_vae(m, n, model, simu_loader)
 ```
 
-### Setting with `m=2, n=2`
-Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
-
-#### Observation and Reconstruction
-
-#### Prior and Posterior
-![alt text](./__resources__/latent_m2_n2.jpg?raw=true "Title")
-
-#### Learning Curve
-
 ### Setting with `m=2, n=20`
 Distribution of the original and reconstructed latent variables `z` with `m=2, n=20, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
@@ -74,6 +64,19 @@ Distribution of the original and reconstructed latent variables `z` with `m=2, n
 ![alt text](./__resources__/latent_m2_n20.jpg?raw=true "Title")
 
 #### Learning Curve
+![alt text](./__resources__/callback_m2_n20.jpg?raw=true "Title")
+
+### Setting with `m=2, n=2`
+Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
+
+#### Observation and Reconstruction
+
+#### Prior and Posterior
+![alt text](./__resources__/latent_m2_n2.jpg?raw=true "Title")
+
+#### Learning Curve
+![alt text](./__resources__/callback_m2_n2.jpg?raw=true "Title")
+
 
 ## MLE with Gradient Descent
 <a href="./funcs/likelihood.py">Link</a> to numerical integration for the likelihood function. 

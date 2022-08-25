@@ -35,7 +35,6 @@ def main(m, n, activation):
     [train_llh, valid_llh] = llh
 
     # plot callback and reconstruction
-    callback = plot_callback(loss, llh)
     simu_df = generate_data(m, n, activation, simu_size)
     simu_loader = load_data(simu_df)
     recon_df = simu_vae(m, n, model, simu_loader)
@@ -46,15 +45,15 @@ def main(m, n, activation):
     np.save(os.path.join(model_path, "valid_loss.npy"), valid_loss)
     np.save(os.path.join(model_path, "train_llh.npy"), train_llh)
     np.save(os.path.join(model_path, "valid_llh.npy"), valid_llh)
-    callback.savefig(os.path.join(model_path, "callback.pdf"), bbox_inches="tight")
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
 
 if __name__ == "__main__":
     from torch import nn
-    main(m=2, n=20, activation=nn.ReLU())
-    main(m=2, n=20, activation=nn.Sigmoid())
-    main(m=2, n=20, activation=nn.Tanh())
-    main(m=2, n=20, activation=nn.GELU())
-    plot_latent_2d(n=20)
+    # main(m=2, n=20, activation=nn.ReLU())
+    # main(m=2, n=20, activation=nn.Sigmoid())
+    # main(m=2, n=20, activation=nn.Tanh())
+    # main(m=2, n=20, activation=nn.GELU())
+    # plot_latent_2d(n=20)
+    plot_callback(n=2)

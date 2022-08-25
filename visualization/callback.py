@@ -1,30 +1,42 @@
+from global_settings import VAE_PATH
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
+import os
 sns.set()
 
 
-def plot_callback(loss, llh):
+def plot_callback(n):
     """ Plot training and validation history
-    :param loss: training and validation loss
-    :param llh: training and validation llh
-    :return:
+    :param n: dimension of the target variable
+    :return: dataframe of z and x
     """
 
-    train_loss, valid_loss = loss
-    train_llh, valid_llh = llh
+    fig, axes = plt.subplots(2, 2, figsize=(16, 8))
+    activations = ["ReLU", "Sigmoid", "Tanh", "GELU"]
+    axes = [ax for sub_axes in axes for ax in sub_axes]
 
-    fig, ax = plt.subplots(1, 1, figsize=(8, 4))
-    ax.plot(train_loss, color=sns.color_palette()[0], label="train_loss")
-    ax.plot(valid_loss, color=sns.color_palette()[1], label="valid_loss")
-    ax.set_xlabel("Epoch")
-    ax.set_ylabel("ELBO")
-    ax.legend(loc="upper left")
+    for ax, activation in zip(axes, activations):
+        model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
+        train_loss = np.load(os.path.join(model_path, "train_loss.npy"))
+        valid_loss = np.load(os.path.join(model_path, "valid_loss.npy"))
+        train_llh = np.load(os.path.join(model_path, "train_llh.npy"))
+        valid_llh = np.load(os.path.join(model_path, "valid_llh.npy"))
 
-    ax_ = ax.twinx()
-    ax_.plot(train_llh, color=sns.color_palette()[2], label="train_llh")
-    ax_.plot(valid_llh, color=sns.color_palette()[3], label="valid_llh")
-    ax_.set_ylabel("Log-Likelihood")
-    ax_.legend(loc="upper right")
-    ax_.grid(False)
+        ax.plot(train_llh, color=sns.color_palette()[0], label="train_llh")
+        ax.plot(valid_llh, color=sns.color_palette()[1], label="valid_llh")
+        ax.set_xlabel("Epoch")
+        ax.set_ylabel("Log-Likelihood")
 
-    return fig
+        ax_ = ax.twinx()
+        ax_.plot(train_loss, color=sns.color_palette()[2], label="train_loss")
+        ax_.plot(valid_loss, color=sns.color_palette()[3], label="valid_loss")
+        ax_.set_ylabel("ELBO")
+        ax_.grid(False)
+
+        h, l = ax.get_legend_handles_labels()
+        h_, l_ = ax_.get_legend_handles_labels()
+        ax.legend(h + h_, l + l_, loc="upper left")
+
+    plt.tight_layout()
+    fig.savefig(os.path.join(VAE_PATH, f"callback_m2_n{n}.pdf"), bbox_inches="tight")
