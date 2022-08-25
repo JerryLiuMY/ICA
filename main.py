@@ -67,10 +67,10 @@ def plot(m, n):
     callback.savefig(os.path.join(figure_path, f"callback_m2_n{n}.pdf"), bbox_inches="tight")
 
 
-if __name__ == "__main__":
-    # from torch import nn
-    # main(m=2, n=20, activation=nn.ReLU())
-    # main(m=2, n=20, activation=nn.Sigmoid())
-    # main(m=2, n=20, activation=nn.Tanh())
-    # main(m=2, n=20, activation=nn.GELU())
-    plot(m=2, n=20)
+# if __name__ == "__main__":
+#     from torch import nn
+#     main_vae(m=2, n=20, activation=nn.ReLU())
+#     main_vae(m=2, n=20, activation=nn.Sigmoid())
+#     main_vae(m=2, n=20, activation=nn.Tanh())
+#     main_vae(m=2, n=20, activation=nn.GELU())
+#     plot(m=2, n=20)
