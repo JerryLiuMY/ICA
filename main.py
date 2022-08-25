@@ -12,11 +12,12 @@ import numpy as np
 import os
 
 
-def main_vae(m, n, activation):
+def main_vae(m, n, activation, llh_method):
     """ Perform experiments for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param activation: activation function for mlp
+    :param llh_method: method for numerical integration
     """
 
     # define path and load parameters
@@ -30,14 +31,14 @@ def main_vae(m, n, activation):
     valid_df = generate_data(m, n, activation, valid_size)
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
-    model, loss, llh = train_vae(m, n, train_loader, valid_loader)
+    model, loss, llh = train_vae(m, n, train_loader, valid_loader, llh_method)
     [train_loss, valid_loss], [train_llh, valid_llh] = loss, llh
 
     torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
     np.save(os.path.join(model_path, "train_loss.npy"), train_loss)
     np.save(os.path.join(model_path, "valid_loss.npy"), valid_loss)
-    np.save(os.path.join(model_path, "train_llh.npy"), train_llh)
-    np.save(os.path.join(model_path, "valid_llh.npy"), valid_llh)
+    np.save(os.path.join(model_path, f"train_llh_{llh_method}.npy"), train_llh)
+    np.save(os.path.join(model_path, f"valid_llh_{llh_method}.npy"), valid_llh)
 
     # run simulation and reconstruction
     simu_df = generate_data(m, n, activation, simu_size)
@@ -47,10 +48,11 @@ def main_vae(m, n, activation):
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
 
-def plot(m, n):
+def plot(m, n, llh_method):
     """ Plot original space, latent space and callback
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
+    :param llh_method: method for numerical integration
     """
 
     # define path and load parameters
@@ -61,16 +63,16 @@ def plot(m, n):
     # plot recon, latent and callback
     recon = plot_recon_2d(n)
     latent = plot_latent_2d(n)
-    callback = plot_callback(n)
+    callback = plot_callback(n, llh_method=llh_method)
     recon.savefig(os.path.join(figure_path, f"recon_m2_n{n}.pdf"), bbox_inches="tight")
     latent.savefig(os.path.join(figure_path, f"latent_m2_n{n}.pdf"), bbox_inches="tight")
-    callback.savefig(os.path.join(figure_path, f"callback_m2_n{n}.pdf"), bbox_inches="tight")
+    callback.savefig(os.path.join(figure_path, f"callback_m2_n{n}_{llh_method}.pdf"), bbox_inches="tight")
 
 
 if __name__ == "__main__":
     from torch import nn
-    # main_vae(m=2, n=19, activation=nn.ReLU())
-    # main_vae(m=2, n=19, activation=nn.Sigmoid())
-    # main_vae(m=2, n=19, activation=nn.Tanh())
-    # main_vae(m=2, n=19, activation=nn.GELU())
-    plot(m=2, n=2)
+    main_vae(m=2, n=19, activation=nn.ReLU(), llh_method="mc")
+    main_vae(m=2, n=19, activation=nn.Sigmoid(), llh_method="mc")
+    main_vae(m=2, n=19, activation=nn.Tanh(), llh_method="mc")
+    main_vae(m=2, n=19, activation=nn.GELU(), llh_method="mc")
+    plot(m=2, n=2, llh_method="mc")

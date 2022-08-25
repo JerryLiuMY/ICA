@@ -7,17 +7,24 @@ import numpy as np
 import torch
 
 
-def train_vae(m, n, train_loader, valid_loader):
+def train_vae(m, n, train_loader, valid_loader, llh_method):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param train_loader: training dataset loader
     :param valid_loader: validation dataset loader
+    :param llh_method: method for numerical integration
     :return: trained model and training loss history
     """
 
     # load parameters
     epoch, lr, beta = train_dict["epoch"], train_dict["lr"], train_dict["beta"]
+    if llh_method == "mc":
+        get_llh = get_llh_mc
+    elif llh_method == "grid":
+        get_llh = get_llh_grid
+    else:
+        raise ValueError("Invalid integration method specified")
 
     # building VAE
     model = VariationalAutoencoder(m, n)
@@ -47,7 +54,7 @@ def train_vae(m, n, train_loader, valid_loader):
             optimizer.step()
 
             train_loss += loss.item() / x_batch.size(dim=0)
-            train_llh += get_llh_grid(m, n, input_batch, model) / x_batch.size(dim=0)
+            train_llh += get_llh(m, n, input_batch, model) / x_batch.size(dim=0)
             nbatch += 1
 
         # get training loss
@@ -60,7 +67,7 @@ def train_vae(m, n, train_loader, valid_loader):
         train_llh_li.append(train_llh)
 
         # get validation loss
-        valid_loss, valid_llh = valid_vae(m, n, valid_loader, model, eval_mode=False)
+        valid_loss, valid_llh = valid_vae(m, n, valid_loader, model, llh_method, eval_mode=False)
         valid_loss_li.append(valid_loss)
         valid_llh_li.append(valid_llh)
 
@@ -75,18 +82,26 @@ def train_vae(m, n, train_loader, valid_loader):
     return model, loss, llh
 
 
-def valid_vae(m, n, valid_loader, model, eval_mode):
+def valid_vae(m, n, valid_loader, model, llh_method, eval_mode):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param model: trained VAE model
     :param valid_loader: validation dataset loader
+    :param llh_method: method for numerical integration
     :param eval_mode: whether set to evaluation model
     :return: validation loss
     """
 
     # load parameters and set evaluation mode
     beta = train_dict["beta"]
+    if llh_method == "mc":
+        get_llh = get_llh_mc
+    elif llh_method == "grid":
+        get_llh = get_llh_grid
+    else:
+        raise ValueError("Invalid integration method specified")
+
     if eval_mode:
         model.eval()
 
@@ -100,7 +115,7 @@ def valid_vae(m, n, valid_loader, model, eval_mode):
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
 
             valid_loss += loss.item() / x_batch.size(dim=0)
-            valid_llh += get_llh_grid(m, n, input_batch, model) / x_batch.size(dim=0)
+            valid_llh += get_llh(m, n, input_batch, model) / x_batch.size(dim=0)
             nbatch += 1
 
     valid_loss = valid_loss / nbatch

@@ -6,9 +6,10 @@ import os
 sns.set()
 
 
-def plot_callback(n):
+def plot_callback(n, llh_method):
     """ Plot training and validation history
     :param n: dimension of the target variable
+    :param llh_method: method for numerical integration
     :return: dataframe of z and x
     """
 
@@ -20,10 +21,10 @@ def plot_callback(n):
         model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
         train_loss = np.load(os.path.join(model_path, "train_loss.npy"))
         valid_loss = np.load(os.path.join(model_path, "valid_loss.npy"))
-        train_llh = np.load(os.path.join(model_path, "train_llh.npy"))
-        valid_llh = np.load(os.path.join(model_path, "valid_llh.npy"))
+        train_llh = np.load(os.path.join(model_path, f"train_llh_{llh_method}.npy"))
+        valid_llh = np.load(os.path.join(model_path, f"valid_llh_{llh_method}.npy"))
 
-        ax.set_title(f"Learning curve of {activation}")
+        ax.set_title(f"Learning curve of {activation} [Integration method = {llh_method}]")
         ax.plot(train_llh, color=sns.color_palette()[0], label="train_llh")
         ax.plot(valid_llh, color=sns.color_palette()[1], label="valid_llh")
         ax.set_xlabel("Epoch")

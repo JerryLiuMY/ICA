@@ -19,10 +19,9 @@ else:
     VAE_PATH = get_dir(os.path.join(DESKTOP_PATH, "vae"))
 
 
-# Find likelihood -- a) sparse grid b) monte carlo
+# Compare sparse grid vs. monte carlo
 # Find gradient -- a) autograd b) MLE gradient descent
 # Compare latent variable p(z|x) with estimates
-# Compare latent variable p(z) with estimates
 # Modification to derived gradient of likelihood
 
 
