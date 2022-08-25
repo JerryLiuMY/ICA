@@ -2,17 +2,17 @@ from global_settings import VAE_PATH
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae
-from visualization.callback import plot_callback
 from vae.simulation import simu_vae
+from vae.callback import plot_callback
 from params.params import exp_dict
-from visualization.latent import plot_latent_2d
-from visualization.recon import plot_recon_2d
+from vae.latent import plot_latent_2d
+from vae.recon import plot_recon_2d
 import torch
 import numpy as np
 import os
 
 
-def main_vae(m, n, activation, llh_method):
+def run_vae(m, n, activation, llh_method):
     """ Perform experiments for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
@@ -48,7 +48,7 @@ def main_vae(m, n, activation, llh_method):
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
 
-def plot(m, n, llh_method):
+def plot_vae(m, n, llh_method):
     """ Plot original space, latent space and callback
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
@@ -71,8 +71,8 @@ def plot(m, n, llh_method):
 
 if __name__ == "__main__":
     from torch import nn
-    main_vae(m=2, n=19, activation=nn.ReLU(), llh_method="mc")
-    main_vae(m=2, n=19, activation=nn.Sigmoid(), llh_method="mc")
-    main_vae(m=2, n=19, activation=nn.Tanh(), llh_method="mc")
-    main_vae(m=2, n=19, activation=nn.GELU(), llh_method="mc")
-    plot(m=2, n=2, llh_method="mc")
+    run_vae(m=2, n=19, activation=nn.ReLU(), llh_method="mc")
+    run_vae(m=2, n=19, activation=nn.Sigmoid(), llh_method="mc")
+    run_vae(m=2, n=19, activation=nn.Tanh(), llh_method="mc")
+    run_vae(m=2, n=19, activation=nn.GELU(), llh_method="mc")
+    plot_vae(m=2, n=2, llh_method="mc")

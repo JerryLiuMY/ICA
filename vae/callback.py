@@ -25,14 +25,14 @@ def plot_callback(n, llh_method):
         valid_llh = np.load(os.path.join(model_path, f"valid_llh_{llh_method}.npy"))
 
         ax.set_title(f"Learning curve of {activation} [Integration method = {llh_method}]")
-        ax.plot(train_llh, color=sns.color_palette()[0], label="train_llh")
-        ax.plot(valid_llh, color=sns.color_palette()[1], label="valid_llh")
+        ax.plot_vae(train_llh, color=sns.color_palette()[0], label="train_llh")
+        ax.plot_vae(valid_llh, color=sns.color_palette()[1], label="valid_llh")
         ax.set_xlabel("Epoch")
         ax.set_ylabel("Log-Likelihood")
 
         ax_ = ax.twinx()
-        ax_.plot(train_loss, color=sns.color_palette()[2], label="train_loss")
-        ax_.plot(valid_loss, color=sns.color_palette()[3], label="valid_loss")
+        ax_.plot_vae(train_loss, color=sns.color_palette()[2], label="train_loss")
+        ax_.plot_vae(valid_loss, color=sns.color_palette()[3], label="valid_loss")
         ax_.set_ylabel("ELBO")
         ax_.grid(False)
 
