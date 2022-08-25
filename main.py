@@ -69,8 +69,8 @@ def plot(m, n):
 
 if __name__ == "__main__":
     from torch import nn
-    main_vae(m=2, n=19, activation=nn.ReLU())
-    main_vae(m=2, n=19, activation=nn.Sigmoid())
-    main_vae(m=2, n=19, activation=nn.Tanh())
-    main_vae(m=2, n=19, activation=nn.GELU())
-    plot(m=2, n=19)
+    # main_vae(m=2, n=19, activation=nn.ReLU())
+    # main_vae(m=2, n=19, activation=nn.Sigmoid())
+    # main_vae(m=2, n=19, activation=nn.Tanh())
+    # main_vae(m=2, n=19, activation=nn.GELU())
+    plot(m=2, n=2)

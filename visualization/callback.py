@@ -23,6 +23,7 @@ def plot_callback(n):
         train_llh = np.load(os.path.join(model_path, "train_llh.npy"))
         valid_llh = np.load(os.path.join(model_path, "valid_llh.npy"))
 
+        ax.set_title(f"Learning curve of {activation}")
         ax.plot(train_llh, color=sns.color_palette()[0], label="train_llh")
         ax.plot(valid_llh, color=sns.color_palette()[1], label="valid_llh")
         ax.set_xlabel("Epoch")
