@@ -56,4 +56,4 @@ if __name__ == "__main__":
     # main(m=2, n=20, activation=nn.Tanh())
     # main(m=2, n=20, activation=nn.GELU())
     # plot_latent_2d(n=20)
-    plot_callback(n=2)
+    plot_callback(n=20)

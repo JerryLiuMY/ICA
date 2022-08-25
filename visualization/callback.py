@@ -36,7 +36,7 @@ def plot_callback(n):
 
         h, l = ax.get_legend_handles_labels()
         h_, l_ = ax_.get_legend_handles_labels()
-        ax.legend(h + h_, l + l_, loc="upper left")
+        ax.legend(h + h_, l + l_, loc="upper right")
 
     plt.tight_layout()
     fig.savefig(os.path.join(VAE_PATH, f"callback_m2_n{n}.pdf"), bbox_inches="tight")
