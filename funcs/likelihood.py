@@ -24,9 +24,9 @@ def get_llh_mc(m, n, input_batch, model):
     # get reconstruction -- batch_size x mc x n
     mu_mc = torch.zeros(m).repeat(mc, 1).reshape(mc, m)
     mu_mc = mu_mc.repeat(batch_size, 1, 1).reshape(batch_size, mc, m)
-    var_mc = torch.eye(m).repeat(mc, 1, 1).reshape(mc, m, m)
-    var_mc = var_mc.repeat(batch_size, 1, 1, 1).reshape(batch_size, mc, m, m)
-    sampler = MultivariateNormal(mu_mc, var_mc)
+    var_tril_mc = torch.eye(m).repeat(mc, 1, 1).reshape(mc, m, m)
+    var_tril_mc = var_tril_mc.repeat(batch_size, 1, 1, 1).reshape(batch_size, mc, m, m)
+    sampler = MultivariateNormal(loc=mu_mc, scale_tril=var_tril_mc)
     z_mc = sampler.sample()
     z_mc = z_mc.to(device)
     x_recon = model.decoder(z_mc)[0]
@@ -65,7 +65,7 @@ def get_llh_grid(m, n, input_batch, model):
 
     # define input
     x_batch, logs2_batch = input_batch
-    x, s2 = x_batch.cpu().detach(), logs2_batch.exp().cpu().detach()
+    x, s2 = x_batch, logs2_batch.exp()
     batch_size = x_batch.shape[0]
 
     # prepare for numerical integration
@@ -83,7 +83,7 @@ def get_llh_grid(m, n, input_batch, model):
     z_grid = z_grid.repeat(batch_size, 1, 1).reshape(batch_size, grid_size, m)
     z_grid = z_grid.to(device)
     x_recon = model.decoder(z_grid)[0]
-    x_recon = x_recon.cpu().detach()
+    x_recon = x_recon
 
     # get covariance -- batch_size x grid_size x n x n
     s2_sqrt = s2.sqrt()
@@ -91,6 +91,7 @@ def get_llh_grid(m, n, input_batch, model):
     s2_sqrt = s2_sqrt.repeat(1, grid_size, 1, 1).reshape(batch_size, grid_size, n, n)
     eye = torch.eye(n).repeat(grid_size, 1, 1).reshape(grid_size, n, n)
     eye = eye.repeat(batch_size, 1, 1, 1).reshape(batch_size, grid_size, n, n)
+    eye = eye.to(device)
     s2_cov_tril = s2_sqrt * eye
 
     # get input x -- batch_size x grid_size x n
@@ -104,6 +105,6 @@ def get_llh_grid(m, n, input_batch, model):
     llh_sample = llh.exp().sum(dim=1).log()
     llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
     llh_batch = llh_sample.sum(dim=0)
-    llh_batch = llh_batch.numpy().tolist()
+    llh_batch = llh_batch.cpu().detach().numpy().tolist()
 
     return llh_batch
