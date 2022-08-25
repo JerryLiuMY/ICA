@@ -39,4 +39,6 @@ def plot_recon_2d(n):
         ax.set_xlabel("PC0")
         ax.set_ylabel("PC1")
 
+    plt.tight_layout()
+
     return fig

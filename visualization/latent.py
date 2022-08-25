@@ -36,4 +36,6 @@ def plot_latent_2d(n):
         ax.set_xlabel("z0")
         ax.set_ylabel("z1")
 
+    plt.tight_layout()
+
     return fig

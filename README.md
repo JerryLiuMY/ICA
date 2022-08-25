@@ -36,7 +36,7 @@ simu_df = generate_data(m, n, activation, simu_size)
 simu_loader = load_data(simu_df)
 ```
 
-Distribution of the latent variable `z` and the generated `x`
+Sample distribution of the latent variable `z` and the generated `x`
 - **Column**: Distribution of `z`, `x` with `ReLU` activation, `x` with `Sigmoid` activation, `x` with `Tanh` activation and `x` with `GELU` activation
 - **Row**: Distribution of `z` and `x` with `m=1, n=1`, `m=1, n=2` and `m=2, n=2`
 
