@@ -36,9 +36,9 @@ def plot_callback(n, llh_method):
         ax_.set_ylabel("ELBO")
         ax_.grid(False)
 
-        h, l = ax.get_legend_handles_labels()
-        h_, l_ = ax_.get_legend_handles_labels()
-        ax.legend(h + h_, l + l_, loc="upper right")
+        handles, labels = ax.get_legend_handles_labels()
+        handles_, labels_ = ax_.get_legend_handles_labels()
+        ax.legend(handles + handles_, labels + labels_, loc="upper right")
 
     plt.tight_layout()
 
