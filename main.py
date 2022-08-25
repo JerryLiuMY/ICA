@@ -6,6 +6,7 @@ from visualization.callback import plot_callback
 from vae.simulation import simu_vae
 from params.params import exp_dict
 from visualization.latent import plot_latent_2d
+from visualization.recon import plot_recon_2d
 import torch
 import numpy as np
 import os
@@ -50,10 +51,15 @@ def main(m, n, activation):
 
 
 if __name__ == "__main__":
-    from torch import nn
+    # from torch import nn
     # main(m=2, n=20, activation=nn.ReLU())
     # main(m=2, n=20, activation=nn.Sigmoid())
     # main(m=2, n=20, activation=nn.Tanh())
     # main(m=2, n=20, activation=nn.GELU())
+    pass
+
+
+if __name__ == "__main__":
+    plot_recon_2d(n=2)
     # plot_latent_2d(n=20)
-    plot_callback(n=20)
+    # plot_callback(n=20)

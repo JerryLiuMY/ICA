@@ -1,5 +1,5 @@
 from torch.distributions import MultivariateNormal
-from funcs.dist import get_norm_lp
+from funcs.normal import get_norm_lp
 from global_settings import device
 from params.params import mc
 import itertools
