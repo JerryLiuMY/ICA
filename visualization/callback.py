@@ -12,7 +12,7 @@ def plot_callback(n):
     :return: dataframe of z and x
     """
 
-    fig, axes = plt.subplots(2, 2, figsize=(16, 8))
+    fig, axes = plt.subplots(2, 2, figsize=(14, 7))
     activations = ["ReLU", "Sigmoid", "Tanh", "GELU"]
     axes = [ax for sub_axes in axes for ax in sub_axes]
 
