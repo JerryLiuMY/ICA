@@ -1,5 +1,5 @@
 from pathlib import Path
-from utils.tools import get_dir
+from funcs.tools import get_dir
 import torch
 import os
 
