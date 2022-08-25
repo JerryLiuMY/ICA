@@ -20,7 +20,7 @@ else:
 
 
 # Find likelihood -- a) sparse grid b) monte carlo
-# Find gradient -- a) SGD b) MLE gradient descent
+# Find gradient -- a) autograd b) MLE gradient descent
 # Compare latent variable p(z|x) with estimates
 # Compare latent variable p(z) with estimates
 # Modification to derived gradient of likelihood

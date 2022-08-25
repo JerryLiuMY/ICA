@@ -59,6 +59,7 @@ recon_df = simu_vae(m, n, model, simu_loader)
 Distribution of the original and reconstructed latent variables `z` with `m=2, n=20, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
+![alt text](./__resources__/recon_m2_n20.jpg?raw=true "Title")
 
 - #### Prior and Posterior
 ![alt text](./__resources__/latent_m2_n20.jpg?raw=true "Title")
@@ -70,6 +71,7 @@ Distribution of the original and reconstructed latent variables `z` with `m=2, n
 Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
+![alt text](./__resources__/recon_m2_n2.jpg?raw=true "Title")
 
 - #### Prior and Posterior
 ![alt text](./__resources__/latent_m2_n2.jpg?raw=true "Title")
