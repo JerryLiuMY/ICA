@@ -2,6 +2,7 @@ from torch.distributions import MultivariateNormal
 from funcs.normal import get_norm_lp
 from global_settings import device
 from params.params import mc
+from params.params import min_lim, max_lim, space
 import itertools
 import numpy as np
 import torch
@@ -69,7 +70,6 @@ def get_llh_grid(m, n, input_batch, model):
     batch_size = x_batch.shape[0]
 
     # prepare for numerical integration
-    min_lim, max_lim, space = -3, 3, 61
     lin_space = np.linspace(min_lim, max_lim, space)
     grid_space = np.array([0.5 * (lin_space[i] + lin_space[i + 1]) for i in range(len(lin_space) - 1)])
     volume = ((max_lim - min_lim) / (space - 1)) ** m

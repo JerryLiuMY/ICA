@@ -1,5 +1,5 @@
 from vae.vae import VariationalAutoencoder, elbo_gaussian
-from funcs.likelihood import get_llh_mc
+from funcs.likelihood import get_llh_mc, get_llh_grid
 from params.params import vae_dict as train_dict
 from global_settings import device
 from datetime import datetime
@@ -47,7 +47,7 @@ def train_vae(m, n, train_loader, valid_loader):
             optimizer.step()
 
             train_loss += loss.item() / x_batch.size(dim=0)
-            train_llh += get_llh_mc(m, n, input_batch, model) / x_batch.size(dim=0)
+            train_llh += get_llh_grid(m, n, input_batch, model) / x_batch.size(dim=0)
             nbatch += 1
 
         # get training loss
@@ -100,7 +100,7 @@ def valid_vae(m, n, valid_loader, model, eval_mode):
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
 
             valid_loss += loss.item() / x_batch.size(dim=0)
-            valid_llh += get_llh_mc(m, n, input_batch, model) / x_batch.size(dim=0)
+            valid_llh += get_llh_grid(m, n, input_batch, model) / x_batch.size(dim=0)
             nbatch += 1
 
     valid_loss = valid_loss / nbatch
