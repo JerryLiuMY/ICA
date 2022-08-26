@@ -70,9 +70,9 @@ def plot_vae(m, n, llh_method):
 
 
 if __name__ == "__main__":
-    from torch import nn
-    run_vae(m=2, n=19, activation=nn.ReLU(), llh_method="mc")
-    run_vae(m=2, n=19, activation=nn.Sigmoid(), llh_method="mc")
-    run_vae(m=2, n=19, activation=nn.Tanh(), llh_method="mc")
-    run_vae(m=2, n=19, activation=nn.GELU(), llh_method="mc")
-    plot_vae(m=2, n=2, llh_method="mc")
+    # from torch import nn
+    # run_vae(m=2, n=19, activation=nn.ReLU(), llh_method="mc")
+    # run_vae(m=2, n=19, activation=nn.Sigmoid(), llh_method="mc")
+    # run_vae(m=2, n=19, activation=nn.Tanh(), llh_method="mc")
+    # run_vae(m=2, n=19, activation=nn.GELU(), llh_method="mc")
+    plot_vae(m=2, n=20, llh_method="mc")

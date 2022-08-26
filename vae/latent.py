@@ -1,6 +1,7 @@
 from global_settings import VAE_PATH
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+from data_prep.posterior import simu_post
 from numpy import random
 import numpy as np
 import pandas as pd
