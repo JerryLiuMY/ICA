@@ -3,12 +3,14 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from data_prep.posterior import simu_post
 from numpy import random
+from tqdm import tqdm
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import os
 sns.set()
 palette = sns.color_palette()
+tqdm.pandas()
 
 
 def plot_latent_2d(n):
@@ -23,8 +25,8 @@ def plot_latent_2d(n):
         # build simu_df and recon_df (num. of samples per datapoint set to 1)
         model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"), index_col=0)
-        # simu_df["post0"] = simu_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
-        # simu_df["post1"] = simu_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
+        post = simu_df.progress_apply(lambda _: simu_post(_.values, 2, n, activation), axis=1)
+        simu_df[["post0", "post1"]] = pd.DataFrame.from_dict(dict(zip(post.index, post.values))).T
 
         recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"), index_col=0)
         recon_df["std0"] = recon_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
@@ -33,11 +35,13 @@ def plot_latent_2d(n):
         recon_df["post1"] = recon_df.apply(lambda _: random.normal(loc=_.mu1, scale=_.std1, size=1)[0], axis=1)
 
         # visualization of the 2d latent distribution
-        sns.kdeplot(data=simu_df, x="z0", y="z1", fill=True, alpha=1., ax=ax)
-        sns.kdeplot(data=recon_df, x="post0", y="post1", fill=True, alpha=.7, ax=ax)
+        sns.kdeplot(data=simu_df, x="z0", y="z1", color=palette[0], fill=True, alpha=1., ax=ax)
+        sns.kdeplot(data=simu_df, x="post0", y="post1", color=palette[2], fill=True, alpha=1., ax=ax)
+        sns.kdeplot(data=recon_df, x="post0", y="post1", color=palette[1], fill=True, alpha=.7, ax=ax)
         ax_legend_prior = mpatches.Patch(color=palette[0], label="Prior $p(z)$", alpha=0.8)
+        ax_legend_post = mpatches.Patch(color=palette[2], label="Posterior $p(z|x)$", alpha=0.8)
         ax_legend_recon = mpatches.Patch(color=palette[1], label="Recon $\widehat{p}(z|x)$", alpha=0.8)
-        handles = [ax_legend_prior, ax_legend_recon]
+        handles = [ax_legend_prior, ax_legend_post, ax_legend_recon]
         ax.legend(handles=handles, loc="upper right", handlelength=0.2, handletextpad=0.5)
         ax.set_title(f"Latent space of {activation}")
         ax.set_xlabel("z0")
