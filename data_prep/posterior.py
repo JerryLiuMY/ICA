@@ -16,9 +16,9 @@ def simu_post(x, m, n, activation):
     :return:
     """
 
-    sampler = emcee.EnsembleSampler(1, m, get_log_prob, args=[x, m, n, activation])
-    p0 = np.random.randn(1, m)
-    post = sampler.run_mcmc(p0, nsteps=1000)[0]
+    sampler = emcee.EnsembleSampler(10, m, get_log_prob, args=[x, m, n, activation])
+    p0 = np.random.randn(10, m)
+    post = sampler.run_mcmc(p0, nsteps=1000)[0, :]
 
     return post
 
