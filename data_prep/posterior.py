@@ -18,7 +18,7 @@ def simu_post(x, m, n, activation):
 
     sampler = EnsembleSampler(nwalkers=2*m, ndim=m, log_prob_fn=get_log_prob, threads=8, args=(x, m, n, activation))
     p0 = np.random.randn(2 * m, m)
-    sampler.run_mcmc(p0, skip_initial_state_check=True, nsteps=500)
+    sampler.run_mcmc(p0, skip_initial_state_check=True, nsteps=80)
     post = sampler.get_last_sample().coords[0, :]
 
     return post
