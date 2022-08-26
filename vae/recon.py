@@ -2,6 +2,7 @@ from global_settings import VAE_PATH
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from torch import nn
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -17,11 +18,12 @@ def plot_recon_2d(n):
     """
 
     fig, axes = plt.subplots(1, 4, figsize=(16, 4))
-    activations = ["ReLU", "Sigmoid", "Tanh", "GELU"]
+    activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.GELU()]
     for ax, activation in zip(axes, activations):
         # load simu_df and recon_df and perform PCA
+        activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])
         simu_pca, recon_pac = PCA(n_components=2), PCA(n_components=2)
-        model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
+        model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation_name}")
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"), index_col=0)
         recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"), index_col=0)
         simu_2d = simu_pca.fit_transform(simu_df.loc[:, [_ for _ in simu_df.columns if "x" in _]])
@@ -38,7 +40,7 @@ def plot_recon_2d(n):
         ax_legend_s2 = mpatches.Patch(color=palette[7], label="$\widehat{\sigma}^2$" + f"={s2}", alpha=0.8)
         handles = [ax_legend_true, ax_legend_recon, ax_legend_s2]
         ax.legend(handles=handles, loc="upper right", handlelength=0.2, handletextpad=0.5)
-        ax.set_title(f"Reconstruction of {activation}")
+        ax.set_title(f"Reconstruction of {activation_name}")
         ax.set_xlabel("PC0")
         ax.set_ylabel("PC1")
 

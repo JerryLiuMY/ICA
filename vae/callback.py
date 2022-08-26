@@ -1,5 +1,6 @@
 from global_settings import VAE_PATH
 import matplotlib.pyplot as plt
+from torch import nn
 import numpy as np
 import seaborn as sns
 import os
@@ -14,17 +15,18 @@ def plot_callback(n, llh_method):
     """
 
     fig, axes = plt.subplots(2, 2, figsize=(14, 7))
-    activations = ["ReLU", "Sigmoid", "Tanh", "GELU"]
+    activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.GELU()]
     axes = [ax for sub_axes in axes for ax in sub_axes]
 
     for ax, activation in zip(axes, activations):
-        model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
+        activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])
+        model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation_name}")
         train_loss = np.load(os.path.join(model_path, "train_loss.npy"))
         valid_loss = np.load(os.path.join(model_path, "valid_loss.npy"))
         train_llh = np.load(os.path.join(model_path, f"train_llh_{llh_method}.npy"))
         valid_llh = np.load(os.path.join(model_path, f"valid_llh_{llh_method}.npy"))
 
-        ax.set_title(f"Learning curve of {activation} [Integration = {llh_method}]")
+        ax.set_title(f"Learning curve of {activation_name} [Integration = {llh_method}]")
         ax.plot(train_llh, color=sns.color_palette()[0], label="train_llh")
         ax.plot(valid_llh, color=sns.color_palette()[1], label="valid_llh")
         ax.set_xlabel("Epoch")

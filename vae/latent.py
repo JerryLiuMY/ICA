@@ -1,7 +1,8 @@
 from global_settings import VAE_PATH
 import matplotlib.patches as mpatches
-import matplotlib.pyplot as plt
 from data_prep.posterior import simu_post
+import matplotlib.pyplot as plt
+from torch import nn
 from numpy import random
 from tqdm import tqdm
 import numpy as np
@@ -20,14 +21,17 @@ def plot_latent_2d(n):
     """
 
     fig, axes = plt.subplots(1, 4, figsize=(16, 4))
-    activations = ["ReLU", "Sigmoid", "Tanh", "GELU"]
+    activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.GELU()]
     for ax, activation in zip(axes, activations):
-        # build simu_df and recon_df (num. of samples per datapoint set to 1)
-        model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
+        # build simu_df (num. of samples per datapoint set to 1)
+        activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])
+        model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation_name}")
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"), index_col=0)
-        post = simu_df.progress_apply(lambda _: simu_post(_.values, 2, n, activation), axis=1)
+        temp_df = simu_df[[col for col in simu_df.columns if "x" in col]]
+        post = temp_df.progress_apply(lambda _: simu_post(_.values, 2, n, activation), axis=1)
         simu_df[["post0", "post1"]] = pd.DataFrame.from_dict(dict(zip(post.index, post.values))).T
 
+        # build recon_df (num. of samples per datapoint set to 1)
         recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"), index_col=0)
         recon_df["std0"] = recon_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
         recon_df["std1"] = recon_df["logvar1"].apply(lambda _: np.exp(0.5 * _))
@@ -43,7 +47,7 @@ def plot_latent_2d(n):
         ax_legend_recon = mpatches.Patch(color=palette[1], label="Recon $\widehat{p}(z|x)$", alpha=0.8)
         handles = [ax_legend_prior, ax_legend_post, ax_legend_recon]
         ax.legend(handles=handles, loc="upper right", handlelength=0.2, handletextpad=0.5)
-        ax.set_title(f"Latent space of {activation}")
+        ax.set_title(f"Latent space of {activation_name}")
         ax.set_xlabel("z0")
         ax.set_ylabel("z1")
 
