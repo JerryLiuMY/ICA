@@ -23,18 +23,18 @@ def plot_latent_2d(n):
         # build simu_df and recon_df
         model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"), index_col=0)
-        simu_df["post0"] = simu_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
-        simu_df["post1"] = simu_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
+        # simu_df["post0"] = simu_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
+        # simu_df["post1"] = simu_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
 
         recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"), index_col=0)
         recon_df["std0"] = recon_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
         recon_df["std1"] = recon_df["logvar1"].apply(lambda _: np.exp(0.5 * _))
-        recon_df["z0"] = recon_df.apply(lambda _: random.normal(loc=_.mu0, scale=_.std0, size=1)[0], axis=1)
-        recon_df["z1"] = recon_df.apply(lambda _: random.normal(loc=_.mu1, scale=_.std1, size=1)[0], axis=1)
+        recon_df["post0"] = recon_df.apply(lambda _: random.normal(loc=_.mu0, scale=_.std0, size=1)[0], axis=1)
+        recon_df["post1"] = recon_df.apply(lambda _: random.normal(loc=_.mu1, scale=_.std1, size=1)[0], axis=1)
 
         # visualization of the 2d latent distribution
         sns.kdeplot(data=simu_df, x="z0", y="z1", fill=True, alpha=1., ax=ax)
-        sns.kdeplot(data=recon_df, x="z0", y="z1", fill=True, alpha=.7, ax=ax)
+        sns.kdeplot(data=recon_df, x="post0", y="post1", fill=True, alpha=.7, ax=ax)
         ax_legend_prior = mpatches.Patch(color=palette[0], label="Prior $p(z)$", alpha=0.8)
         ax_legend_recon = mpatches.Patch(color=palette[1], label="Recon $\widehat{p}(z|x)$", alpha=0.8)
         handles = [ax_legend_prior, ax_legend_recon]
