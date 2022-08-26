@@ -40,8 +40,8 @@ def plot_latent_2d(n):
 
         # visualization of the 2d latent distribution
         sns.kdeplot(data=simu_df, x="z0", y="z1", color=palette[0], fill=True, alpha=1., ax=ax)
-        sns.kdeplot(data=simu_df, x="post0", y="post1", color=palette[2], fill=True, alpha=.85, ax=ax)
-        sns.kdeplot(data=recon_df, x="post0", y="post1", color=palette[1], fill=True, alpha=.7, ax=ax)
+        sns.kdeplot(data=simu_df, x="post0", y="post1", color=palette[2], fill=True, alpha=.65, ax=ax)
+        sns.kdeplot(data=recon_df, x="post0", y="post1", color=palette[1], fill=True, alpha=.60, ax=ax)
         ax_legend_prior = mpatches.Patch(color=palette[0], label="Prior $p(z)$", alpha=0.8)
         ax_legend_post = mpatches.Patch(color=palette[2], label="Posterior $p(z|x)$", alpha=0.8)
         ax_legend_recon = mpatches.Patch(color=palette[1], label="Recon $\widehat{p}(z|x)$", alpha=0.8)
