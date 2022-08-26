@@ -75,4 +75,4 @@ if __name__ == "__main__":
     # run_vae(m=2, n=19, activation=nn.Sigmoid(), llh_method="mc")
     # run_vae(m=2, n=19, activation=nn.Tanh(), llh_method="mc")
     # run_vae(m=2, n=19, activation=nn.GELU(), llh_method="mc")
-    plot_vae(m=2, n=19, llh_method="grid")
+    plot_vae(m=2, n=20, llh_method="mc")
