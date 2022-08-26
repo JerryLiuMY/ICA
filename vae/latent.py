@@ -20,7 +20,7 @@ def plot_latent_2d(n):
     fig, axes = plt.subplots(1, 4, figsize=(16, 4))
     activations = ["ReLU", "Sigmoid", "Tanh", "GELU"]
     for ax, activation in zip(axes, activations):
-        # build simu_df and recon_df
+        # build simu_df and recon_df (num. of samples per datapoint set to 1)
         model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"), index_col=0)
         # simu_df["post0"] = simu_df["logvar0"].apply(lambda _: np.exp(0.5 * _))

@@ -18,3 +18,4 @@ pickle5==0.0.11
 statsmodels==0.13.2
 torchvision==0.12.0
 emcee==3.1.2
+zeus-mcmc==2.4.1

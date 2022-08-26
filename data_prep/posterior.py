@@ -2,8 +2,8 @@ from global_settings import DATA_PATH
 from scipy.stats import multivariate_normal
 import pickle5 as pickle
 import numpy as np
+from emcee import EnsembleSampler
 import torch
-import emcee
 import os
 
 
@@ -16,9 +16,10 @@ def simu_post(x, m, n, activation):
     :return:
     """
 
-    sampler = emcee.EnsembleSampler(10, m, get_log_prob, args=[x, m, n, activation])
-    p0 = np.random.randn(10, m)
-    post = sampler.run_mcmc(p0, nsteps=1000)[0, :]
+    sampler = EnsembleSampler(nwalkers=2*m, ndim=m, log_prob_fn=get_log_prob, threads=8, args=(x, m, n, activation))
+    p0 = np.random.randn(2 * m, m)
+    sampler.run_mcmc(p0, skip_initial_state_check=True, nsteps=500)
+    post = sampler.get_last_sample().coords[0, :]
 
     return post
 
@@ -28,7 +29,7 @@ def get_log_prob(z, x, m, n, activation):
     :param z: latent variable z
     :param x: observed variable x
     :param m: dimension of the latent variable
-    :param n:dimension of the observed variable
+    :param n: dimension of the observed variable
     :param activation: activation function for mlp
     :return:
     """
