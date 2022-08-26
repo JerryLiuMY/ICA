@@ -20,8 +20,8 @@ else:
 
 
 # Compare sparse grid vs. monte carlo
-# Find gradient -- a) autograd b) MLE gradient descent
 # Compare latent variable p(z|x) with estimates
+# Find gradient -- a) autograd b) MLE gradient descent
 # Modification to derived gradient of likelihood
 
 

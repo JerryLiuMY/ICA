@@ -3,7 +3,7 @@ numpy==1.21.0
 matplotlib==3.4.3
 python-dateutil==2.8.2
 mysql-connector-python==8.0.18
-seaborn==0.11.2
+seaborn==0.11.1
 tqdm==4.62.3
 openpyxl==3.0.9
 scipy==1.7.2
@@ -17,3 +17,4 @@ nvsmi==0.4.2
 pickle5==0.0.11
 statsmodels==0.13.2
 torchvision==0.12.0
+emcee==3.1.2

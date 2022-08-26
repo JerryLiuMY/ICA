@@ -1,6 +1,7 @@
 from global_settings import VAE_PATH
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+from numpy import random
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -22,10 +23,14 @@ def plot_latent_2d(n):
         model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation}")
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"), index_col=0)
         recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"), index_col=0)
+        recon_df["std0"] = recon_df["logvar0"].apply(lambda _: np.exp(0.5 * _))
+        recon_df["std1"] = recon_df["logvar1"].apply(lambda _: np.exp(0.5 * _))
+        recon_df["z0"] = recon_df.apply(lambda _: random.normal(loc=_.mu0, scale=_.std0, size=1)[0], axis=1)
+        recon_df["z1"] = recon_df.apply(lambda _: random.normal(loc=_.mu1, scale=_.std1, size=1)[0], axis=1)
 
         # visualization of the 2d latent distribution
         sns.kdeplot(data=simu_df, x="z0", y="z1", fill=True, alpha=1., ax=ax)
-        sns.kdeplot(data=recon_df, x="mu0", y="mu1", fill=True, alpha=.7, ax=ax)
+        sns.kdeplot(data=recon_df, x="z0", y="z1", fill=True, alpha=.7, ax=ax)
         s2 = np.round(np.mean(np.exp(recon_df["logs2"])), 3)
         ax_legend_prior = mpatches.Patch(color=palette[0], label="Prior $p(z)$", alpha=0.8)
         ax_legend_posterior = mpatches.Patch(color=palette[1], label="Posterior $\widehat{p}(z|x)$", alpha=0.8)
