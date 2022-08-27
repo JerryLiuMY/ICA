@@ -1,7 +1,7 @@
 from torch.distributions import MultivariateNormal
 
 
-def get_norm_lp(x, loc, cov_tril):
+def get_normal_lp(x, loc, cov_tril):
     """ Get log pdf from multivariate gaussian
     :param x: input value
     :param loc: location of multivariate normal

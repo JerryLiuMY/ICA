@@ -1,5 +1,5 @@
 from torch.distributions import MultivariateNormal
-from funcs.normal import get_norm_lp
+from funcs.dist import get_normal_lp
 from global_settings import device
 from params.params import mc
 from params.params import min_lim, max_lim, space
@@ -45,7 +45,7 @@ def get_llh_mc(m, n, input_batch, model):
     x = x.repeat(1, mc).reshape(batch_size, mc, n)
 
     # perform numerical integration
-    llh = get_norm_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
+    llh = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
     llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
@@ -97,8 +97,8 @@ def get_llh_grid(m, n, input_batch, model):
     x = x.repeat(1, grid_size).reshape(batch_size, grid_size, n)
 
     # perform numerical integration
-    log_prob_1 = get_norm_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
-    log_prob_2 = get_norm_lp(z_grid, loc=torch.zeros(z_grid.shape[-1]), cov_tril=torch.eye(z_grid.shape[-1]))
+    log_prob_1 = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
+    log_prob_2 = get_normal_lp(z_grid, loc=torch.zeros(z_grid.shape[-1]), cov_tril=torch.eye(z_grid.shape[-1]))
     log_prob_3 = torch.log(volume)
     llh = log_prob_1 + log_prob_2 + log_prob_3
     llh = llh.to(torch.float64)
