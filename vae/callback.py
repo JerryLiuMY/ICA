@@ -7,8 +7,9 @@ import os
 sns.set()
 
 
-def plot_callback(n, llh_method):
+def plot_callback(m, n, llh_method):
     """ Plot training and validation history
+    :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param llh_method: method for numerical integration
     :return: dataframe of z and x
@@ -20,7 +21,7 @@ def plot_callback(n, llh_method):
 
     for ax, activation in zip(axes, activations):
         activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])
-        model_path = os.path.join(VAE_PATH, f"m2_n{n}_{activation_name}")
+        model_path = os.path.join(VAE_PATH, f"m{m}_n{n}_{activation_name}")
         train_loss = np.load(os.path.join(model_path, "train_loss.npy"))
         valid_loss = np.load(os.path.join(model_path, "valid_loss.npy"))
         train_llh = np.load(os.path.join(model_path, f"train_llh_{llh_method}.npy"))

@@ -20,10 +20,7 @@ else:
 
 
 # Compare sparse grid vs. monte carlo
-# Compare latent variable p(z|x) with estimates
 # Find gradient -- a) autograd b) MLE gradient descent
-# Modification to derived gradient of likelihood
-
 
 # Underestimation of variance
 # Think about identification requirements

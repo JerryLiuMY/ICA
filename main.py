@@ -61,12 +61,12 @@ def plot_vae(m, n, llh_method):
         os.mkdir(figure_path)
 
     # plot recon, latent and callback
-    recon = plot_recon_2d(n)
-    latent = plot_latent_2d(n)
-    callback = plot_callback(n, llh_method=llh_method)
-    recon.savefig(os.path.join(figure_path, f"recon_m2_n{n}.pdf"), bbox_inches="tight")
-    latent.savefig(os.path.join(figure_path, f"latent_m2_n{n}.pdf"), bbox_inches="tight")
-    callback.savefig(os.path.join(figure_path, f"callback_m2_n{n}_{llh_method}.pdf"), bbox_inches="tight")
+    recon = plot_recon_2d(m, n)
+    latent = plot_latent_2d(m, n)
+    callback = plot_callback(m, n, llh_method=llh_method)
+    recon.savefig(os.path.join(figure_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")
+    latent.savefig(os.path.join(figure_path, f"latent_m{m}_n{n}.pdf"), bbox_inches="tight")
+    callback.savefig(os.path.join(figure_path, f"callback_m{m}_n{n}_{llh_method}.pdf"), bbox_inches="tight")
 
 
 if __name__ == "__main__":
