@@ -67,7 +67,7 @@ def train_vae(m, n, train_loader, valid_loader, llh_method):
         train_llh_li.append(train_llh)
 
         # get validation loss
-        valid_loss, valid_llh = valid_vae(m, n, valid_loader, model, llh_method, eval_mode=False)
+        valid_loss, valid_llh = valid_vae(m, n, model, valid_loader, llh_method, eval_mode=False)
         valid_loss_li.append(valid_loss)
         valid_llh_li.append(valid_llh)
 
@@ -82,7 +82,7 @@ def train_vae(m, n, train_loader, valid_loader, llh_method):
     return model, loss, llh
 
 
-def valid_vae(m, n, valid_loader, model, llh_method, eval_mode):
+def valid_vae(m, n, model, valid_loader, llh_method, eval_mode):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
