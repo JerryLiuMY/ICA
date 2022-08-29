@@ -8,41 +8,41 @@ import numpy as np
 import torch
 
 
-def get_llh_mc(m, n, input_batch, model):
+def get_llh_mc(m, n, x, logs2, model):
     """ Find log-likelihood from data and trained model
     :param m: latent dimension
     :param n: observed dimension
-    :param input_batch: inputs related to observation [batch_size x dimension]
+    :param x: inputs related to the observation x data
+    :param logs2: inputs related to the variance s2 data
     :param model: trained model
     :return: log-likelihood
     """
 
     # define input
-    x_batch, logs2_batch = input_batch
-    x, s2 = x_batch, logs2_batch.exp()
-    batch_size = x_batch.shape[0]
+    x, s2 = x, logs2.exp()
+    data_size = x.shape[0]
 
-    # get reconstruction -- batch_size x mc x n
+    # get reconstruction -- data_size x mc x n
     mu_mc = torch.zeros(m).repeat(mc, 1).reshape(mc, m)
-    mu_mc = mu_mc.repeat(batch_size, 1, 1).reshape(batch_size, mc, m)
+    mu_mc = mu_mc.repeat(data_size, 1, 1).reshape(data_size, mc, m)
     var_tril_mc = torch.eye(m).repeat(mc, 1, 1).reshape(mc, m, m)
-    var_tril_mc = var_tril_mc.repeat(batch_size, 1, 1, 1).reshape(batch_size, mc, m, m)
+    var_tril_mc = var_tril_mc.repeat(data_size, 1, 1, 1).reshape(data_size, mc, m, m)
     sampler = MultivariateNormal(loc=mu_mc, scale_tril=var_tril_mc)
     z_mc = sampler.sample()
     z_mc = z_mc.to(device)
     x_recon = model.decoder(z_mc)[0]
 
-    # get covariance -- batch_size x mc x n x n
+    # get covariance -- data_size x mc x n x n
     s2_sqrt = s2.sqrt()
-    s2_sqrt = s2_sqrt.repeat(1, n * n).reshape(batch_size, n, n)
-    s2_sqrt = s2_sqrt.repeat(1, mc, 1, 1).reshape(batch_size, mc, n, n)
+    s2_sqrt = s2_sqrt.repeat(1, n * n).reshape(data_size, n, n)
+    s2_sqrt = s2_sqrt.repeat(1, mc, 1, 1).reshape(data_size, mc, n, n)
     eye = torch.eye(n).repeat(mc, 1, 1).reshape(mc, n, n)
-    eye = eye.repeat(batch_size, 1, 1, 1).reshape(batch_size, mc, n, n)
+    eye = eye.repeat(data_size, 1, 1, 1).reshape(data_size, mc, n, n)
     eye = eye.to(device)
     s2_cov_tril = s2_sqrt * eye
 
-    # get input x -- batch_size x mc x n
-    x = x.repeat(1, mc).reshape(batch_size, mc, n)
+    # get input x -- data_size x mc x n
+    x = x.repeat(1, mc).reshape(data_size, mc, n)
 
     # perform numerical integration
     llh = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
@@ -55,19 +55,19 @@ def get_llh_mc(m, n, input_batch, model):
     return llh_batch
 
 
-def get_llh_grid(m, n, input_batch, model):
+def get_llh_grid(m, n, x, logs2, model):
     """ Find log-likelihood from data and trained model
     :param m: latent dimension
     :param n: observed dimension
-    :param input_batch: inputs related to observation [batch_size x dimension]
+    :param x: inputs related to the observation x data
+    :param logs2: inputs related to the variance s2 data
     :param model: trained model
     :return: log-likelihood
     """
 
     # define input
-    x_batch, logs2_batch = input_batch
-    x, s2 = x_batch, logs2_batch.exp()
-    batch_size = x_batch.shape[0]
+    x, s2 = x, logs2.exp()
+    data_size = x.shape[0]
 
     # prepare for numerical integration
     lin_space = np.linspace(min_lim, max_lim, space)
@@ -75,26 +75,26 @@ def get_llh_grid(m, n, input_batch, model):
     volume = ((max_lim - min_lim) / (space - 1)) ** m
     volume = torch.tensor(volume)
 
-    # get reconstruction -- batch_size x grid_size x n
+    # get reconstruction -- data_size x grid_size x n
     z_grid = itertools.product(*[list(grid_space) for _ in range(m)])
     z_grid = np.array(list(z_grid)).astype(np.float32)
     z_grid = torch.tensor(z_grid)
     grid_size = z_grid.shape[0]
-    z_grid = z_grid.repeat(batch_size, 1, 1).reshape(batch_size, grid_size, m)
+    z_grid = z_grid.repeat(data_size, 1, 1).reshape(data_size, grid_size, m)
     z_grid = z_grid.to(device)
     x_recon = model.decoder(z_grid)[0]
 
-    # get covariance -- batch_size x grid_size x n x n
+    # get covariance -- data_size x grid_size x n x n
     s2_sqrt = s2.sqrt()
-    s2_sqrt = s2_sqrt.repeat(1, n * n).reshape(batch_size, n, n)
-    s2_sqrt = s2_sqrt.repeat(1, grid_size, 1, 1).reshape(batch_size, grid_size, n, n)
+    s2_sqrt = s2_sqrt.repeat(1, n * n).reshape(data_size, n, n)
+    s2_sqrt = s2_sqrt.repeat(1, grid_size, 1, 1).reshape(data_size, grid_size, n, n)
     eye = torch.eye(n).repeat(grid_size, 1, 1).reshape(grid_size, n, n)
-    eye = eye.repeat(batch_size, 1, 1, 1).reshape(batch_size, grid_size, n, n)
+    eye = eye.repeat(data_size, 1, 1, 1).reshape(data_size, grid_size, n, n)
     eye = eye.to(device)
     s2_cov_tril = s2_sqrt * eye
 
-    # get input x -- batch_size x grid_size x n
-    x = x.repeat(1, grid_size).reshape(batch_size, grid_size, n)
+    # get input x -- data_size x grid_size x n
+    x = x.repeat(1, grid_size).reshape(data_size, grid_size, n)
 
     # perform numerical integration
     log_prob_1 = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
