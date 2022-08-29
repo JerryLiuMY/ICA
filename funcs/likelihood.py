@@ -19,7 +19,6 @@ def get_llh_mc(m, n, x, logs2, model):
     """
 
     # define input
-    x, s2 = x, logs2.exp()
     data_size = x.shape[0]
 
     # get reconstruction -- data_size x mc x n
@@ -33,7 +32,7 @@ def get_llh_mc(m, n, x, logs2, model):
     x_recon = model.decoder(z_mc)[0]
 
     # get covariance -- data_size x mc x n x n
-    s2_sqrt = s2.sqrt()
+    s2_sqrt = logs2.exp().sqrt()
     s2_sqrt = s2_sqrt.repeat(1, n * n).reshape(data_size, n, n)
     s2_sqrt = s2_sqrt.repeat(1, mc, 1, 1).reshape(data_size, mc, n, n)
     eye = torch.eye(n).repeat(mc, 1, 1).reshape(mc, n, n)
@@ -66,7 +65,6 @@ def get_llh_grid(m, n, x, logs2, model):
     """
 
     # define input
-    x, s2 = x, logs2.exp()
     data_size = x.shape[0]
 
     # prepare for numerical integration
@@ -85,7 +83,7 @@ def get_llh_grid(m, n, x, logs2, model):
     x_recon = model.decoder(z_grid)[0]
 
     # get covariance -- data_size x grid_size x n x n
-    s2_sqrt = s2.sqrt()
+    s2_sqrt = logs2.exp().sqrt()
     s2_sqrt = s2_sqrt.repeat(1, n * n).reshape(data_size, n, n)
     s2_sqrt = s2_sqrt.repeat(1, grid_size, 1, 1).reshape(data_size, grid_size, n, n)
     eye = torch.eye(n).repeat(grid_size, 1, 1).reshape(grid_size, n, n)
