@@ -1,12 +1,12 @@
 from params.params import mle_dict as train_dict
 from datetime import datetime
 from global_settings import device
-from autograd.model import Autograd
+from mle.model import MLE
 import numpy as np
 import torch
 
 
-def train_autograd(m, n, train_loader, valid_loader, llh_func):
+def train_mleauto(m, n, train_loader, valid_loader, llh_func):
     """ Perform autograd to train the model and find logs2
     :param m: latent dimension
     :param n: observed dimension
@@ -19,8 +19,8 @@ def train_autograd(m, n, train_loader, valid_loader, llh_func):
     # load parameters
     epochs, lr = train_dict["epochs"], train_dict["lr"]
 
-    # building MLEModel
-    model = Autograd(m, n)
+    # building Autograd
+    model = MLE(m, n)
     model = model.to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)

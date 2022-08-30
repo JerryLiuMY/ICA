@@ -1,4 +1,4 @@
-from model.vae import VariationalAutoencoder, elbo_gaussian
+from vae.model import VAE, elbo_gaussian
 from params.params import vae_dict as train_dict
 from global_settings import device
 from datetime import datetime
@@ -20,7 +20,7 @@ def train_vae(m, n, train_loader, valid_loader, llh_func):
     epochs, lr, beta = train_dict["epochs"], train_dict["lr"], train_dict["beta"]
 
     # building VAE
-    model = VariationalAutoencoder(m, n)
+    model = VAE(m, n)
     model = model.to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)

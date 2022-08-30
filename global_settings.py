@@ -23,11 +23,11 @@ DESKTOP_PATH = str(Path(os.getcwd()).parent.absolute())
 if DESKTOP_PATH == "/Users/mingyu/Desktop":
     DRIVE_PATH = "/Volumes/Sumsung_1T/ICA"
     DATA_PATH = get_dir(os.path.join(DRIVE_PATH, "data_prep"))
-    AUTOGRAD_PATH = get_dir(os.path.join(DRIVE_PATH, "autograd"))
+    AUTOGRAD_PATH = get_dir(os.path.join(DRIVE_PATH, "mle"))
     VAE_PATH = get_dir(os.path.join(DRIVE_PATH, "vae"))
 else:
     DATA_PATH = get_dir(os.path.join(DESKTOP_PATH, "data_prep"))
-    AUTOGRAD_PATH = get_dir(os.path.join(DESKTOP_PATH, "autograd"))
+    AUTOGRAD_PATH = get_dir(os.path.join(DESKTOP_PATH, "mle"))
     VAE_PATH = get_dir(os.path.join(DESKTOP_PATH, "vae"))
 
 

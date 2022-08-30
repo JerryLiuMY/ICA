@@ -2,9 +2,9 @@ from params.base import Decoder
 import torch.nn as nn
 
 
-class MLEAuto(nn.Module):
+class MLE(nn.Module):
     def __init__(self, m, n):
-        super(MLEAuto, self).__init__()
+        super(MLE, self).__init__()
         self.name = "autograd"
         self.decoder = Decoder(m, n)
 
