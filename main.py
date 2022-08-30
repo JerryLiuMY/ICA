@@ -11,8 +11,8 @@ from visualization.callback import plot_callback
 from params.params import exp_dict
 from visualization.latent import plot_latent_2d
 from visualization.recon import plot_recon_2d
-import torch
 import numpy as np
+import torch
 import os
 
 
@@ -31,6 +31,7 @@ def main(m, n, activation, model_name, llh_method):
     model_path = os.path.join(DESKTOP_PATH, model_name, f"m{m}_n{n}_{activation_name}")
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
+
     train_dict = {"vae": train_vae, "mleauto": train_mleauto, "mlesgd": train_mlesgd}
     simu_dict = {"vae": simu_vae, "mleauto": simu_mle, "mlesgd": simu_mle}
     llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}

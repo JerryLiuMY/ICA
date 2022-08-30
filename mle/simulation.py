@@ -18,10 +18,10 @@ def simu_mle(m, n, model, simu_loader):
     # perform simulation
     model.eval()
     nbatch = 0
-    for x_batch, _ in simu_loader:
+    for _, z_batch in simu_loader:
         with torch.no_grad():
-            x_batch = x_batch.to(device)
-            mean_batch, logs2_batch = model(x_batch)
+            z_batch = z_batch.to(device)
+            mean_batch, logs2_batch = model(z_batch)
             mean, logs2 = torch.cat([mean, mean_batch], dim=0), torch.cat([logs2, logs2_batch], dim=0)
             nbatch += 1
 

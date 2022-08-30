@@ -1,6 +1,6 @@
 from params.params import mle_dict as train_dict
-from datetime import datetime
 from global_settings import device
+from datetime import datetime
 from mle.model import MLE
 import numpy as np
 import torch
@@ -37,7 +37,7 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
 
         # mini-batch loop
         train_llh, nbatch = 0., 0
-        for x_batch, _ in train_loader:
+        for x_batch, z_batch in train_loader:
             x_batch = x_batch.to(device)
             train_llh = - llh_func(m, n, x_batch, model)
             optimizer.zero_grad()
@@ -54,7 +54,7 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
         train_llh_li.append(train_llh)
 
         # get validation loss
-        valid_loss, valid_llh = valid_autograd(m, n, model, valid_loader, llh_func, eval_mode=False)
+        valid_loss, valid_llh = valid_mleauto(m, n, model, valid_loader, llh_func, eval_mode=False)
         valid_llh_li.append(valid_llh)
 
     # return train/valid history and log-likelihoods
@@ -65,7 +65,7 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
     return model, callback
 
 
-def valid_autograd(m, n, model, valid_loader, llh_func, eval_mode):
+def valid_mleauto(m, n, model, valid_loader, llh_func, eval_mode):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
     :param n: dimension of the target variable

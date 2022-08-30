@@ -38,8 +38,8 @@ def train_vae(m, n, train_loader, valid_loader, llh_func):
 
         # mini-batch loop
         train_loss, train_llh, nbatch = 0., 0., 0
-        for x_batch, _ in train_loader:
-            x_batch = x_batch.to(device)
+        for x_batch, z_batch in train_loader:
+            x_batch, z_batch = x_batch.to(device), z_batch.to(device)
             mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
             optimizer.zero_grad()
@@ -47,7 +47,7 @@ def train_vae(m, n, train_loader, valid_loader, llh_func):
             optimizer.step()
 
             train_loss += loss.item() / x_batch.size(dim=0)
-            train_llh += llh_func(m, n, x_batch, model) / x_batch.size(dim=0)
+            train_llh += llh_func(m, n, x_batch, z_batch, model) / x_batch.size(dim=0)
             nbatch += 1
 
         # get training loss and llh
@@ -95,14 +95,14 @@ def valid_vae(m, n, model, valid_loader, llh_func, eval_mode):
 
     # get validation loss
     valid_loss, valid_llh, nbatch = 0., 0., 0
-    for x_batch, _ in valid_loader:
+    for x_batch, z_batch in valid_loader:
         with torch.no_grad():
-            x_batch = x_batch.to(device)
+            x_batch, z_batch = x_batch.to(device), z_batch.to(device)
             mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
 
             valid_loss += loss.item() / x_batch.size(dim=0)
-            valid_llh += llh_func(m, n, x_batch, model) / x_batch.size(dim=0)
+            valid_llh += llh_func(m, n, x_batch, z_batch, model) / x_batch.size(dim=0)
             nbatch += 1
 
     valid_loss = valid_loss / nbatch
