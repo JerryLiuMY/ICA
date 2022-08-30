@@ -31,7 +31,7 @@ def main(m, n, activation, model_name, llh_method):
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
     train_dict = {"vae": train_vae, "autograd": train_mleauto}
-    simu_dict = {"vae": simu_vae, "mle": simu_mle}
+    simu_dict = {"vae": simu_vae, "autograd": simu_mle}
     llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
     train_func = train_dict[model_name]
     simu_func = simu_dict[model_name]

@@ -120,6 +120,6 @@ def get_logs2(x, model):
     elif model.name == "mle":
         _, logs2 = model(x)
     else:
-        raise ValueError("Invalid model type")
+        raise ValueError("Invalid model name")
 
     return logs2

@@ -1,10 +1,11 @@
 from global_settings import device
+from datetime import datetime
 import pandas as pd
 import torch
 
 
 def simu_mle(m, n, model, simu_loader):
-    """ Perform simulation for reconstruction with VAE
+    """ Perform simulation for reconstruction with MLE
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param model: trained model for performing simulation
