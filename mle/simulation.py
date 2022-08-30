@@ -1,5 +1,4 @@
 from global_settings import device
-from datetime import datetime
 import pandas as pd
 import torch
 
