@@ -8,18 +8,18 @@ import numpy as np
 import torch
 
 
-def get_llh_mc(m, n, x, model, logs2):
+def get_llh_mc(m, n, x, model):
     """ Find log-likelihood from data and trained model
     :param m: latent dimension
     :param n: observed dimension
     :param x: inputs related to the observation x data
     :param model: trained model
-    :param logs2: inputs related to the variance s2 data
     :return: log-likelihood
     """
 
     # define input
     data_size = x.size(dim=0)
+    logs2 = get_logs2(x, model)
 
     # get reconstruction -- data_size x mc x n
     mu_mc = torch.zeros(m).repeat(mc, 1).reshape(mc, m)
@@ -54,18 +54,18 @@ def get_llh_mc(m, n, x, model, logs2):
     return llh_batch
 
 
-def get_llh_grid(m, n, x, model, logs2):
+def get_llh_grid(m, n, x, model):
     """ Find log-likelihood from data and trained model
     :param m: latent dimension
     :param n: observed dimension
     :param x: inputs related to the observation x data
     :param model: trained model
-    :param logs2: inputs related to the variance s2 data
     :return: log-likelihood
     """
 
     # define input
     data_size = x.size(dim=0)
+    logs2 = get_logs2(x, model)
 
     # prepare for numerical integration
     lin_space = np.linspace(min_lim, max_lim, space)
@@ -106,3 +106,20 @@ def get_llh_grid(m, n, x, model, logs2):
     llh_batch = llh_batch.cpu().detach().numpy().tolist()
 
     return llh_batch
+
+
+def get_logs2(x, model):
+    """ Find log-likelihood from data and trained model
+    :param x: inputs related to the observation x data
+    :param model: trained model
+    :return: logs2 for log-likelihood evaluation
+    """
+
+    if model.name == "vae":
+        _, logs2, _, _ = model(x)
+    elif model.name == "mle":
+        _, logs2 = model(x)
+    else:
+        raise ValueError("Invalid model type")
+
+    return logs2

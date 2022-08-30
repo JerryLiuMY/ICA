@@ -17,7 +17,6 @@ from torch import nn
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from params.params import exp_dict
-
 m, n, activation = 10, 20, nn.ReLU()
 
 # training data
@@ -49,9 +48,12 @@ Sample distribution of the latent variable `z` and the generated `x`
 from vae.training import train_vae
 from vae.training import valid_vae
 from vae.simulation import simu_vae
+from funcs.likelihood import get_llh_mc, get_llh_grid
 
-model, train_loss = train_vae(m, n, train_loader, valid_loader, llh_method="mc")
-valid_loss = valid_vae(m, n, model, valid_loader, llh_method="mc", eval_mode=True)
+llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
+llh_func = llh_dict["mc"]
+model, train_loss = train_vae(m, n, train_loader, valid_loader, llh_func)
+valid_loss = valid_vae(m, n, model, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_vae(m, n, model, simu_loader)
 ```
 

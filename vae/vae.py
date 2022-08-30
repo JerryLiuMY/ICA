@@ -6,6 +6,7 @@ import torch
 class VariationalAutoencoder(nn.Module):
     def __init__(self, m, n):
         super(VariationalAutoencoder, self).__init__()
+        self.name = "vae"
         self.encoder = Encoder(m, n)
         self.decoder = Decoder(m, n)
         if not self.encoder.input_dim == self.decoder.output_dim:

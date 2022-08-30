@@ -1,4 +1,5 @@
 from global_settings import VAE_PATH
+from funcs.likelihood import get_llh_mc, get_llh_grid
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae
@@ -31,7 +32,9 @@ def run_vae(m, n, activation, llh_method):
     valid_df = generate_data(m, n, activation, valid_size)
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
-    model, loss, llh = train_vae(m, n, train_loader, valid_loader, llh_method)
+    llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
+    llh_func = llh_dict[llh_method]
+    model, loss, llh = train_vae(m, n, train_loader, valid_loader, llh_func)
     [train_loss, valid_loss], [train_llh, valid_llh] = loss, llh
 
     torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
