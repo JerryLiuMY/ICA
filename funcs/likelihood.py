@@ -19,7 +19,7 @@ def get_llh_mc(m, n, x, model, logs2):
     """
 
     # define input
-    data_size = x.shape[0]
+    data_size = x.size(dim=0)
 
     # get reconstruction -- data_size x mc x n
     mu_mc = torch.zeros(m).repeat(mc, 1).reshape(mc, m)
@@ -65,7 +65,7 @@ def get_llh_grid(m, n, x, model, logs2):
     """
 
     # define input
-    data_size = x.shape[0]
+    data_size = x.size(dim=0)
 
     # prepare for numerical integration
     lin_space = np.linspace(min_lim, max_lim, space)

@@ -8,7 +8,7 @@ class VariationalAutoencoder(nn.Module):
         super(VariationalAutoencoder, self).__init__()
         self.encoder = Encoder(m, n)
         self.decoder = Decoder(m, n)
-        if not self.encoder.input_size == self.decoder.output_size:
+        if not self.encoder.input_dim == self.decoder.output_dim:
             raise ValueError("Input size does not match with output size")
 
     def forward(self, x):
@@ -31,8 +31,8 @@ class VariationalAutoencoder(nn.Module):
 class Block(nn.Module):
     def __init__(self, m, n):
         super(Block, self).__init__()
-        self.input_size = n
-        self.hidden = m
+        self.input_dim = n
+        self.latent_dim = m
 
 
 class Encoder(Block):
@@ -40,24 +40,24 @@ class Encoder(Block):
         super(Encoder, self).__init__(m, n)
 
         # first encoder layer
-        self.inter_size = self.input_size
-        self.enc1 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size)
+        self.inter_dim = self.input_dim
+        self.enc1 = nn.Linear(in_features=self.inter_dim, out_features=self.inter_dim)
 
         # second encoder layer
-        self.enc2 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size)
+        self.enc2 = nn.Linear(in_features=self.inter_dim, out_features=self.inter_dim)
 
         # map to mu and variance
-        self.fc_mu = nn.Linear(in_features=self.inter_size, out_features=self.hidden)
-        self.fc_logvar = nn.Linear(in_features=self.inter_size, out_features=self.hidden)
+        self.fc_mu = nn.Linear(in_features=self.inter_dim, out_features=self.latent_dim)
+        self.fc_logvar = nn.Linear(in_features=self.inter_dim, out_features=self.latent_dim)
 
     def forward(self, x):
         # encoder layers
-        x = F.relu(self.enc1(x))
-        x = F.relu(self.enc2(x))
+        inter = F.relu(self.enc1(x))
+        inter = F.relu(self.enc2(inter))
 
         # calculate mu & logvar
-        mu = self.fc_mu(x)
-        logvar = self.fc_logvar(x)
+        mu = self.fc_mu(inter)
+        logvar = self.fc_logvar(inter)
 
         return mu, logvar
 
@@ -67,24 +67,24 @@ class Decoder(Encoder, Block):
         super(Decoder, self).__init__(m, n)
 
         # linear layer
-        self.fc = nn.Linear(in_features=self.hidden, out_features=self.inter_size)
+        self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.inter_dim)
 
         # first decoder layer
-        self.dec2 = nn.Linear(in_features=self.inter_size, out_features=self.inter_size)
+        self.dec2 = nn.Linear(in_features=self.inter_dim, out_features=self.inter_dim)
 
         # second decoder layer -- mean and logs2
-        self.output_size = self.inter_size
-        self.dec1_mean = nn.Linear(in_features=self.inter_size, out_features=self.output_size)
-        self.dec1_logs2 = nn.Linear(in_features=self.inter_size, out_features=1)
+        self.output_dim = self.inter_dim
+        self.dec1_mean = nn.Linear(in_features=self.inter_dim, out_features=self.output_dim)
+        self.dec1_logs2 = nn.Linear(in_features=self.inter_dim, out_features=1)
 
-    def forward(self, x):
+    def forward(self, z):
         # linear layer
-        x = self.fc(x)
+        inter = self.fc(z)
 
         # decoder layers
-        x = F.relu(self.dec2(x))
-        mean = self.dec1_mean(x)
-        logs2 = self.dec1_logs2(x)
+        inter = F.relu(self.dec2(inter))
+        mean = self.dec1_mean(inter)
+        logs2 = self.dec1_logs2(inter)
 
         return mean, logs2
 
@@ -109,4 +109,4 @@ def elbo_gaussian(x, mean, logs2, mu, logvar, beta):
     # loss
     loss = - beta * kl_div + recon_loss
 
-    return -loss
+    return - loss

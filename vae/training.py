@@ -18,7 +18,7 @@ def train_vae(m, n, train_loader, valid_loader, llh_method):
     """
 
     # load parameters
-    epoch, lr, beta = train_dict["epoch"], train_dict["lr"], train_dict["beta"]
+    epochs, lr, beta = train_dict["epochs"], train_dict["lr"], train_dict["beta"]
     if llh_method == "mc":
         get_llh = get_llh_mc
     elif llh_method == "grid":
@@ -38,7 +38,7 @@ def train_vae(m, n, train_loader, valid_loader, llh_method):
     model.train()
     train_loss_li, train_llh_li = [], []
     valid_loss_li, valid_llh_li = [], []
-    for epoch in range(epoch):
+    for epoch in range(epochs):
         print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Training on epoch {epoch} "
               f"[lr={round(scheduler.get_last_lr()[0], 6)}]...")
 
