@@ -1,5 +1,5 @@
 from torch.distributions import MultivariateNormal
-from funcs.dist import get_normal_lp
+from likelihood.dist import get_normal_lp
 from global_settings import device
 from params.params import mc
 from params.params import min_lim, max_lim, space

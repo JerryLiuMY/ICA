@@ -48,7 +48,7 @@ Sample distribution of the latent variable `z` and the generated `x`
 from vae.training import train_vae
 from vae.training import valid_vae
 from vae.simulation import simu_vae
-from funcs.likelihood import get_llh_mc, get_llh_grid
+from likelihood.llh import get_llh_mc, get_llh_grid
 
 llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
 llh_func = llh_dict["mc"]
