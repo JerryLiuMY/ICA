@@ -1,7 +1,7 @@
 from params.params import mle_dict as train_dict
 from datetime import datetime
 from global_settings import device
-from mle.mle import MLEModel
+from mle_auto.model import MLEAuto
 import numpy as np
 import torch
 
@@ -20,7 +20,7 @@ def train_autograd(m, n, train_loader, valid_loader, llh_func):
     epochs, lr = train_dict["epochs"], train_dict["lr"]
 
     # building MLEModel
-    model = MLEModel(m, n)
+    model = MLEAuto(m, n)
     model = model.to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)

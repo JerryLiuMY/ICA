@@ -1,4 +1,4 @@
-from vae.vae import elbo_gaussian
+from model.vae import elbo_gaussian
 from params.params import vae_dict as train_dict
 from global_settings import device
 from datetime import datetime

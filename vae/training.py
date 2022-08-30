@@ -1,4 +1,4 @@
-from vae.vae import VariationalAutoencoder, elbo_gaussian
+from model.vae import VariationalAutoencoder, elbo_gaussian
 from params.params import vae_dict as train_dict
 from global_settings import device
 from datetime import datetime
@@ -69,10 +69,12 @@ def train_vae(m, n, train_loader, valid_loader, llh_func):
     valid_loss_arr = np.array(valid_loss_li)
     train_llh_arr = np.array(train_llh_li)
     valid_llh_arr = np.array(valid_llh_li)
-    loss = [train_loss_arr, valid_loss_arr]
-    llh = [train_llh_arr, valid_llh_arr]
+    callback = {
+        "loss": [train_loss_arr, valid_loss_arr],
+        "llh": [train_llh_arr, valid_llh_arr]
+    }
 
-    return model, loss, llh
+    return model, callback
 
 
 def valid_vae(m, n, model, valid_loader, llh_func, eval_mode):
