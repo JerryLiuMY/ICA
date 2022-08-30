@@ -4,6 +4,7 @@ from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae
 from mle.training_auto import train_mleauto
+from mle.training_sgd import train_mlesgd
 from vae.simulation import simu_vae
 from mle.simulation import simu_mle
 from visualization.callback import plot_callback
@@ -30,7 +31,7 @@ def main(m, n, activation, model_name, llh_method):
     model_path = os.path.join(DESKTOP_PATH, model_name, f"m{m}_n{n}_{activation_name}")
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
-    train_dict = {"vae": train_vae, "mleauto": train_mleauto}
+    train_dict = {"vae": train_vae, "mleauto": train_mleauto, "mlesgd": train_mlesgd}
     simu_dict = {"vae": simu_vae, "mleauto": simu_mle, "mlesgd": simu_mle}
     llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
     train_func = train_dict[model_name]
