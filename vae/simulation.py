@@ -45,6 +45,6 @@ def simu_vae(m, n, model, simu_loader):
 
     # report simulation loss
     simu_loss = simu_loss / nbatch
-    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish validation with loss {simu_loss}")
+    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish simulation with loss {simu_loss}")
 
     return recon_df

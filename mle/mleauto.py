@@ -60,9 +60,9 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
     # return train/valid history and log-likelihoods
     train_llh_arr = np.array(train_llh_li)
     valid_llh_arr = np.array(valid_llh_li)
-    llh = [train_llh_arr, valid_llh_arr]
+    callback = {"llh": [train_llh_arr, valid_llh_arr]}
 
-    return model, llh
+    return model, callback
 
 
 def valid_autograd(m, n, model, valid_loader, llh_func, eval_mode):

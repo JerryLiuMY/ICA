@@ -18,7 +18,7 @@ def simu_mle(m, n, model, simu_loader):
 
     # perform simulation
     model.eval()
-    valid_loss, nbatch = 0., 0
+    nbatch = 0
     for x_batch, _ in simu_loader:
         with torch.no_grad():
             x_batch = x_batch.to(device)
@@ -32,9 +32,5 @@ def simu_mle(m, n, model, simu_loader):
     logs2_dict = {f"logs2": logs2[:, 0].reshape(-1)}
     recon_dict = {**mean_dict, **logs2_dict}
     recon_df = pd.DataFrame(recon_dict)
-
-    # report simulation loss
-    valid_loss = valid_loss / nbatch
-    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish validation with loss {valid_loss}")
 
     return recon_df
