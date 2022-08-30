@@ -3,7 +3,7 @@ from likelihood.llh import get_llh_mc, get_llh_grid
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae
-from mle_auto.training import train_autograd
+from autograd.training import train_autograd
 from vae.simulation import simu_vae
 from visualization.callback import plot_callback
 from params.params import exp_dict
