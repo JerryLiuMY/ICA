@@ -1,10 +1,22 @@
 from pathlib import Path
-from utils.tools import get_dir
 import torch
 import os
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+def get_dir(path):
+    """ Make directory and return path
+    :param path:
+    :return:
+    """
+
+    if not os.path.isdir(path):
+        os.mkdir(path)
+
+    return path
+
 
 # define directories
 DESKTOP_PATH = str(Path(os.getcwd()).parent.absolute())
