@@ -38,8 +38,8 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
         # mini-batch loop
         train_llh, nbatch = 0., 0
         for x_batch, z_batch in train_loader:
-            x_batch = x_batch.to(device)
-            train_llh = - llh_func(m, n, x_batch, model)
+            x_batch, z_batch = x_batch.to(device), z_batch.to(device)
+            train_llh = - llh_func(m, n, x_batch, z_batch, model)
             optimizer.zero_grad()
             train_llh.backward()
             optimizer.step()
@@ -82,11 +82,11 @@ def valid_mleauto(m, n, model, valid_loader, llh_func, eval_mode):
 
     # get validation loss
     valid_llh, nbatch = 0., 0
-    for x_batch, _ in valid_loader:
+    for x_batch, z_batch in valid_loader:
         with torch.no_grad():
-            x_batch = x_batch.to(device)
+            x_batch, z_batch = x_batch.to(device), z_batch.to(device)
 
-            valid_llh += llh_func(m, n, x_batch, model) / x_batch.size(dim=0)
+            valid_llh += llh_func(m, n, x_batch, z_batch, model) / x_batch.size(dim=0)
             nbatch += 1
 
     valid_llh = valid_llh / nbatch
