@@ -46,8 +46,10 @@ def train_vae(m, n, train_loader, valid_loader, llh_func):
             loss.backward()
             optimizer.step()
 
-            train_loss += loss.item() / x_batch.size(dim=0)
-            train_llh += llh_func(m, n, x_batch, model, logs2_batch) / x_batch.size(dim=0)
+            loss_batch = loss.item()
+            llh_batch = llh_func(m, n, x_batch, model, logs2_batch).cpu().detach().numpy().tolist()
+            train_loss += loss_batch / x_batch.size(dim=0)
+            train_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1
 
         # get training loss and llh
@@ -69,10 +71,7 @@ def train_vae(m, n, train_loader, valid_loader, llh_func):
     valid_loss_arr = np.array(valid_loss_li)
     train_llh_arr = np.array(train_llh_li)
     valid_llh_arr = np.array(valid_llh_li)
-    callback = {
-        "loss": [train_loss_arr, valid_loss_arr],
-        "llh": [train_llh_arr, valid_llh_arr]
-    }
+    callback = {"loss": [train_loss_arr, valid_loss_arr], "llh": [train_llh_arr, valid_llh_arr]}
 
     return model, callback
 
@@ -101,8 +100,10 @@ def valid_vae(m, n, model, valid_loader, llh_func, eval_mode):
             mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
 
-            valid_loss += loss.item() / x_batch.size(dim=0)
-            valid_llh += llh_func(m, n, x_batch, model, logs2_batch) / x_batch.size(dim=0)
+            loss_batch = loss.item()
+            llh_batch = llh_func(m, n, x_batch, model, logs2_batch).cpu().detach().numpy().tolist()
+            valid_loss += loss_batch / x_batch.size(dim=0)
+            valid_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1
 
     valid_loss = valid_loss / nbatch

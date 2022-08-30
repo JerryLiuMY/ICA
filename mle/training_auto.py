@@ -39,12 +39,14 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
         train_llh, nbatch = 0., 0
         for x_batch, _ in train_loader:
             x_batch = x_batch.to(device)
-            train_llh = - llh_func(m, n, x_batch, model, logs2_batch)
+            logs2_batch = torch.zeros(size=(x_batch.shape[0], 1)).to(device)
+            llh = - llh_func(m, n, x_batch, model, logs2_batch)
             optimizer.zero_grad()
-            train_llh.backward()
+            llh.backward()
             optimizer.step()
 
-            train_llh += - train_llh.item() / x_batch.size(dim=0)
+            llh_batch = - llh.cpu().detach().numpy().tolist()
+            train_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1
 
         # get training llh
@@ -54,7 +56,7 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
         train_llh_li.append(train_llh)
 
         # get validation loss
-        valid_loss, valid_llh = valid_mleauto(m, n, model, valid_loader, llh_func, eval_mode=False)
+        valid_llh = valid_mleauto(m, n, model, valid_loader, llh_func, eval_mode=False)
         valid_llh_li.append(valid_llh)
 
     # return train/valid history and log-likelihoods
@@ -85,8 +87,10 @@ def valid_mleauto(m, n, model, valid_loader, llh_func, eval_mode):
     for x_batch, _ in valid_loader:
         with torch.no_grad():
             x_batch = x_batch.to(device)
+            logs2_batch = torch.zeros(size=(x_batch.shape[0], 1)).to(device)
 
-            valid_llh += llh_func(m, n, x_batch, model, logs2_batch) / x_batch.size(dim=0)
+            llh_batch = llh_func(m, n, x_batch, model, logs2_batch).cpu().detach().numpy().tolist()
+            valid_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1
 
     valid_llh = valid_llh / nbatch

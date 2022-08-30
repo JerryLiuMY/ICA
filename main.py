@@ -7,8 +7,8 @@ from mle.training_auto import train_mleauto
 from mle.training_sgd import train_mlesgd
 from vae.simulation import simu_vae
 from mle.simulation import simu_mle
-from visualization.callback import plot_callback
 from params.params import exp_dict
+from visualization.callback import plot_callback
 from visualization.latent import plot_latent_2d
 from visualization.recon import plot_recon_2d
 import numpy as np
@@ -32,6 +32,7 @@ def main(m, n, activation, model_name, llh_method):
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
 
+    # define training/simulation functions
     train_dict = {"vae": train_vae, "mleauto": train_mleauto, "mlesgd": train_mlesgd}
     simu_dict = {"vae": simu_vae, "mleauto": simu_mle, "mlesgd": simu_mle}
     llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
@@ -88,8 +89,8 @@ def plotting(m, n, model_name, llh_method):
 
 if __name__ == "__main__":
     from torch import nn
-    main(m=2, n=2, activation=nn.ReLU(), model_name="vae", llh_method="mc")
-    main(m=2, n=2, activation=nn.Sigmoid(), model_name="vae", llh_method="mc")
-    main(m=2, n=2, activation=nn.Tanh(), model_name="vae", llh_method="mc")
-    main(m=2, n=2, activation=nn.GELU(), model_name="vae", llh_method="mc")
+    main(m=2, n=2, activation=nn.ReLU(), model_name="mleauto", llh_method="mc")
+    main(m=2, n=2, activation=nn.Sigmoid(), model_name="mleauto", llh_method="mc")
+    main(m=2, n=2, activation=nn.Tanh(), model_name="mleauto", llh_method="mc")
+    main(m=2, n=2, activation=nn.GELU(), model_name="mleauto", llh_method="mc")
     plotting(m=2, n=2, model_name="vae", llh_method="mc")
