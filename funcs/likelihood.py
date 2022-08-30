@@ -8,13 +8,13 @@ import numpy as np
 import torch
 
 
-def get_llh_mc(m, n, x, logs2, model):
+def get_llh_mc(m, n, x, model, logs2):
     """ Find log-likelihood from data and trained model
     :param m: latent dimension
     :param n: observed dimension
     :param x: inputs related to the observation x data
-    :param logs2: inputs related to the variance s2 data
     :param model: trained model
+    :param logs2: inputs related to the variance s2 data
     :return: log-likelihood
     """
 
@@ -54,13 +54,13 @@ def get_llh_mc(m, n, x, logs2, model):
     return llh_batch
 
 
-def get_llh_grid(m, n, x, logs2, model):
+def get_llh_grid(m, n, x, model, logs2):
     """ Find log-likelihood from data and trained model
     :param m: latent dimension
     :param n: observed dimension
     :param x: inputs related to the observation x data
-    :param logs2: inputs related to the variance s2 data
     :param model: trained model
+    :param logs2: inputs related to the variance s2 data
     :return: log-likelihood
     """
 
