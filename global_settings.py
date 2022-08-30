@@ -23,15 +23,15 @@ DESKTOP_PATH = str(Path(os.getcwd()).parent.absolute())
 if DESKTOP_PATH == "/Users/mingyu/Desktop":
     DRIVE_PATH = "/Volumes/Sumsung_1T/ICA"
     DATA_PATH = get_dir(os.path.join(DRIVE_PATH, "data_prep"))
-    AUTOGRAD_PATH = get_dir(os.path.join(DRIVE_PATH, "mle"))
     VAE_PATH = get_dir(os.path.join(DRIVE_PATH, "vae"))
+    MLEAUTO_PATH = get_dir(os.path.join(DRIVE_PATH, "mleauto"))
 else:
     DATA_PATH = get_dir(os.path.join(DESKTOP_PATH, "data_prep"))
-    AUTOGRAD_PATH = get_dir(os.path.join(DESKTOP_PATH, "mle"))
     VAE_PATH = get_dir(os.path.join(DESKTOP_PATH, "vae"))
+    MLEAUTO_PATH = get_dir(os.path.join(DESKTOP_PATH, "mleauto"))
 
+path_dict = {"vae": VAE_PATH, "mleauto": MLEAUTO_PATH}
 
-# Autograd
 # Compare sparse grid vs. monte carlo
 # Gradient descent
 
