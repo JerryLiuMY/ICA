@@ -1,5 +1,6 @@
 from global_settings import path_dict
-from likelihood.llh import get_llh_mc, get_llh_grid
+from likelihood.llh_mc import get_llh_mc
+from likelihood.llh_grid import get_llh_grid
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae

@@ -8,6 +8,10 @@ The up-to-date <a href="./__resources__/ICA/main.pdf" target="_blank">write-up</
 
 Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/params.py
 
+Numerical integration via `Monte Carlo`: 
+
+Numerical integration via `Sparse Grid`: 
+
 ## Data Information
 <a href="https://drive.google.com/drive/folders/1OnsuFWZwtcZhROKImRHxXBBkdrAlD5Ti?usp=sharing" target="_blank">Repository</a> for the generated `weight` and `bias` of the single-layer MLP.
 
@@ -48,13 +52,14 @@ Sample distribution of the latent variable `z` and the generated `x`
 from vae.training import train_vae
 from vae.training import valid_vae
 from vae.simulation import simu_vae
-from likelihood.llh import get_llh_mc, get_llh_grid
+from likelihood.llh_mc import get_llh_mc
+from likelihood.llh_grid import get_llh_grid
 
 llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
 llh_func = llh_dict["mc"]
 model, train_loss = train_vae(m, n, train_loader, valid_loader, llh_func)
-valid_loss = valid_vae(m, n, model, valid_loader, llh_func, eval_mode=True)
-recon_df = simu_vae(m, n, model, simu_loader)
+valid_loss = valid_vae([model], valid_loader, llh_func, eval_mode=True)
+recon_df = simu_vae([model], simu_loader)
 ```
 
 ### Setting with `m=2, n=20`
@@ -83,5 +88,18 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 ![alt text](./__resources__/callback_m2_n2_mc.jpg?raw=true "Title")
 
 
-## MLE with Gradient Descent
-<a href="./funcs/likelihood.py">Link</a> to numerical integration for the likelihood function. 
+## MLE with AutoGrad
+
+```python
+from vae.training import train_vae
+from vae.training import valid_vae
+from vae.simulation import simu_vae
+from likelihood.llh_mc import get_llh_mc
+from likelihood.llh_grid import get_llh_grid
+
+llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
+llh_func = llh_dict["mc"]
+model, train_loss = train_vae(m, n, train_loader, valid_loader, llh_func)
+valid_loss = valid_vae([model], valid_loader, llh_func, eval_mode=True)
+recon_df = simu_vae([model], simu_loader)
+```
