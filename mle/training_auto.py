@@ -25,7 +25,7 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
     optimizer = torch.optim.AdamW([*model.parameters(), logs2], lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)
     num_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Number of parameters: {num_params}")
+    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Number of model parameters: {num_params}")
 
     # training loop
     model.train()
