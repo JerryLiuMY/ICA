@@ -52,7 +52,7 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
         # get training llh
         scheduler.step()
         train_llh = train_llh / nbatch
-        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish epoch {epoch} with llh={round(train_llh, 2)}")
+        print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Finish training with llh={round(train_llh, 2)}")
         train_llh_li.append(train_llh)
 
         # get validation loss
