@@ -21,8 +21,8 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
 
     # building Autograd
     model = MLE(m, n)
-    model = model.to(device)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
+    logs2 = torch.tensor([0.], requires_grad=True).to(device)
+    optimizer = torch.optim.AdamW([*model.parameters(), logs2], lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)
     num_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Number of parameters: {num_params}")
@@ -39,7 +39,7 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
         train_llh, nbatch = 0., 0
         for x_batch, _ in train_loader:
             x_batch = x_batch.to(device)
-            logs2_batch = torch.zeros(size=(x_batch.shape[0], 1)).to(device)
+            logs2_batch = logs2.repeat(x_batch.shape[0], 1)
             llh = - llh_func(m, n, x_batch, model, logs2_batch)
             optimizer.zero_grad()
             llh.backward()
