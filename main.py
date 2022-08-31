@@ -65,7 +65,7 @@ def main(m, n, activation, model_name, llh_method):
     # run simulation and reconstruction
     simu_df = generate_data(m, n, activation, simu_size)
     simu_loader = load_data(simu_df)
-    recon_df = simu_func(model, simu_loader)
+    recon_df = simu_func(outputs, simu_loader)
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
@@ -74,7 +74,7 @@ def plotting(m, n, model_name, llh_method):
     """ Plot original space, latent space and callback
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
-    :param model_name: name of the model to run
+    :param model_name: model name
     :param llh_method: method for numerical integration
     """
 
@@ -84,9 +84,9 @@ def plotting(m, n, model_name, llh_method):
         os.mkdir(figure_path)
 
     # plot recon, latent and callback
-    recon = plot_recon_2d(m, n)
-    latent = plot_latent_2d(m, n)
-    callback = plot_callback(m, n, llh_method=llh_method)
+    recon = plot_recon_2d(m, n, model_name)
+    latent = plot_latent_2d(m, n, model_name)
+    callback = plot_callback(m, n, model_name, llh_method=llh_method)
     recon.savefig(os.path.join(figure_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")
     latent.savefig(os.path.join(figure_path, f"latent_m{m}_n{n}.pdf"), bbox_inches="tight")
     callback.savefig(os.path.join(figure_path, f"callback_m{m}_n{n}_{llh_method}.pdf"), bbox_inches="tight")

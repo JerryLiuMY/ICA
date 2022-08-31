@@ -1,5 +1,5 @@
-from global_settings import VAE_PATH
 import matplotlib.patches as mpatches
+from global_settings import path_dict
 from data_prep.posterior import simu_post
 import matplotlib.pyplot as plt
 from torch import nn
@@ -14,10 +14,11 @@ palette = sns.color_palette()
 tqdm.pandas()
 
 
-def plot_latent_2d(m, n):
+def plot_latent_2d(m, n, model_name):
     """ Visualize the reconstructed 2D latent space
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
+    :param model_name: model name
     :return: dataframe of z and x
     """
 
@@ -26,7 +27,7 @@ def plot_latent_2d(m, n):
     for ax, activation in zip(axes, activations):
         # build simu_df (num. of samples per datapoint set to 1)
         activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])
-        model_path = os.path.join(VAE_PATH, f"m{m}_n{n}_{activation_name}")
+        model_path = os.path.join(path_dict[model_name], f"m{m}_n{n}_{activation_name}")
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"), index_col=0)
         temp_df = simu_df[[col for col in simu_df.columns if "x" in col]]
         post_df = temp_df.progress_apply(lambda _: simu_post(_.values, m, n, activation), axis=1)
