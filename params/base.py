@@ -38,10 +38,11 @@ class Encoder(Block):
 
 
 class Decoder(Block):
-    def __init__(self, m, n):
+    def __init__(self, m, n, fit_s2):
         super(Decoder, self).__init__(m, n)
 
         # linear layer
+        self.fit_s2 = fit_s2
         self.inter_dim = self.output_dim
         self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.inter_dim)
 
@@ -61,4 +62,7 @@ class Decoder(Block):
         mean = self.dec1_mean(inter)
         logs2 = self.dec1_logs2(inter)
 
-        return mean, logs2
+        if self.fit_s2:
+            return mean, logs2
+        else:
+            return mean
