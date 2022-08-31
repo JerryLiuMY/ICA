@@ -56,7 +56,7 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
         train_llh_li.append(train_llh)
 
         # get validation loss
-        valid_llh = valid_mleauto(m, n, model, valid_loader, llh_func, eval_mode=False)
+        valid_llh = valid_mleauto(m, n, model, logs2, valid_loader, llh_func, eval_mode=False)
         valid_llh_li.append(valid_llh)
 
     # return train/valid history and log-likelihoods
@@ -67,11 +67,12 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
     return model, callback
 
 
-def valid_mleauto(m, n, model, valid_loader, llh_func, eval_mode):
+def valid_mleauto(m, n, model, logs2, valid_loader, llh_func, eval_mode):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param model: trained VAE model
+    :param logs2: log of the fitted s2
     :param valid_loader: validation dataset loader
     :param llh_func: function for numerical integration
     :param eval_mode: whether set to evaluation model
@@ -87,7 +88,7 @@ def valid_mleauto(m, n, model, valid_loader, llh_func, eval_mode):
     for x_batch, _ in valid_loader:
         with torch.no_grad():
             x_batch = x_batch.to(device)
-            logs2_batch = torch.zeros(size=(x_batch.shape[0], 1)).to(device)
+            logs2_batch = logs2.repeat(x_batch.shape[0], 1)
 
             llh_batch = llh_func(m, n, x_batch, model, logs2_batch).cpu().detach().numpy().tolist()
             valid_llh += llh_batch / x_batch.size(dim=0)
