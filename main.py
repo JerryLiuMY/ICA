@@ -85,11 +85,13 @@ def plotting(m, n, model_name, llh_method):
 
     # plot recon, latent and callback
     recon = plot_recon_2d(m, n, model_name)
-    latent = plot_latent_2d(m, n, model_name)
     callback = plot_callback(m, n, model_name, llh_method=llh_method)
     recon.savefig(os.path.join(figure_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")
-    latent.savefig(os.path.join(figure_path, f"latent_m{m}_n{n}.pdf"), bbox_inches="tight")
     callback.savefig(os.path.join(figure_path, f"callback_m{m}_n{n}_{llh_method}.pdf"), bbox_inches="tight")
+
+    if model_name == "vae":
+        latent = plot_latent_2d(m, n, model_name)
+        latent.savefig(os.path.join(figure_path, f"latent_m{m}_n{n}.pdf"), bbox_inches="tight")
 
 
 if __name__ == "__main__":
