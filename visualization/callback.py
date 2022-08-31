@@ -49,6 +49,9 @@ def plot_callback(m, n, model_name, llh_method):
             handles, labels = ax.get_legend_handles_labels()
             ax.legend(handles, labels, loc="upper right")
 
+        else:
+            raise ValueError("Invalid model name")
+
     plt.tight_layout()
 
     return fig
