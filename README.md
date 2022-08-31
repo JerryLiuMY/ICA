@@ -92,7 +92,7 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 
 
 ## MLE with AutoGrad
-<a href="https://drive.google.com/drive/folders/1Oo8BO-NfYjcuMjYujvyiz0fzIqemiVxm?usp=sharing" target="_blank">Folder</a> for the trained MLE AutoGrad models. <a href="./mle">Link</a> to the model architecture, training loop and simulation. 
+<a href="https://drive.google.com/drive/folders/1APQifN2eF1nH0ztlzVKVGgzKPNpEq0_h?usp=sharing" target="_blank">Folder</a> for the trained MLE AutoGrad models. <a href="./mle">Link</a> to the model architecture, training loop and simulation. 
 
 ```python
 from mle.training_auto import train_mleauto
@@ -106,6 +106,16 @@ outputs, train_loss = train_mleauto(m, n, train_loader, valid_loader, llh_func)
 valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```
+
+### Setting with `m=2, n=10`
+Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
+
+- #### Observation and Reconstruction
+![alt text](./__resources__/mleauto/recon_m2_n2.jpg?raw=true "Title")
+
+- #### Learning Curve
+![alt text](./__resources__/mleauto/callback_m2_n2_mc.jpg?raw=true "Title")
+
 
 ### Setting with `m=2, n=2`
 Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
