@@ -3,17 +3,15 @@ import pandas as pd
 import torch
 
 
-def simu_mle(m, n, model, simu_loader):
+def simu_mle(model, simu_loader):
     """ Perform simulation for reconstruction with MLE
-    :param m: dimension of the latent variable
-    :param n: dimension of the target variable
     :param model: trained model for performing simulation
     :param simu_loader: simulation dataset loader
     :return: dataframe of reconstructions
     """
 
     # load parameters and initialize
-    mean, logs2 = torch.empty(size=(0, n)), torch.empty(size=(0, 1))
+    mean, logs2 = torch.empty(size=(0, model.n)), torch.empty(size=(0, 1))
 
     # perform simulation
     model.eval()

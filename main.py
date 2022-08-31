@@ -60,7 +60,7 @@ def main(m, n, activation, model_name, llh_method):
     # run simulation and reconstruction
     simu_df = generate_data(m, n, activation, simu_size)
     simu_loader = load_data(simu_df)
-    recon_df = simu_func(m, n, model, simu_loader)
+    recon_df = simu_func(model, simu_loader)
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
@@ -89,8 +89,8 @@ def plotting(m, n, model_name, llh_method):
 
 if __name__ == "__main__":
     from torch import nn
-    main(m=2, n=10, activation=nn.ReLU(), model_name="mleauto", llh_method="mc")
-    main(m=2, n=10, activation=nn.Sigmoid(), model_name="mleauto", llh_method="mc")
-    main(m=2, n=10, activation=nn.Tanh(), model_name="mleauto", llh_method="mc")
-    main(m=2, n=10, activation=nn.GELU(), model_name="mleauto", llh_method="mc")
-    plotting(m=2, n=10, model_name="mleauto", llh_method="mc")
+    main(m=2, n=2, activation=nn.ReLU(), model_name="mleauto", llh_method="mc")
+    main(m=2, n=2, activation=nn.Sigmoid(), model_name="mleauto", llh_method="mc")
+    main(m=2, n=2, activation=nn.Tanh(), model_name="mleauto", llh_method="mc")
+    main(m=2, n=2, activation=nn.GELU(), model_name="mleauto", llh_method="mc")
+    plotting(m=2, n=2, model_name="mleauto", llh_method="mc")

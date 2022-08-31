@@ -6,7 +6,7 @@ import torch
 class VAE(nn.Module):
     def __init__(self, m, n):
         super(VAE, self).__init__()
-        self.name = "vae"
+        self.name, self.m, self.n = "vae", m, n
         self.encoder = Encoder(m, n)
         self.decoder = Decoder(m, n, fit_s2=True)
 
