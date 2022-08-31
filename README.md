@@ -111,10 +111,10 @@ recon_df = simu_mle(outputs, simu_loader)
 Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
-![alt text](./__resources__/mleauto/recon_m2_n2.jpg?raw=true "Title")
+![alt text](./__resources__/mleauto/recon_m2_n10.jpg?raw=true "Title")
 
 - #### Learning Curve
-![alt text](./__resources__/mleauto/callback_m2_n2_mc.jpg?raw=true "Title")
+![alt text](./__resources__/mleauto/callback_m2_n10_mc.jpg?raw=true "Title")
 
 
 ### Setting with `m=2, n=2`
