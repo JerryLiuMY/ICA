@@ -18,10 +18,11 @@ def simu_vae(inputs, simu_loader):
     # perform simulation
     model.eval()
     nbatch = 0
-    for x_batch, _ in simu_loader:
+    for x_batch, z_batch in simu_loader:
         with torch.no_grad():
-            x_batch = x_batch.to(device)
-            mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
+            x_batch, z_batch = x_batch.to(device), z_batch.to(device)
+            mu_batch, logvar_batch = model.encoder(x_batch)
+            mean_batch, logs2_batch = model.decoder(z_batch)
             mean, logs2 = torch.cat([mean, mean_batch], dim=0), torch.cat([logs2, logs2_batch], dim=0)
             mu, logvar = torch.cat([mu, mu_batch], dim=0), torch.cat([logvar, logvar_batch], dim=0)
             nbatch += 1
