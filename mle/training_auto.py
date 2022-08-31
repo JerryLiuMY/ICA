@@ -64,7 +64,7 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
     valid_llh_arr = np.array(valid_llh_li)
     callback = {"llh": [train_llh_arr, valid_llh_arr]}
 
-    return model, callback
+    return [model, logs2], callback
 
 
 def valid_mleauto(inputs, valid_loader, llh_func, eval_mode):

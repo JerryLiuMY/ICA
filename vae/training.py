@@ -73,7 +73,7 @@ def train_vae(m, n, train_loader, valid_loader, llh_func):
     valid_llh_arr = np.array(valid_llh_li)
     callback = {"loss": [train_loss_arr, valid_loss_arr], "llh": [train_llh_arr, valid_llh_arr]}
 
-    return model, callback
+    return [model], callback
 
 
 def valid_vae(inputs, valid_loader, llh_func, eval_mode):

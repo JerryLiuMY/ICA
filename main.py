@@ -46,8 +46,12 @@ def main(m, n, activation, model_name, llh_method):
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
 
-    model, callback = train_func(m, n, train_loader, valid_loader, llh_func)
+    outputs, callback = train_func(m, n, train_loader, valid_loader, llh_func)
+    model = outputs[0]
     torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
+    if len == 2:
+        logs2 = outputs[1].cpu().detach()
+        torch.save(logs2, os.path.join(model_path, "logs2.pt"))
     if "loss" in callback.keys():
         [train_loss, valid_loss] = callback["loss"]
         np.save(os.path.join(model_path, "train_loss.npy"), train_loss)
@@ -89,8 +93,8 @@ def plotting(m, n, model_name, llh_method):
 
 if __name__ == "__main__":
     from torch import nn
-    main(m=2, n=2, activation=nn.ReLU(), model_name="mleauto", llh_method="mc")
-    main(m=2, n=2, activation=nn.Sigmoid(), model_name="mleauto", llh_method="mc")
-    main(m=2, n=2, activation=nn.Tanh(), model_name="mleauto", llh_method="mc")
-    main(m=2, n=2, activation=nn.GELU(), model_name="mleauto", llh_method="mc")
-    plotting(m=2, n=2, model_name="mleauto", llh_method="mc")
+    main(m=2, n=10, activation=nn.ReLU(), model_name="mleauto", llh_method="mc")
+    main(m=2, n=10, activation=nn.Sigmoid(), model_name="mleauto", llh_method="mc")
+    main(m=2, n=10, activation=nn.Tanh(), model_name="mleauto", llh_method="mc")
+    main(m=2, n=10, activation=nn.GELU(), model_name="mleauto", llh_method="mc")
+    plotting(m=2, n=10, model_name="mleauto", llh_method="mc")
