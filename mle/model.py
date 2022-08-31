@@ -6,9 +6,9 @@ class MLE(nn.Module):
     def __init__(self, m, n):
         super(MLE, self).__init__()
         self.name = "mle"
-        self.decoder = Decoder(m, n)
+        self.decoder = Decoder(m, n, fit_s2=False)
 
     def forward(self, z):
-        mean, logs2 = self.decoder(z)
+        mean = self.decoder(z)
 
-        return mean, logs2
+        return mean

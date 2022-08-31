@@ -8,7 +8,7 @@ class VAE(nn.Module):
         super(VAE, self).__init__()
         self.name = "vae"
         self.encoder = Encoder(m, n)
-        self.decoder = Decoder(m, n)
+        self.decoder = Decoder(m, n, fit_s2=True)
 
     def forward(self, x):
         mu, logvar = self.encoder(x)
