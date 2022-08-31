@@ -88,6 +88,7 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 
 
 ## MLE with AutoGrad
+<a href="https://drive.google.com/drive/folders/1Oo8BO-NfYjcuMjYujvyiz0fzIqemiVxm?usp=sharing" target="_blank">Folder</a> for the trained MLE AutoGrad models. <a href="./mle">Link</a> to the model architecture, training loop and simulation. 
 
 ```python
 from mle.training_auto import train_mleauto
