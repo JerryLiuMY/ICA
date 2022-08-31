@@ -3,14 +3,15 @@ import pandas as pd
 import torch
 
 
-def simu_vae(model, simu_loader):
+def simu_vae(inputs, simu_loader):
     """ Perform simulation for reconstruction with VAE
-    :param model: trained model for performing simulation
+    :param inputs: trained model for performing simulation
     :param simu_loader: simulation dataset loader
     :return: dataframe of reconstructions
     """
 
     # load parameters and initialize
+    [model] = inputs
     mean, logs2 = torch.empty(size=(0, model.n)), torch.empty(size=(0, 1))
     mu, logvar = torch.empty(size=(0, model.m)), torch.empty(size=(0, model.m))
 
