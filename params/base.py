@@ -61,7 +61,6 @@ class Decoder(Block):
         # decoder layers
         inter = F.relu(self.dec2(inter))
         mean = self.dec1_mean(inter)
-
         if self.fit_s2:
             logs2 = self.dec1_logs2(inter)
             return mean, logs2
