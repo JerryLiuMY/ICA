@@ -65,26 +65,26 @@ recon_df = simu_vae(outputs, simu_loader)
 Setting with `m=2, n=20, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
-![alt text](./__resources__/recon_m2_n20.jpg?raw=true "Title")
+![alt text](./__resources__/vae/recon_m2_n20.jpg?raw=true "Title")
 
 - #### Prior and Posterior
-![alt text](./__resources__/latent_m2_n20.jpg?raw=true "Title")
+![alt text](./__resources__/vae/latent_m2_n20.jpg?raw=true "Title")
 
 - #### Learning Curve
-![alt text](./__resources__/callback_m2_n20_mc.jpg?raw=true "Title")
+![alt text](./__resources__/vae/callback_m2_n20_mc.jpg?raw=true "Title")
 
 
 ### Setting with `m=2, n=2`
 Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
-![alt text](./__resources__/recon_m2_n2.jpg?raw=true "Title")
+![alt text](./__resources__/vae/recon_m2_n2.jpg?raw=true "Title")
 
 - #### Prior and Posterior
-![alt text](./__resources__/latent_m2_n2.jpg?raw=true "Title")
+![alt text](./__resources__/vae/latent_m2_n2.jpg?raw=true "Title")
 
 - #### Learning Curve
-![alt text](./__resources__/callback_m2_n2_mc.jpg?raw=true "Title")
+![alt text](./__resources__/vae/callback_m2_n2_mc.jpg?raw=true "Title")
 
 
 ## MLE with AutoGrad
@@ -102,3 +102,12 @@ outputs, train_loss = train_mleauto(m, n, train_loader, valid_loader, llh_func)
 valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```
+
+### Setting with `m=2, n=2`
+Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
+
+- #### Observation and Reconstruction
+![alt text](./__resources__/mleauto/recon_m2_n2.jpg?raw=true "Title")
+
+- #### Learning Curve
+![alt text](./__resources__/mleauto/callback_m2_n2_mc.jpg?raw=true "Title")
