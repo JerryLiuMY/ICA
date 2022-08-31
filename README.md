@@ -55,11 +55,10 @@ from vae.simulation import simu_vae
 from likelihood.llh_mc import get_llh_mc
 from likelihood.llh_grid import get_llh_grid
 
-llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
-llh_func = llh_dict["mc"]
-model, train_loss = train_vae(m, n, train_loader, valid_loader, llh_func)
-valid_loss = valid_vae([model], valid_loader, llh_func, eval_mode=True)
-recon_df = simu_vae([model], simu_loader)
+llh_func = {"mc": get_llh_mc, "grid": get_llh_grid}["mc"]
+outputs, train_loss = train_vae(m, n, train_loader, valid_loader, llh_func)
+valid_loss = valid_vae(outputs, valid_loader, llh_func, eval_mode=True)
+recon_df = simu_vae(outputs, simu_loader)
 ```
 
 ### Setting with `m=2, n=20`
@@ -91,15 +90,14 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 ## MLE with AutoGrad
 
 ```python
-from vae.training import train_vae
-from vae.training import valid_vae
-from vae.simulation import simu_vae
+from mle.training_auto import train_mleauto
+from mle.training_auto import valid_mleauto
+from mle.simulation import simu_mle
 from likelihood.llh_mc import get_llh_mc
 from likelihood.llh_grid import get_llh_grid
 
-llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
-llh_func = llh_dict["mc"]
-model, train_loss = train_vae(m, n, train_loader, valid_loader, llh_func)
-valid_loss = valid_vae([model], valid_loader, llh_func, eval_mode=True)
-recon_df = simu_vae([model], simu_loader)
+llh_func = {"mc": get_llh_mc, "grid": get_llh_grid}["mc"]
+outputs, train_loss = train_mleauto(m, n, train_loader, valid_loader, llh_func)
+valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
+recon_df = simu_mle(outputs, simu_loader)
 ```
