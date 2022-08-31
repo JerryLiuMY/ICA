@@ -1,4 +1,4 @@
-from global_settings import path_dict
+from global_settings import PATH_DICT
 from likelihood.llh_mc import get_llh_mc
 from likelihood.llh_grid import get_llh_grid
 from data_prep.generator import generate_data
@@ -29,7 +29,7 @@ def main(m, n, activation, model_name, llh_method):
     # define path and load parameters
     train_size, valid_size, simu_size = exp_dict["train_size"], exp_dict["valid_size"], exp_dict["simu_size"]
     activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])
-    model_path = os.path.join(path_dict[model_name], f"m{m}_n{n}_{activation_name}")
+    model_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_{activation_name}")
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
 
@@ -79,7 +79,7 @@ def plotting(m, n, model_name, llh_method):
     """
 
     # define path and load parameters
-    figure_path = os.path.join(path_dict[model_name], f"m{m}_n{n}_figure")
+    figure_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_figure")
     if not os.path.isdir(figure_path):
         os.mkdir(figure_path)
 

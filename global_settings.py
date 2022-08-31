@@ -25,12 +25,14 @@ if DESKTOP_PATH == "/Users/mingyu/Desktop":
     DATA_PATH = get_dir(os.path.join(DRIVE_PATH, "data_prep"))
     VAE_PATH = get_dir(os.path.join(DRIVE_PATH, "vae"))
     MLEAUTO_PATH = get_dir(os.path.join(DRIVE_PATH, "mleauto"))
+    MLESGD_PATH = get_dir(os.path.join(DRIVE_PATH, "mlesgd"))
 else:
     DATA_PATH = get_dir(os.path.join(DESKTOP_PATH, "data_prep"))
     VAE_PATH = get_dir(os.path.join(DESKTOP_PATH, "vae"))
     MLEAUTO_PATH = get_dir(os.path.join(DESKTOP_PATH, "mleauto"))
+    MLESGD_PATH = get_dir(os.path.join(DESKTOP_PATH, "mlesgd"))
 
-path_dict = {"vae": VAE_PATH, "mleauto": MLEAUTO_PATH}
+PATH_DICT = {"vae": VAE_PATH, "mleauto": MLEAUTO_PATH}
 
 # Compare sparse grid vs. monte carlo
 # Gradient descent

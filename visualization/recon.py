@@ -1,5 +1,5 @@
 import matplotlib.patches as mpatches
-from global_settings import path_dict
+from global_settings import PATH_DICT
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from torch import nn
@@ -25,7 +25,7 @@ def plot_recon_2d(m, n, model_name):
         # load simu_df and recon_df and perform PCA
         activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])
         simu_pca, recon_pac = PCA(n_components=2), PCA(n_components=2)
-        model_path = os.path.join(path_dict[model_name], f"m{m}_n{n}_{activation_name}")
+        model_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_{activation_name}")
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"), index_col=0)
         recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"), index_col=0)
         simu_2d = simu_pca.fit_transform(simu_df.loc[:, [_ for _ in simu_df.columns if "x" in _]])
