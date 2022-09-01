@@ -1,32 +1,39 @@
-## Notes
+# Notes
 
-
-### Numerical Integration
-#### Monte Carlo 
+## Numerical Integration
+### Monte Carlo 
 - Computationally efficient
 - Work well in high dimension (large `m`)
-- High variance
+- High variance and require large enough samples
 
-#### Sparse Grid 
+### Sparse Grid 
 - Computationally less efficient
-- Numerical underflow in hugh dimension 
+- Numerical underflow in high dimension 
+- Can evaluate exactly with fine enough grid + complete coverage
 
+## Training and Inference
+### Learning curve 
+- **VAE:** The ELBO converges reasonably fast
+- **VAE:** The LLH first deteriorates before improving again
+- **VAE:** The LLH can deteriorate as we train for more iterations (e.g. Sigmoid)
+- **MLE:** The LLH converges very fast
 
-### Training and Inference
-#### Learning curve 
+### Sigma^{2}
+- **VAE:** `sigma^{2}` estimated using network with VAE and can be data dependent
+- **VAE:** `sigma^{2}` under estimated with VAE 
+- **MLE:** `sigma^{2}` estimated using an independent variable
+- **MLE:** `sigma^{2}` estimated correctly estimated with MLE 
 
-#### Sigma^{2}
-- sigma^{2} under estimation under VAE 
-- sigma^{2} correctly estimated under MLE 
-
-### Observed Space 
-- Compare p(x|z) with PCA
+## Observed Space 
+- Compare `p(x|z)` with PCA
 - Single latent sample per observation
 - m=2, n=2 may experience over-parametrization
-- VAE: p(x|z) is generated from variational distribution
-- MLE: p(x|z) is generated from prior
+- **VAE:** `p(x|z)` is generated from the variational distribution
+- **MLE:** `p(x|z)` is generated from the prior
 
-### Latent Space
-- MCMC for latent 
+## Latent Space
+- MCMC for computing the posterior `p(z|x)`
 - Single latent sample per observation
-- MLE: Latent p(z|x) not available for MLE
+- **VAE:** Latent `\hat{p}(z|x)` available for VAE 
+- **VAE:** Latent variable `z` of interest or by-product of VAE structure
+- **MLE:** Latent `\hat{p}(z|x)` not available for MLE
