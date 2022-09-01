@@ -22,7 +22,7 @@
 ### Sigma^{2}
 - **VAE:** `sigma^{2}` estimated using network with VAE and can be data dependent
 - **VAE:** `sigma^{2}` under estimated with VAE 
-- **MLE:** `sigma^{2}` estimated using an independent variable
+- **MLE:** `sigma^{2}` estimated using an independent variable and not data dependent
 - **MLE:** `sigma^{2}` estimated correctly estimated with MLE 
 
 ## Observed Space
