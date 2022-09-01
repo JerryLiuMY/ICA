@@ -1,4 +1,4 @@
-# Notes
+# Notes for MLE/VAE for nonlinear ICA
 
 ## Numerical Integration
 ### Monte Carlo 
