@@ -82,8 +82,12 @@ def get_grad_mc(m, n, x, model, logs2):
     llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
 
     # perform numerical integration for model parameters
-    x_recon.backward()
-    model_int = - logs2 + model.parameters().grad + (x - x_recon) + llh
+    objective = - 0.5 * logs2.exp().pow(-1) * torch.norm(x - x_recon, p=2, dim=2)
+    objective.backward(torch.ones_like(objective))
+    for param in model.parameters():
+        print(param.grad.view(-1))
+
+    model_int = llh
     model_int = model_int.to(torch.float64)
     model_int_sample = model_int.exp().sum(dim=1)
 

@@ -16,4 +16,9 @@ def train_mlesgd(m, n, train_loader, valid_loader, llh_func):
     :return: trained model and training loss history
     """
 
+    with torch.no_grad():
+        for p in model.parameters():
+            p_new = p - lr * p.grad
+            p.copy_(p_new)
+
     pass
