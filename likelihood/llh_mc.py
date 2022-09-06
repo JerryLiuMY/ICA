@@ -6,14 +6,14 @@ import numpy as np
 import torch
 
 
-def get_llh_mc(m, n, x, model, logs2):
-    """ Find log-likelihood from data and trained model
+def initialize_mc(m, n, x, model, logs2):
+    """ Initialize monte-carlo integration
     :param m: latent dimension
     :param n: observed dimension
     :param x: inputs related to the observation x data
     :param model: trained model
     :param logs2: log of the estimated s2
-    :return: log-likelihood
+    :return: x, x_recon, s2_cov_tril
     """
 
     # define input
@@ -41,10 +41,37 @@ def get_llh_mc(m, n, x, model, logs2):
     # get input x -- data_size x mc x n
     x = x.repeat(1, mc).reshape(data_size, mc, n)
 
+    return x, x_recon, s2_cov_tril
+
+
+def get_llh_mc(m, n, x, model, logs2):
+    """ Find log-likelihood from data and trained model
+    :param m: latent dimension
+    :param n: observed dimension
+    :param x: inputs related to the observation x data
+    :param model: trained model
+    :param logs2: log of the estimated s2
+    :return: log-likelihood
+    """
+
     # perform numerical integration
+    x, x_recon, s2_cov_tril = initialize_mc(m, n, x, model, logs2)
     llh = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
     llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
 
     return llh_sample
+
+
+def get_grad_mc(m, n, x, model, logs2):
+    """ Find log-likelihood from data and trained model
+    :param m: latent dimension
+    :param n: observed dimension
+    :param x: inputs related to the observation x data
+    :param model: trained model
+    :param logs2: log of the estimated s2
+    :return: log-likelihood
+    """
+
+    pass
