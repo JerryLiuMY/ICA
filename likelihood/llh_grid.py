@@ -54,6 +54,5 @@ def get_llh_grid(m, n, x, model, logs2):
     llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
-    llh_batch = llh_sample.sum(dim=0)
 
-    return llh_batch
+    return llh_sample

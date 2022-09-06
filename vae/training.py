@@ -47,7 +47,8 @@ def train_vae(m, n, train_loader, valid_loader, llh_func):
             optimizer.step()
 
             loss_batch = loss.item()
-            llh_batch = llh_func(m, n, x_batch, model, logs2_batch).cpu().detach().numpy().tolist()
+            llh_sample = llh_func(m, n, x_batch, model, logs2_batch)
+            llh_batch = llh_sample.sum(dim=0).cpu().detach().numpy().tolist()
             train_loss += loss_batch / x_batch.size(dim=0)
             train_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1
@@ -101,7 +102,8 @@ def valid_vae(inputs, valid_loader, llh_func, eval_mode):
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
 
             loss_batch = loss.item()
-            llh_batch = llh_func(m, n, x_batch, model, logs2_batch).cpu().detach().numpy().tolist()
+            llh_sample = llh_func(m, n, x_batch, model, logs2_batch)
+            llh_batch = llh_sample.sum(dim=0).cpu().detach().numpy().tolist()
             valid_loss += loss_batch / x_batch.size(dim=0)
             valid_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1

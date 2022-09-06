@@ -40,12 +40,12 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
         for x_batch, _ in train_loader:
             x_batch = x_batch.to(device)
             logs2_batch = logs2.repeat(x_batch.shape[0], 1)
-            llh = - llh_func(m, n, x_batch, model, logs2_batch)
+            objective = - llh_func(m, n, x_batch, model, logs2_batch).sum(dim=0)
             optimizer.zero_grad()
-            llh.backward()
+            objective.backward()
             optimizer.step()
 
-            llh_batch = - llh.cpu().detach().numpy().tolist()
+            llh_batch = - objective.cpu().detach().numpy().tolist()
             train_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1
 
@@ -89,7 +89,8 @@ def valid_mleauto(inputs, valid_loader, llh_func, eval_mode):
             x_batch = x_batch.to(device)
             logs2_batch = logs2.repeat(x_batch.shape[0], 1)
 
-            llh_batch = llh_func(m, n, x_batch, model, logs2_batch).cpu().detach().numpy().tolist()
+            llh_sample = llh_func(m, n, x_batch, model, logs2_batch)
+            llh_batch = llh_sample.sum(dim=0).cpu().detach().numpy().tolist()
             valid_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1
 
