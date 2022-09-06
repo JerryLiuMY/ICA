@@ -1,12 +1,12 @@
 from torch.distributions import MultivariateNormal
-from likelihood.dist import get_normal_lp
+from likelihoods.dist import get_normal_lp
 from global_settings import device
 from params.params import mc
 import numpy as np
 import torch
 
 
-def initialize_mc(m, n, x, model, logs2):
+def build_mc(m, n, x, model, logs2):
     """ Initialize monte-carlo integration
     :param m: latent dimension
     :param n: observed dimension
@@ -41,11 +41,11 @@ def initialize_mc(m, n, x, model, logs2):
     # get input x -- data_size x mc x n
     x = x.repeat(1, mc).reshape(data_size, mc, n)
 
-    return x, x_recon, s2_cov_tril
+    return x, model, logs2, x_recon, s2_cov_tril
 
 
 def get_llh_mc(m, n, x, model, logs2):
-    """ Find log-likelihood from data and trained model
+    """ Find log-likelihood from data and trained model [mc]
     :param m: latent dimension
     :param n: observed dimension
     :param x: inputs related to the observation x data
@@ -54,8 +54,8 @@ def get_llh_mc(m, n, x, model, logs2):
     :return: log-likelihood
     """
 
-    # perform numerical integration
-    x, x_recon, s2_cov_tril = initialize_mc(m, n, x, model, logs2)
+    # perform numerical integration for llh
+    x, model, logs2, x_recon, s2_cov_tril = build_mc(m, n, x, model, logs2)
     llh = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
     llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
@@ -71,7 +71,29 @@ def get_grad_mc(m, n, x, model, logs2):
     :param x: inputs related to the observation x data
     :param model: trained model
     :param logs2: log of the estimated s2
-    :return: log-likelihood
+    :return: gradients w.r.t model and s2
     """
 
-    pass
+    # perform numerical integration for likelihood
+    x, model, logs2, x_recon, s2_cov_tril = build_mc(m, n, x, model, logs2)
+    llh = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
+    llh = llh.to(torch.float64)
+    llh_sample = llh.exp().sum(dim=1).log()
+    llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
+
+    # perform numerical integration for model parameters
+    x_recon.backward()
+    model_int = - logs2 + model.parameters().grad + (x - x_recon) + llh
+    model_int = model_int.to(torch.float64)
+    model_int_sample = model_int.exp().sum(dim=1)
+
+    # perform numerical integration for s2
+    s2_int = - logs2 + (x - x_recon) + llh
+    s2_int = s2_int.to(torch.float64)
+    s2_int_sample = s2_int.exp().sum(dim=1)
+
+    # take the ratio and find the gradients
+    model_grad_sample = model_int_sample / llh_sample.exp()
+    s2_grad_sample = s2_int_sample / llh_sample.exp()
+
+    return model_grad_sample, s2_grad_sample

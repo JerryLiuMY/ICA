@@ -2,11 +2,11 @@ import itertools
 import numpy as np
 import torch
 from global_settings import device
-from likelihood.dist import get_normal_lp
+from likelihoods.dist import get_normal_lp
 from params.params import min_lim, max_lim, space
 
 
-def get_llh_grid(m, n, x, model, logs2):
+def build_grid(m, n, x, model, logs2):
     """ Find log-likelihood from data and trained model
     :param m: latent dimension
     :param n: observed dimension
@@ -46,6 +46,22 @@ def get_llh_grid(m, n, x, model, logs2):
     # get input x -- data_size x grid_size x n
     x = x.repeat(1, grid_size).reshape(data_size, grid_size, n)
 
+    return x, model, logs2, x_recon, s2_cov_tril, z_grid, volume
+
+
+def get_llh_grid(m, n, x, model, logs2):
+    """ Find log-likelihood from data and trained model [grid]
+    :param m: latent dimension
+    :param n: observed dimension
+    :param x: inputs related to the observation x data
+    :param model: trained model
+    :param logs2: log of the estimated s2
+    :return: log-likelihood
+    """
+
+    # perform numerical integration for llh
+    x, model, logs2, x_recon, s2_cov_tril, z_grid, volume = build_grid(m, n, x, model, logs2)
+
     # perform numerical integration
     log_prob_1 = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
     log_prob_2 = get_normal_lp(z_grid, loc=torch.zeros(z_grid.shape[-1]), cov_tril=torch.eye(z_grid.shape[-1]))
@@ -56,3 +72,19 @@ def get_llh_grid(m, n, x, model, logs2):
     llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))
 
     return llh_sample
+
+
+def get_grad_grid(m, n, x, model, logs2):
+    """ Find log-likelihood from data and trained model [grid]
+    :param m: latent dimension
+    :param n: observed dimension
+    :param x: inputs related to the observation x data
+    :param model: trained model
+    :param logs2: log of the estimated s2
+    :return: gradients w.r.t model and s2
+    """
+
+    # perform numerical integration for llh
+    x, model, logs2, x_recon, s2_cov_tril, z_grid, volume = build_grid(m, n, x, model, logs2)
+
+    return None
