@@ -1,6 +1,6 @@
 from global_settings import PATH_DICT
 from likelihoods.llh_mc import get_llh_mc
-from likelihoods.llh_grid import get_llh_grid, get_grad_grid
+from likelihoods.llh_grid import get_llh_grid
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae
@@ -11,6 +11,7 @@ from params.params import exp_dict
 from visualization.callback import plot_callback
 from visualization.latent import plot_latent_2d
 from visualization.recon import plot_recon_2d
+from functools import partial
 import numpy as np
 import torch
 import os
@@ -33,14 +34,14 @@ def main(m, n, activation, model_name, llh_method):
         os.mkdir(model_path)
 
     # define training/simulation functions
-    train_dict = {"vae": train_vae, "mleauto": train_mle, "mlesgd": train_mlesgd}
+    train_mleauto = partial(train_mle, method="auto")
+    train_mlesgd = partial(train_mle, method="sgd")
+    train_dict = {"vae": train_vae, "mleauto": train_mleauto, "mlesgd": train_mlesgd}
     simu_dict = {"vae": simu_vae, "mleauto": simu_mle, "mlesgd": simu_mle}
     llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
-    grad_dict = {"mc": get_grad_mc, "grid": get_grad_grid}
     train_func = train_dict[model_name]
     simu_func = simu_dict[model_name]
     llh_func = llh_dict[llh_method]
-    llh_func = grad_dict[llh_method]
 
     # training and validation
     train_df = generate_data(m, n, activation, train_size)
@@ -96,8 +97,8 @@ def plotting(m, n, model_name, llh_method):
 
 if __name__ == "__main__":
     from torch import nn
-    main(m=2, n=20, activation=nn.ReLU(), model_name="mleauto", llh_method="mc")
-    # main(m=2, n=20, activation=nn.Sigmoid(), model_name="mleauto", llh_method="mc")
-    # main(m=2, n=20, activation=nn.Tanh(), model_name="mleauto", llh_method="mc")
-    # main(m=2, n=20, activation=nn.GELU(), model_name="mleauto", llh_method="mc")
-    # plotting(m=2, n=20, model_name="mleauto", llh_method="mc")
+    main(m=2, n=10, activation=nn.ReLU(), model_name="mlesgd", llh_method="mc")
+    main(m=2, n=10, activation=nn.Sigmoid(), model_name="mlesgd", llh_method="mc")
+    main(m=2, n=10, activation=nn.Tanh(), model_name="mlesgd", llh_method="mc")
+    main(m=2, n=10, activation=nn.GELU(), model_name="mlesgd", llh_method="mc")
+    plotting(m=2, n=10, model_name="mlesgd", llh_method="mc")

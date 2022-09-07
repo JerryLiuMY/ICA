@@ -55,7 +55,8 @@ def train_mle(m, n, train_loader, valid_loader, llh_func, method):
                 optimizer.zero_grad()
                 objective.backward(gradient=gradient)
                 optimizer.step()
-                llh_batch = - torch.dot(objective, gradient).cpu().detach().numpy().tolist()
+                llh_sample = llh_func(m, n, x_batch, model, logs2_batch)
+                llh_batch = llh_sample.sum(dim=0).cpu().detach().numpy().tolist()
             else:
                 raise ValueError("Invalid model name")
 
