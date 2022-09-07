@@ -4,6 +4,7 @@ from datetime import datetime
 from mle.model import MLE
 import numpy as np
 import torch
+from torch.autograd import backward
 
 
 def train_mle(m, n, train_loader, valid_loader, llh_func, method):
