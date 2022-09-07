@@ -117,17 +117,7 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 ![alt text](./__resources__/mleauto/callback_m2_n10_mc.jpg?raw=true "Title")
 
 
-### Setting with `m=2, n=2`
-Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
-
-- #### Observation and Reconstruction
-![alt text](./__resources__/mleauto/recon_m2_n2.jpg?raw=true "Title")
-
-- #### Learning Curve
-![alt text](./__resources__/mleauto/callback_m2_n2_mc.jpg?raw=true "Title")
-
-
-## MLE with Manual Gradient Descent
+## MLE with SGD
 <a href="https://drive.google.com/drive/folders/1gYz0fbDiakBBkP9M5x2MRjwWtB0ucSBk?usp=sharing" target="_blank">Folder</a> for the trained MLE SGD models. <a href="./mle">Link</a> to the model architecture, training loop and simulation.
 
 ```python
