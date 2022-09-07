@@ -132,3 +132,10 @@ outputs, train_loss = train_mle(m, n, train_loader, valid_loader, llh_func, meth
 valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```
+
+- #### Observation and Reconstruction
+![alt text](./__resources__/mlesgd/recon_m2_n10.jpg?raw=true "Title")
+
+- #### Learning Curve
+![alt text](./__resources__/mlesgd/callback_m2_n10_mc.jpg?raw=true "Title")
+
