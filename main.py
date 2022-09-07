@@ -1,11 +1,10 @@
 from global_settings import PATH_DICT
-from likelihoods.llh_mc import get_llh_mc, get_grad_mc
+from likelihoods.llh_mc import get_llh_mc
 from likelihoods.llh_grid import get_llh_grid, get_grad_grid
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae
-from mle.training_auto import train_mleauto
-from mle.training_sgd import train_mlesgd
+from mle.training import train_mle
 from vae.simulation import simu_vae
 from mle.simulation import simu_mle
 from params.params import exp_dict
@@ -34,7 +33,7 @@ def main(m, n, activation, model_name, llh_method):
         os.mkdir(model_path)
 
     # define training/simulation functions
-    train_dict = {"vae": train_vae, "mleauto": train_mleauto, "mlesgd": train_mlesgd}
+    train_dict = {"vae": train_vae, "mleauto": train_mle, "mlesgd": train_mlesgd}
     simu_dict = {"vae": simu_vae, "mleauto": simu_mle, "mlesgd": simu_mle}
     llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
     grad_dict = {"mc": get_grad_mc, "grid": get_grad_grid}

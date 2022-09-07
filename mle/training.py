@@ -6,13 +6,14 @@ import numpy as np
 import torch
 
 
-def train_mleauto(m, n, train_loader, valid_loader, llh_func):
+def train_mle(m, n, train_loader, valid_loader, llh_func, method):
     """ Perform autograd to train the model and find logs2
     :param m: latent dimension
     :param n: observed dimension
     :param train_loader: training dataset loader
     :param valid_loader: validation dataset loader
     :param llh_func: function for numerical integration
+    :param method: method for computing the gradient
     :return: trained model and training loss history
     """
 
@@ -40,12 +41,24 @@ def train_mleauto(m, n, train_loader, valid_loader, llh_func):
         for x_batch, _ in train_loader:
             x_batch = x_batch.to(device)
             logs2_batch = logs2.repeat(x_batch.shape[0], 1)
-            objective = - llh_func(m, n, x_batch, model, logs2_batch).sum(dim=0)
-            optimizer.zero_grad()
-            objective.backward()
-            optimizer.step()
 
-            llh_batch = - objective.cpu().detach().numpy().tolist()
+            if method == "auto":
+                objective = - llh_func(m, n, x_batch, model, logs2_batch).sum(dim=0)
+                optimizer.zero_grad()
+                objective.backward()
+                optimizer.step()
+                llh_batch = - objective.cpu().detach().numpy().tolist()
+            elif method == "sgd":
+                objective = - llh_func(m, n, x_batch, model, logs2_batch).exp()
+                likelihood = - torch.clone(objective)
+                gradient = likelihood.pow(-1).detach()
+                optimizer.zero_grad()
+                objective.backward(gradient=gradient)
+                optimizer.step()
+                llh_batch = - torch.dot(objective, gradient).cpu().detach().numpy().tolist()
+            else:
+                raise ValueError("Invalid model name")
+
             train_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1
 
