@@ -41,7 +41,6 @@ def train_mle(m, n, train_loader, valid_loader, llh_func, method):
         for x_batch, _ in train_loader:
             x_batch = x_batch.to(device)
             logs2_batch = logs2.repeat(x_batch.shape[0], 1)
-
             if method == "auto":
                 objective = - llh_func(m, n, x_batch, model, logs2_batch).sum(dim=0)
                 optimizer.zero_grad()
@@ -58,7 +57,7 @@ def train_mle(m, n, train_loader, valid_loader, llh_func, method):
                 llh_sample = llh_func(m, n, x_batch, model, logs2_batch)
                 llh_batch = llh_sample.sum(dim=0).cpu().detach().numpy().tolist()
             else:
-                raise ValueError("Invalid model name")
+                raise ValueError("Invalid method for back-propagation")
 
             train_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1
