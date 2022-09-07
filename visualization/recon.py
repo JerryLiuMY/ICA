@@ -33,6 +33,10 @@ def plot_recon_2d(m, n, model_name):
         simu_2d_df = pd.DataFrame(simu_2d, columns=["pc0", "pc1"])
         recon_2d_df = pd.DataFrame(recon_2d, columns=["pc0", "pc1"])
 
+        # tiny perturbation to avoid exactly same values
+        recon_2d_df["pc0"] = recon_2d_df["pc0"] + np.random.normal(loc=0.0, scale=1e-6, size=recon_2d_df.shape[0])
+        recon_2d_df["pc1"] = recon_2d_df["pc1"] + np.random.normal(loc=0.0, scale=1e-6, size=recon_2d_df.shape[0])
+
         # visualization of the 2d PCA distribution
         sns.kdeplot(data=simu_2d_df, x="pc0", y="pc1", fill=True, alpha=1., ax=ax)
         sns.kdeplot(data=recon_2d_df, x="pc0", y="pc1", fill=True, alpha=.7, ax=ax)

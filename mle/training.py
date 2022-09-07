@@ -57,7 +57,7 @@ def train_mle(m, n, train_loader, valid_loader, llh_func, method):
                 llh_sample = llh_func(m, n, x_batch, model, logs2_batch)
                 llh_batch = llh_sample.sum(dim=0).cpu().detach().numpy().tolist()
             else:
-                raise ValueError("Invalid method for back-propagation")
+                raise ValueError("Invalid backpropagation method")
 
             train_llh += llh_batch / x_batch.size(dim=0)
             nbatch += 1

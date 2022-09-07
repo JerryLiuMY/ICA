@@ -101,4 +101,4 @@ if __name__ == "__main__":
     # main(m=2, n=2, activation=nn.Sigmoid(), model_name="mlesgd", llh_method="mc")
     # main(m=2, n=2, activation=nn.Tanh(), model_name="mlesgd", llh_method="mc")
     # main(m=2, n=2, activation=nn.GELU(), model_name="mlesgd", llh_method="mc")
-    plotting(m=2, n=10, model_name="mlesgd", llh_method="mc")
+    plotting(m=2, n=2, model_name="mlesgd", llh_method="mc")
