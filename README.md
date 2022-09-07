@@ -102,7 +102,7 @@ from likelihoods.llh_mc import get_llh_mc
 from likelihoods.llh_grid import get_llh_grid
 
 llh_func = {"mc": get_llh_mc, "grid": get_llh_grid}["mc"]
-outputs, train_loss = train_mle(m, n, train_loader, valid_loader, llh_func)
+outputs, train_loss = train_mle(m, n, train_loader, valid_loader, llh_func, method="auto")
 valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```
@@ -125,3 +125,20 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 
 - #### Learning Curve
 ![alt text](./__resources__/mleauto/callback_m2_n2_mc.jpg?raw=true "Title")
+
+
+## MLE with Manual Gradient Descent
+<a href="https://drive.google.com/drive/folders/1gYz0fbDiakBBkP9M5x2MRjwWtB0ucSBk?usp=sharing" target="_blank">Folder</a> for the trained MLE SGD models. <a href="./mle">Link</a> to the model architecture, training loop and simulation.
+
+```python
+from mle.training import train_mle
+from mle.training import valid_mleauto
+from mle.simulation import simu_mle
+from likelihoods.llh_mc import get_llh_mc
+from likelihoods.llh_grid import get_llh_grid
+
+llh_func = {"mc": get_llh_mc, "grid": get_llh_grid}["mc"]
+outputs, train_loss = train_mle(m, n, train_loader, valid_loader, llh_func, method="sgd")
+valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
+recon_df = simu_mle(outputs, simu_loader)
+```
