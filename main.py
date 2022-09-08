@@ -96,7 +96,7 @@ def plotting(m, n, model_name, llh_method):
 
 
 if __name__ == "__main__":
-    from torch import nn
+    # from torch import nn
     # main(m=2, n=2, activation=nn.ReLU(), model_name="mlesgd", llh_method="mc")
     # main(m=2, n=2, activation=nn.Sigmoid(), model_name="mlesgd", llh_method="mc")
     # main(m=2, n=2, activation=nn.Tanh(), model_name="mlesgd", llh_method="mc")
