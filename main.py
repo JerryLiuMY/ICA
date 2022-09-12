@@ -96,9 +96,9 @@ def plotting(m, n, model_name, llh_method):
 
 
 if __name__ == "__main__":
-    # from torch import nn
-    # main(m=2, n=2, activation=nn.ReLU(), model_name="mlesgd", llh_method="mc")
-    # main(m=2, n=2, activation=nn.Sigmoid(), model_name="mlesgd", llh_method="mc")
-    # main(m=2, n=2, activation=nn.Tanh(), model_name="mlesgd", llh_method="mc")
-    # main(m=2, n=2, activation=nn.GELU(), model_name="mlesgd", llh_method="mc")
-    plotting(m=2, n=10, model_name="mlesgd", llh_method="mc")
+    from torch import nn
+    main(m=1, n=2, activation=nn.ReLU(), model_name="mleauto", llh_method="mc")
+    # main(m=1, n=2, activation=nn.Sigmoid(), model_name="mleauto", llh_method="mc")
+    # main(m=1, n=2, activation=nn.Tanh(), model_name="mleauto", llh_method="mc")
+    # main(m=1, n=2, activation=nn.LeakyReLU(), model_name="mleauto", llh_method="mc")
+    # plotting(m=2, n=10, model_name="mlesgd", llh_method="mc")

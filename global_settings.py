@@ -36,5 +36,4 @@ PATH_DICT = {"vae": VAE_PATH, "mleauto": MLEAUTO_PATH, "mlesgd": MLESGD_PATH}
 
 
 # Compare sparse grid vs. monte carlo
-# Underestimation of variance
 # Should not fit \sigma^{2}

@@ -20,7 +20,7 @@ def plot_recon_2d(m, n, model_name):
     """
 
     fig, axes = plt.subplots(1, 4, figsize=(16, 4))
-    activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.GELU()]
+    activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.LeakyReLU()]
     for ax, activation in zip(axes, activations):
         # load simu_df and recon_df and perform PCA
         activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])

@@ -26,7 +26,7 @@ def visualize():
     data_df01 = generate_data(m=m, n=n, activation=nn.ReLU())
     data_df02 = generate_data(m=m, n=n, activation=nn.Sigmoid())
     data_df03 = generate_data(m=m, n=n, activation=nn.Tanh())
-    data_df04 = generate_data(m=m, n=n, activation=nn.GELU())
+    data_df04 = generate_data(m=m, n=n, activation=nn.LeakyReLU())
     sns.histplot(data_df01, x="z0", kde=True, ax=ax00)
     sns.histplot(data_df01, x="x0", kde=True, ax=ax01)
     sns.histplot(data_df02, x="x0", kde=True, ax=ax02)
@@ -36,7 +36,7 @@ def visualize():
     ax01.set_title("dist. of x with ReLU")
     ax02.set_title("dist. of x with Sigmoid")
     ax03.set_title("dist. of x with Tanh")
-    ax04.set_title("dist. of x with GELU")
+    ax04.set_title("dist. of x with LeakyReLU")
 
     # second line
     m, n = 1, 2
@@ -47,7 +47,7 @@ def visualize():
     data_df11 = generate_data(m=m, n=n, activation=nn.ReLU())
     data_df12 = generate_data(m=m, n=n, activation=nn.Sigmoid())
     data_df13 = generate_data(m=m, n=n, activation=nn.Tanh())
-    data_df14 = generate_data(m=m, n=n, activation=nn.GELU())
+    data_df14 = generate_data(m=m, n=n, activation=nn.LeakyReLU())
     sns.kdeplot(data=data_df11, x="x0", y="x1", fill=True, ax=ax11)
     sns.kdeplot(data=data_df12, x="x0", y="x1", fill=True, ax=ax12)
     sns.kdeplot(data=data_df13, x="x0", y="x1", fill=True, ax=ax13)
@@ -63,7 +63,7 @@ def visualize():
     data_df11 = generate_data(m=m, n=n, activation=nn.ReLU())
     data_df12 = generate_data(m=m, n=n, activation=nn.Sigmoid())
     data_df13 = generate_data(m=m, n=n, activation=nn.Tanh())
-    data_df14 = generate_data(m=m, n=n, activation=nn.GELU())
+    data_df14 = generate_data(m=m, n=n, activation=nn.LeakyReLU())
     sns.kdeplot(data=data_df11, x="z0", y="z1", fill=True, ax=ax20)
     sns.kdeplot(data=data_df11, x="x0", y="x1", fill=True, ax=ax21)
     sns.kdeplot(data=data_df12, x="x0", y="x1", fill=True, ax=ax22)

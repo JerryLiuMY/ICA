@@ -23,7 +23,7 @@ def plot_latent_2d(m, n, model_name):
     """
 
     fig, axes = plt.subplots(1, 4, figsize=(16, 4))
-    activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.GELU()]
+    activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.LeakyReLU()]
     for ax, activation in zip(axes, activations):
         # build simu_df (num. of samples per datapoint set to 1)
         activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])

@@ -17,7 +17,7 @@ def plot_callback(m, n, model_name, llh_method):
     """
 
     fig, axes = plt.subplots(2, 2, figsize=(14, 7))
-    activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.GELU()]
+    activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.LeakyReLU()]
     axes = [ax for sub_axes in axes for ax in sub_axes]
 
     for ax, activation in zip(axes, activations):
