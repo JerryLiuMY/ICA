@@ -43,26 +43,49 @@ class Decoder(Block):
 
         # linear layer
         self.fit_s2 = fit_s2
-        self.inter_dim = self.output_dim
-        self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.inter_dim)
-
-        # first decoder layer
-        self.dec2 = nn.Linear(in_features=self.inter_dim, out_features=self.inter_dim)
+        self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.output_dim)
 
         # second decoder layer -- mean and logs2
-        self.dec1_mean = nn.Linear(in_features=self.inter_dim, out_features=self.output_dim)
         if self.fit_s2:
-            self.dec1_logs2 = nn.Linear(in_features=self.inter_dim, out_features=1)
+            self.dec_logs2 = nn.Linear(in_features=self.output_dim, out_features=1)
 
     def forward(self, z):
-        # linear layer
-        inter = self.fc(z)
-
         # decoder layers
-        inter = F.relu(self.dec2(inter))
-        mean = self.dec1_mean(inter)
+        inter = F.relu(self.fc(z))
+        mean = inter
         if self.fit_s2:
-            logs2 = self.dec1_logs2(inter)
+            logs2 = self.dec_logs2(inter)
             return mean, logs2
         else:
             return mean
+
+
+# class Decoder(Block):
+#     def __init__(self, m, n, fit_s2):
+#         super(Decoder, self).__init__(m, n)
+#
+#         # linear layer
+#         self.fit_s2 = fit_s2
+#         self.inter_dim = self.output_dim
+#         self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.inter_dim)
+#
+#         # first decoder layer
+#         self.dec2 = nn.Linear(in_features=self.inter_dim, out_features=self.inter_dim)
+#
+#         # second decoder layer -- mean and logs2
+#         self.dec1_mean = nn.Linear(in_features=self.inter_dim, out_features=self.output_dim)
+#         if self.fit_s2:
+#             self.dec1_logs2 = nn.Linear(in_features=self.inter_dim, out_features=1)
+#
+#     def forward(self, z):
+#         # linear layer
+#         inter = self.fc(z)
+#
+#         # decoder layers
+#         inter = F.relu(self.dec2(inter))
+#         mean = self.dec1_mean(inter)
+#         if self.fit_s2:
+#             logs2 = self.dec1_logs2(inter)
+#             return mean, logs2
+#         else:
+#             return mean
