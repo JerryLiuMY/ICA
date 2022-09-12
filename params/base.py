@@ -45,19 +45,22 @@ class Decoder(Block):
         self.fit_s2 = fit_s2
         self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.output_dim)
 
-        # second decoder layer -- mean and logs2
+        # decoder layer -- mean and logs2
+        self.dec_mean = nn.Identity(in_features=self.inter_dim, out_features=self.output_dim)
         if self.fit_s2:
             self.dec_logs2 = nn.Linear(in_features=self.output_dim, out_features=1)
 
     def forward(self, z):
         # decoder layers
         inter = F.relu(self.fc(z))
-        mean = inter
-        if self.fit_s2:
+
+        if not self.fit_s2:
+            mean = self.dec_mean(inter)
+            return mean
+        else:
+            mean = self.dec_mean(inter)
             logs2 = self.dec_logs2(inter)
             return mean, logs2
-        else:
-            return mean
 
 
 # class Decoder(Block):
@@ -80,12 +83,12 @@ class Decoder(Block):
 #     def forward(self, z):
 #         # linear layer
 #         inter = self.fc(z)
-#
-#         # decoder layers
 #         inter = F.relu(self.dec2(inter))
-#         mean = self.dec1_mean(inter)
-#         if self.fit_s2:
+#
+#         if not self.fit_s2:
+#             mean = self.dec1_mean(inter)
+#             return mean
+#         else:
+#             mean = self.dec1_mean(inter)
 #             logs2 = self.dec1_logs2(inter)
 #             return mean, logs2
-#         else:
-#             return mean

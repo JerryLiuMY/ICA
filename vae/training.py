@@ -6,12 +6,13 @@ import numpy as np
 import torch
 
 
-def train_vae(m, n, train_loader, valid_loader, llh_func):
+def train_vae(m, n, train_loader, valid_loader, fit_s2, llh_func):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param train_loader: training dataset loader
     :param valid_loader: validation dataset loader
+    :param fit_s2: whether to fit s2 or not
     :param llh_func: function for numerical integration
     :return: trained model and training loss history
     """
@@ -20,7 +21,7 @@ def train_vae(m, n, train_loader, valid_loader, llh_func):
     epochs, lr, beta = train_dict["epochs"], train_dict["lr"], train_dict["beta"]
 
     # building VAE
-    model = VAE(m, n)
+    model = VAE(m, n, fit_s2=fit_s2)
     model = model.to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)

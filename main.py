@@ -18,12 +18,13 @@ import re
 import os
 
 
-def main(m, n, activation, model_name, llh_method):
+def main(m, n, activation, model_name, fit_s2, llh_method):
     """ Perform experiments for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param activation: activation function for mlp
     :param model_name: name of the model to run
+    :param fit_s2: whether to fit s2 or not
     :param llh_method: method for numerical integration
     """
 
@@ -35,8 +36,8 @@ def main(m, n, activation, model_name, llh_method):
         os.mkdir(model_path)
 
     # define training/simulation functions
-    train_mleauto = partial(train_mle, method="auto")
-    train_mlesgd = partial(train_mle, method="sgd")
+    train_mleauto = partial(train_mle, grad_method="auto")
+    train_mlesgd = partial(train_mle, grad_method="sgd")
     train_dict = {"vae": train_vae, "mleauto": train_mleauto, "mlesgd": train_mlesgd}
     simu_dict = {"vae": simu_vae, "mleauto": simu_mle, "mlesgd": simu_mle}
     llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
@@ -50,7 +51,7 @@ def main(m, n, activation, model_name, llh_method):
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
 
-    outputs, callback = train_func(m, n, train_loader, valid_loader, llh_func)
+    outputs, callback = train_func(m, n, train_loader, valid_loader, fit_s2, llh_func)
     model = outputs[0]
     torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
     if len == 2:
@@ -98,8 +99,8 @@ def plotting(m, n, model_name, llh_method):
 
 if __name__ == "__main__":
     from torch import nn
-    # main(m=1, n=2, activation=nn.ReLU(), model_name="vae", llh_method="mc")
-    # main(m=1, n=2, activation=nn.Sigmoid(), model_name="vae", llh_method="mc")
-    # main(m=1, n=2, activation=nn.Tanh(), model_name="vae", llh_method="mc")
-    # main(m=1, n=2, activation=nn.LeakyReLU(), model_name="vae", llh_method="mc")
+    main(m=1, n=2, activation=nn.ReLU(), model_name="vae", fit_s2=False, llh_method="mc")
+    main(m=1, n=2, activation=nn.Sigmoid(), model_name="vae", fit_s2=False, llh_method="mc")
+    main(m=1, n=2, activation=nn.Tanh(), model_name="vae", fit_s2=False, llh_method="mc")
+    main(m=1, n=2, activation=nn.LeakyReLU(), model_name="vae", fit_s2=False, llh_method="mc")
     plotting(m=1, n=2, model_name="vae", llh_method="mc")

@@ -102,7 +102,7 @@ from likelihoods.llh_mc import get_llh_mc
 from likelihoods.llh_grid import get_llh_grid
 
 llh_func = {"mc": get_llh_mc, "grid": get_llh_grid}["mc"]
-outputs, train_loss = train_mle(m, n, train_loader, valid_loader, llh_func, method="auto")
+outputs, train_loss = train_mle(m, n, train_loader, valid_loader, llh_func, grad_method="auto")
 valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```
@@ -128,7 +128,7 @@ from likelihoods.llh_mc import get_llh_mc
 from likelihoods.llh_grid import get_llh_grid
 
 llh_func = {"mc": get_llh_mc, "grid": get_llh_grid}["mc"]
-outputs, train_loss = train_mle(m, n, train_loader, valid_loader, llh_func, method="sgd")
+outputs, train_loss = train_mle(m, n, train_loader, valid_loader, llh_func, grad_method="sgd")
 valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```

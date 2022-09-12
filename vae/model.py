@@ -4,16 +4,20 @@ import torch
 
 
 class VAE(nn.Module):
-    def __init__(self, m, n):
+    def __init__(self, m, n, fit_s2):
         super(VAE, self).__init__()
         self.name, self.m, self.n = "vae", m, n
+        self.fit_s2 = fit_s2
         self.encoder = Encoder(m, n)
-        self.decoder = Decoder(m, n, fit_s2=True)
+        self.decoder = Decoder(m, n, fit_s2=self.fit_s2)
 
     def forward(self, x):
         mu, logvar = self.encoder(x)
         latent = self.latent_sample(mu, logvar)
-        mean, logs2 = self.decoder(latent)
+        if self.fit_s2:
+            mean, logs2 = self.decoder(latent)
+        else:
+            mean = self.decoder(latent)
 
         return mean, logs2, mu, logvar
 

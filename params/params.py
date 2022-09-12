@@ -18,7 +18,7 @@ def save_params(m, n):
     :return:
     """
 
-    sigma = 1
+    sigma = 1.
     np.random.seed(10)
     w = 3 * np.random.rand(n, m)
     b = 1 * np.random.rand(n)
