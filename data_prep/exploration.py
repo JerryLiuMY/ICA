@@ -16,7 +16,7 @@ def visualize():
     fig = plt.figure(figsize=(14, 9))
     gs = fig.add_gridspec(6, 10)
 
-    # first line
+    # first row -- m = 1, n = 1
     m, n = 1, 1
     ax00 = fig.add_subplot(gs[0:2, 0:2])
     ax01 = fig.add_subplot(gs[0:2, 2:4])
@@ -38,7 +38,7 @@ def visualize():
     ax03.set_title("dist. of x with Tanh")
     ax04.set_title("dist. of x with LeakyReLU")
 
-    # second line
+    # second row -- m = 1, n = 2
     m, n = 1, 2
     ax11 = fig.add_subplot(gs[2:4, 2:4])
     ax12 = fig.add_subplot(gs[2:4, 4:6])
@@ -53,7 +53,7 @@ def visualize():
     sns.kdeplot(data=data_df13, x="x0", y="x1", fill=True, ax=ax13)
     sns.kdeplot(data=data_df14, x="x0", y="x1", fill=True, ax=ax14)
 
-    # third line
+    # third row -- m = 2, n = 2
     m, n = 2, 2
     ax20 = fig.add_subplot(gs[4:6, 0:2])
     ax21 = fig.add_subplot(gs[4:6, 2:4])
@@ -70,7 +70,7 @@ def visualize():
     sns.kdeplot(data=data_df13, x="x0", y="x1", fill=True, ax=ax23)
     sns.kdeplot(data=data_df14, x="x0", y="x1", fill=True, ax=ax24)
 
-    # add label
+    # add label and save figure
     fig.text(-0.01, 0.19, "m=2, n=2", va="center", rotation="vertical")
     fig.text(-0.01, 0.52, "m=1, n=2", va="center", rotation="vertical")
     fig.text(-0.01, 0.84, "m=1, n=1", va="center", rotation="vertical")

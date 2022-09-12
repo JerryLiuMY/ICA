@@ -3,6 +3,7 @@ from global_settings import PATH_DICT
 from torch import nn
 import numpy as np
 import seaborn as sns
+import re
 import os
 sns.set()
 
@@ -21,7 +22,7 @@ def plot_callback(m, n, model_name, llh_method):
     axes = [ax for sub_axes in axes for ax in sub_axes]
 
     for ax, activation in zip(axes, activations):
-        activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])
+        activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
         model_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_{activation_name}")
         train_llh = np.load(os.path.join(model_path, f"train_llh_{llh_method}.npy"))
         valid_llh = np.load(os.path.join(model_path, f"valid_llh_{llh_method}.npy"))

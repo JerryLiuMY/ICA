@@ -14,6 +14,7 @@ from visualization.recon import plot_recon_2d
 from functools import partial
 import numpy as np
 import torch
+import re
 import os
 
 
@@ -28,7 +29,7 @@ def main(m, n, activation, model_name, llh_method):
 
     # define path and load parameters
     train_size, valid_size, simu_size = exp_dict["train_size"], exp_dict["valid_size"], exp_dict["simu_size"]
-    activation_name = ''.join([_ for _ in str(activation) if _.isalpha()])
+    activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
     model_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_{activation_name}")
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
@@ -97,8 +98,8 @@ def plotting(m, n, model_name, llh_method):
 
 if __name__ == "__main__":
     from torch import nn
-    main(m=1, n=2, activation=nn.ReLU(), model_name="mleauto", llh_method="mc")
-    # main(m=1, n=2, activation=nn.Sigmoid(), model_name="mleauto", llh_method="mc")
-    # main(m=1, n=2, activation=nn.Tanh(), model_name="mleauto", llh_method="mc")
-    # main(m=1, n=2, activation=nn.LeakyReLU(), model_name="mleauto", llh_method="mc")
-    # plotting(m=2, n=10, model_name="mlesgd", llh_method="mc")
+    # main(m=1, n=2, activation=nn.ReLU(), model_name="vae", llh_method="mc")
+    # main(m=1, n=2, activation=nn.Sigmoid(), model_name="vae", llh_method="mc")
+    # main(m=1, n=2, activation=nn.Tanh(), model_name="vae", llh_method="mc")
+    # main(m=1, n=2, activation=nn.LeakyReLU(), model_name="vae", llh_method="mc")
+    plotting(m=1, n=2, model_name="mleauto", llh_method="mc")
