@@ -43,12 +43,13 @@ class Decoder(Block):
 
         # linear layer
         self.fit_s2 = fit_s2
-        self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.output_dim)
+        self.inter_dim = self.output_dim
+        self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.inter_dim)
 
         # decoder layer -- mean and logs2
         self.dec_mean = nn.Identity(in_features=self.inter_dim, out_features=self.output_dim)
         if self.fit_s2:
-            self.dec_logs2 = nn.Linear(in_features=self.output_dim, out_features=1)
+            self.dec_logs2 = nn.Linear(in_features=self.inter_dim, out_features=1)
 
     def forward(self, z):
         # decoder layers

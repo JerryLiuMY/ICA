@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import torch
 import os
+import re
 
 
 def generate_data(m, n, activation, size=1000):
@@ -18,8 +19,9 @@ def generate_data(m, n, activation, size=1000):
     """
 
     # load parameters
+    activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Building data with m={m}, n={n} "
-          f"with activation={''.join([_ for _ in str(activation) if _.isalpha()])}")
+          f"with activation={activation_name}")
 
     params_path = os.path.join(DATA_PATH, f"params_{m}_{n}.pkl")
     if not os.path.isfile(params_path):
