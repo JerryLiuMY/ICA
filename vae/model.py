@@ -27,7 +27,8 @@ class VAE(nn.Module):
             with open(params_path, "rb") as handle:
                 params = pickle.load(handle)
                 sigma = params["sigma"]
-            logs2 = torch.tensor([np.log(sigma ** 2)], requires_grad=False).to(device)
+            logs2 = np.repeat(np.log(sigma ** 2), x.shape[0]).reshape(x.shape[0], 1)
+            logs2 = torch.tensor(logs2, requires_grad=False).to(device)
 
         return mean, logs2, mu, logvar
 
