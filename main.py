@@ -99,8 +99,8 @@ def plotting(m, n, model_name, llh_method):
 
 if __name__ == "__main__":
     from torch import nn
-    main(m=2, n=10, activation=nn.ReLU(), model_name="vae", fit_s2=False, llh_method="mc")
+    # main(m=2, n=10, activation=nn.ReLU(), model_name="vae", fit_s2=False, llh_method="mc")
     # main(m=2, n=10, activation=nn.Sigmoid(), model_name="mleauto", fit_s2=False, llh_method="mc")
     # main(m=2, n=10, activation=nn.Tanh(), model_name="mleauto", fit_s2=False, llh_method="mc")
     # main(m=2, n=10, activation=nn.LeakyReLU(), model_name="mleauto", fit_s2=False, llh_method="mc")
-    # plotting(m=2, n=10, model_name="mleauto", llh_method="mc")
+    plotting(m=1, n=2, model_name="vae", llh_method="mc")

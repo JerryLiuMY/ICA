@@ -22,7 +22,7 @@ def get_procrustes(m, n, activation, model_name):
         params = pickle.load(handle)
         w, b = params["w"], params["b"]
 
-    # load weight w_hat and b_hat
+    # load fitted w_hat and b_hat
     activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
     model_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_{activation_name}")
     model = torch.load(os.path.join(model_path, "model.pth"))
@@ -32,7 +32,7 @@ def get_procrustes(m, n, activation, model_name):
     # perform procrustes analysis
     b = b.reshape(len(b), 1)
     b_hat = b_hat.reshape(len(b_hat), 1)
-    w_disparity = procrustes(w, w_hat)[2]
-    b_disparity = procrustes(b, b_hat)[2]
+    w_disp = procrustes(w, w_hat)[2]
+    b_disp = procrustes(b, b_hat)[2]
 
-    return w_disparity, b_disparity
+    return w_disp, b_disp
