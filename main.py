@@ -94,15 +94,15 @@ def plotting(m, n, model_name, llh_method):
     callback.savefig(os.path.join(figure_path, f"callback_m{m}_n{n}_{llh_method}.pdf"), bbox_inches="tight")
     recon = plot_recon_2d(m, n, model_name)
     recon.savefig(os.path.join(figure_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")
-    if model_name == "vae":
+    if model_name == "vae" and m >= 2:
         latent = plot_latent_2d(m, n, model_name)
         latent.savefig(os.path.join(figure_path, f"latent_m{m}_n{n}.pdf"), bbox_inches="tight")
 
 
 if __name__ == "__main__":
     from torch import nn
-    # main(m=2, n=2, activation=nn.ReLU(), model_name="mleauto", train_s2=False, decoder_dgp=True, llh_method="mc")
-    # main(m=2, n=10, activation=nn.Sigmoid(), model_name="mleauto", train_s2=False, decoder_dgp=True, llh_method="mc")
-    # main(m=2, n=10, activation=nn.Tanh(), model_name="mleauto", train_s2=False, decoder_dgp=True, llh_method="mc")
-    main(m=2, n=10, activation=nn.LeakyReLU(), model_name="mleauto", train_s2=False, decoder_dgp=True, llh_method="mc")
-    plotting(m=2, n=10, model_name="mleauto", llh_method="mc")
+    # main(m=2, n=10, activation=nn.ReLU(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
+    # main(m=2, n=10, activation=nn.Sigmoid(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
+    # main(m=2, n=10, activation=nn.Tanh(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
+    main(m=2, n=10, activation=nn.LeakyReLU(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
+    plotting(m=2, n=10, model_name="vae", llh_method="mc")
