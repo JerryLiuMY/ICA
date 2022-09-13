@@ -1,5 +1,6 @@
-from torch import nn as nn
+import torch
 from torch.nn import functional
+from torch import nn
 
 
 class Block(nn.Module):
@@ -27,8 +28,8 @@ class Encoder(Block):
 
     def forward(self, x):
         # encoder layers
-        inter = functional.relu(self.enc1(x))
-        inter = functional.relu(self.enc2(inter))
+        inter = torch.relu(self.enc1(x))
+        inter = torch.relu(self.enc2(inter))
 
         # calculate mu & logvar
         mu = self.fc_mu(inter)
@@ -55,9 +56,9 @@ class DecoderDGP(Block):
     def forward(self, z):
         # decoder layers
         functional_dict = {
-            "ReLU": functional.relu,
-            "Sigmoid": functional.sigmoid,
-            "Tanh": functional.tanh,
+            "ReLU": torch.relu,
+            "Sigmoid": torch.sigmoid,
+            "Tanh": torch.tanh,
             "LeakyReLU": functional.leaky_relu
         }
         activation_func = functional_dict[self.activation_name]
@@ -92,7 +93,7 @@ class Decoder(Block):
     def forward(self, z):
         # linear layer
         inter = self.fc(z)
-        inter = functional.relu(self.dec2(inter))
+        inter = torch.relu(self.dec2(inter))
 
         if not self.fit_s2:
             mean = self.dec1_mean(inter)
