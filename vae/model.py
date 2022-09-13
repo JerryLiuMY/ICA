@@ -1,4 +1,4 @@
-from params.base import Encoder, Decoder
+from params.base import Encoder, DecoderDGP, Decoder
 from global_settings import DATA_PATH
 from global_settings import device
 import pickle5 as pickle
@@ -9,12 +9,16 @@ import os
 
 
 class VAE(nn.Module):
-    def __init__(self, m, n, fit_s2):
+    def __init__(self, m, n, decoder_dgp, fit_s2):
         super(VAE, self).__init__()
         self.name, self.m, self.n = "vae", m, n
+        self.match_decoder = decoder_dgp
         self.fit_s2 = fit_s2
         self.encoder = Encoder(m, n)
-        self.decoder = Decoder(m, n, fit_s2=self.fit_s2)
+        if decoder_dgp:
+            self.decoder = DecoderDGP(m, n, fit_s2=self.fit_s2)
+        else:
+            self.decoder = Decoder(m, n, fit_s2=self.fit_s2)
 
     def forward(self, x):
         mu, logvar = self.encoder(x)
