@@ -18,14 +18,14 @@ import re
 import os
 
 
-def main(m, n, activation, model_name, decoder_dgp, fit_s2, llh_method):
+def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method):
     """ Perform experiments for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param activation: activation function for mlp
     :param model_name: name of the model to run
+    :param train_s2: whether to train s2 or not
     :param decoder_dgp: whether to use the same decoder as dgp
-    :param fit_s2: whether to fit s2 or not
     :param llh_method: method for numerical integration
     """
 
@@ -51,8 +51,9 @@ def main(m, n, activation, model_name, decoder_dgp, fit_s2, llh_method):
     valid_df = generate_data(m, n, activation, valid_size)
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
+    decoder_info = [decoder_dgp, activation_name]
 
-    outputs, callback = train_func(m, n, train_loader, valid_loader, decoder_dgp, fit_s2, llh_func)
+    outputs, callback = train_func(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func)
     model = outputs[0]
     torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
     if len == 2:
@@ -100,8 +101,9 @@ def plotting(m, n, model_name, llh_method):
 
 if __name__ == "__main__":
     from torch import nn
-    main(m=2, n=10, activation=nn.ReLU(), model_name="vae", decoder_dgp=True, fit_s2=False, llh_method="mc")
-    main(m=2, n=10, activation=nn.Sigmoid(), model_name="vae", decoder_dgp=True, fit_s2=False, llh_method="mc")
-    main(m=2, n=10, activation=nn.Tanh(), model_name="vae", decoder_dgp=True, fit_s2=False, llh_method="mc")
-    main(m=2, n=10, activation=nn.LeakyReLU(), model_name="vae", decoder_dgp=True, fit_s2=False, llh_method="mc")
+
+    main(m=2, n=10, activation=nn.ReLU(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
+    main(m=2, n=10, activation=nn.Sigmoid(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
+    main(m=2, n=10, activation=nn.Tanh(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
+    main(m=2, n=10, activation=nn.LeakyReLU(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
     plotting(m=1, n=2, model_name="vae", llh_method="mc")

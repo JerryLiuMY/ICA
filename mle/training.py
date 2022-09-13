@@ -9,14 +9,14 @@ import torch
 import os
 
 
-def train_mle(m, n, train_loader, valid_loader, decoder_dgp, fit_s2, llh_func, grad_method):
+def train_mle(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func, grad_method):
     """ Perform autograd to train the model and find logs2
     :param m: latent dimension
     :param n: observed dimension
     :param train_loader: training dataset loader
     :param valid_loader: validation dataset loader
-    :param decoder_dgp: whether to use the same decoder as dgp
-    :param fit_s2: whether to fit s2 or not
+    :param train_s2: whether to train s2 or not
+    :param decoder_info: whether to use the same decoder as dgp and activation
     :param llh_func: function for numerical integration
     :param grad_method: method for computing the gradient
     :return: trained model and training loss history
@@ -26,8 +26,8 @@ def train_mle(m, n, train_loader, valid_loader, decoder_dgp, fit_s2, llh_func, g
     epochs, lr = train_dict["epochs"], train_dict["lr"]
 
     # building Autograd
-    model = MLE(m, n, decoder_dgp=decoder_dgp, fit_s2=False)
-    if fit_s2:
+    model = MLE(m, n, fit_s2=False, decoder_info=decoder_info)
+    if train_s2:
         logs2 = torch.tensor([0.], requires_grad=True).to(device)
     else:
         params_path = os.path.join(DATA_PATH, f"params_{m}_{n}.pkl")

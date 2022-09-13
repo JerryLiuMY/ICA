@@ -58,7 +58,7 @@ from vae.training import valid_vae
 from vae.simulation import simu_vae
 from likelihoods.llh_mc import get_llh_mc
 
-outputs, train_loss = train_vae(m, n, train_loader, valid_loader, fit_s2=False, llh_func=get_llh_mc)
+outputs, train_loss = train_vae(m, n, train_loader, valid_loader, train_s2=False, llh_func=get_llh_mc)
 valid_loss = valid_vae(outputs, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_vae(outputs, simu_loader)
 ```
@@ -98,7 +98,8 @@ from mle.training import valid_mleauto
 from mle.simulation import simu_mle
 from likelihoods.llh_mc import get_llh_mc
 
-outputs, train_loss = train_mle(m, n, train_loader, valid_loader, fit_s2=False, llh_func=get_llh_mc, grad_method="auto")
+outputs, train_loss = train_mle(m, n, train_loader, valid_loader, train_s2=False, decoder_info=, llh_func=get_llh_mc,
+                                grad_method="auto")
 valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```
@@ -122,7 +123,8 @@ from mle.training import valid_mleauto
 from mle.simulation import simu_mle
 from likelihoods.llh_mc import get_llh_mc
 
-outputs, train_loss = train_mle(m, n, train_loader, valid_loader, fit_s2=False, llh_func=get_llh_mc, grad_method="sgd")
+outputs, train_loss = train_mle(m, n, train_loader, valid_loader, train_s2=False, decoder_info=, llh_func=get_llh_mc,
+                                grad_method="sgd")
 valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```

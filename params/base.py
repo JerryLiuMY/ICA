@@ -1,5 +1,5 @@
 from torch import nn as nn
-from torch.nn import functional as F
+from torch.nn import functional
 
 
 class Block(nn.Module):
@@ -27,8 +27,8 @@ class Encoder(Block):
 
     def forward(self, x):
         # encoder layers
-        inter = F.relu(self.enc1(x))
-        inter = F.relu(self.enc2(inter))
+        inter = functional.relu(self.enc1(x))
+        inter = functional.relu(self.enc2(inter))
 
         # calculate mu & logvar
         mu = self.fc_mu(inter)
@@ -38,11 +38,12 @@ class Encoder(Block):
 
 
 class DecoderDGP(Block):
-    def __init__(self, m, n, fit_s2):
+    def __init__(self, m, n, fit_s2, activation_name):
         super(DecoderDGP, self).__init__(m, n)
 
         # linear layer
         self.fit_s2 = fit_s2
+        self.activation_name = activation_name
         self.inter_dim = self.output_dim
         self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.inter_dim)
 
@@ -53,7 +54,14 @@ class DecoderDGP(Block):
 
     def forward(self, z):
         # decoder layers
-        inter = F.relu(self.fc(z))
+        functional_dict = {
+            "ReLU": functional.relu,
+            "Sigmoid": functional.sigmoid,
+            "Tanh": functional.tanh,
+            "LeakyReLU": functional.leaky_relu
+        }
+        activation_func = functional_dict[self.activation_name]
+        inter = activation_func(self.fc(z))
 
         if not self.fit_s2:
             mean = self.dec_mean(inter)
@@ -84,7 +92,7 @@ class Decoder(Block):
     def forward(self, z):
         # linear layer
         inter = self.fc(z)
-        inter = F.relu(self.dec2(inter))
+        inter = functional.relu(self.dec2(inter))
 
         if not self.fit_s2:
             mean = self.dec1_mean(inter)
