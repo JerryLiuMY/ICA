@@ -104,5 +104,5 @@ if __name__ == "__main__":
     # main(m=2, n=10, activation=nn.ReLU(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
     # main(m=2, n=10, activation=nn.Sigmoid(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
     # main(m=2, n=10, activation=nn.Tanh(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
-    main(m=2, n=10, activation=nn.LeakyReLU(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
-    plotting(m=2, n=10, model_name="vae", llh_method="mc")
+    # main(m=2, n=10, activation=nn.LeakyReLU(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
+    plotting(m=2, n=10, model_name="mleauto", llh_method="mc")
