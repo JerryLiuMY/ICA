@@ -1,6 +1,6 @@
 from params.params import mle_dict as train_dict
 from global_settings import DATA_PATH
-from global_settings import device
+from global_settings import DEVICE
 from datetime import datetime
 from mle.model import MLE
 import pickle5 as pickle
@@ -28,13 +28,13 @@ def train_mle(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
     # building Autograd
     model = MLE(m, n, fit_s2=False, decoder_info=decoder_info)
     if train_s2:
-        logs2 = torch.tensor([0.], requires_grad=True).to(device)
+        logs2 = torch.tensor([0.], requires_grad=True).to(DEVICE)
     else:
         params_path = os.path.join(DATA_PATH, f"params_{m}_{n}.pkl")
         with open(params_path, "rb") as handle:
             params = pickle.load(handle)
             sigma = params["sigma"]
-        logs2 = torch.tensor([np.log(sigma**2)], requires_grad=False).to(device)
+        logs2 = torch.tensor([np.log(sigma**2)], requires_grad=False).to(DEVICE)
 
     optimizer = torch.optim.AdamW([*model.parameters(), logs2], lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)
@@ -52,7 +52,7 @@ def train_mle(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
         # mini-batch loop
         train_llh, nbatch = 0., 0
         for x_batch, _ in train_loader:
-            x_batch = x_batch.to(device)
+            x_batch = x_batch.to(DEVICE)
             logs2_batch = logs2.repeat(x_batch.shape[0], 1)
             if grad_method == "auto":
                 objective = - llh_func(m, n, x_batch, model, logs2_batch).sum(dim=0)
@@ -67,8 +67,8 @@ def train_mle(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
                 optimizer.zero_grad()
                 objective.backward(gradient=gradient)
                 optimizer.step()
-                llh_sample = llh_func(m, n, x_batch, model, logs2_batch)
-                llh_batch = llh_sample.sum(dim=0).cpu().detach().numpy().tolist()
+                llh_batch = - objective.log().sum(dim=0).cpu().detach().numpy().tolist()
+                print(llh_batch)
             else:
                 raise ValueError("Invalid backpropagation method")
 
@@ -112,7 +112,7 @@ def valid_mle(inputs, valid_loader, llh_func, eval_mode):
     valid_llh, nbatch = 0., 0
     for x_batch, _ in valid_loader:
         with torch.no_grad():
-            x_batch = x_batch.to(device)
+            x_batch = x_batch.to(DEVICE)
             logs2_batch = logs2.repeat(x_batch.shape[0], 1)
 
             llh_sample = llh_func(m, n, x_batch, model, logs2_batch)

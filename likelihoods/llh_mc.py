@@ -1,6 +1,6 @@
 from torch.distributions import MultivariateNormal
 from likelihoods.dist import get_normal_lp
-from global_settings import device
+from global_settings import DEVICE
 from params.params import mc
 import numpy as np
 import torch
@@ -26,7 +26,7 @@ def build_mc(m, n, x, model, logs2):
     var_tril_mc = var_tril_mc.repeat(data_size, 1, 1, 1).reshape(data_size, mc, m, m)
     sampler = MultivariateNormal(loc=mu_mc, scale_tril=var_tril_mc)
     z_mc = sampler.sample()
-    z_mc = z_mc.to(device)
+    z_mc = z_mc.to(DEVICE)
     x_recon = model.decoder(z_mc)[0]
 
     # get covariance -- data_size x mc x n x n
@@ -35,7 +35,7 @@ def build_mc(m, n, x, model, logs2):
     s2_sqrt = s2_sqrt.repeat(1, mc, 1, 1).reshape(data_size, mc, n, n)
     eye = torch.eye(n).repeat(mc, 1, 1).reshape(mc, n, n)
     eye = eye.repeat(data_size, 1, 1, 1).reshape(data_size, mc, n, n)
-    eye = eye.to(device)
+    eye = eye.to(DEVICE)
     s2_cov_tril = s2_sqrt * eye
 
     # get input x -- data_size x mc x n

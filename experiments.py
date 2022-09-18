@@ -17,7 +17,7 @@ import re
 import os
 
 
-def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method):
+def experiment(m, n, activation, model_name, train_s2, decoder_dgp, llh_method):
     """ Perform experiments for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
@@ -58,14 +58,14 @@ def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method):
     if len == 2:
         logs2 = outputs[1].cpu().detach()
         torch.save(logs2, os.path.join(model_path, "logs2.pt"))
-    if "llh" in callback.keys():
-        [train_llh, valid_llh] = callback["llh"]
-        np.save(os.path.join(model_path, f"train_llh_{llh_method}.npy"), train_llh)
-        np.save(os.path.join(model_path, f"valid_llh_{llh_method}.npy"), valid_llh)
     if "loss" in callback.keys():
         [train_loss, valid_loss] = callback["loss"]
         np.save(os.path.join(model_path, "train_loss.npy"), train_loss)
         np.save(os.path.join(model_path, "valid_loss.npy"), valid_loss)
+    if "llh" in callback.keys():
+        [train_llh, valid_llh] = callback["llh"]
+        np.save(os.path.join(model_path, f"train_llh_{llh_method}.npy"), train_llh)
+        np.save(os.path.join(model_path, f"valid_llh_{llh_method}.npy"), valid_llh)
 
     # run simulation and reconstruction
     simu_df = generate_data(m, n, activation, simu_size)

@@ -1,7 +1,7 @@
 import itertools
 import numpy as np
 import torch
-from global_settings import device
+from global_settings import DEVICE
 from likelihoods.dist import get_normal_lp
 from params.params import min_lim, max_lim, space
 
@@ -31,7 +31,7 @@ def build_grid(m, n, x, model, logs2):
     z_grid = torch.tensor(z_grid)
     grid_size = z_grid.shape[0]
     z_grid = z_grid.repeat(data_size, 1, 1).reshape(data_size, grid_size, m)
-    z_grid = z_grid.to(device)
+    z_grid = z_grid.to(DEVICE)
     x_recon = model.decoder(z_grid)[0]
 
     # get covariance -- data_size x grid_size x n x n
@@ -40,7 +40,7 @@ def build_grid(m, n, x, model, logs2):
     s2_sqrt = s2_sqrt.repeat(1, grid_size, 1, 1).reshape(data_size, grid_size, n, n)
     eye = torch.eye(n).repeat(grid_size, 1, 1).reshape(grid_size, n, n)
     eye = eye.repeat(data_size, 1, 1, 1).reshape(data_size, grid_size, n, n)
-    eye = eye.to(device)
+    eye = eye.to(DEVICE)
     s2_cov_tril = s2_sqrt * eye
 
     # get input x -- data_size x grid_size x n

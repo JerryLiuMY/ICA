@@ -3,7 +3,8 @@ import torch
 import os
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+MODE_FLAG = "experiment"
 
 
 def get_dir(path):
@@ -33,6 +34,3 @@ else:
     MLESGD_PATH = get_dir(os.path.join(DESKTOP_PATH, "mlesgd"))
 
 PATH_DICT = {"vae": VAE_PATH, "mleauto": MLEAUTO_PATH, "mlesgd": MLESGD_PATH}
-
-
-# Compare sparse grid vs. monte carlo

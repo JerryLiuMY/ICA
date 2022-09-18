@@ -1,4 +1,4 @@
-from global_settings import device
+from global_settings import DEVICE
 import pandas as pd
 import numpy as np
 import torch
@@ -20,7 +20,7 @@ def simu_mle(inputs, simu_loader):
     nbatch = 0
     for _, z_batch in simu_loader:
         with torch.no_grad():
-            z_batch = z_batch.to(device)
+            z_batch = z_batch.to(DEVICE)
             mean_batch = model(z_batch)
             mean = torch.cat([mean, mean_batch], dim=0)
             nbatch += 1

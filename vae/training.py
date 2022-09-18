@@ -1,6 +1,6 @@
 from vae.model import VAE, elbo_gaussian
 from params.params import vae_dict as train_dict
-from global_settings import device
+from global_settings import DEVICE
 from datetime import datetime
 import numpy as np
 import torch
@@ -23,7 +23,7 @@ def train_vae(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
 
     # building VAE
     model = VAE(m, n, fit_s2=train_s2, decoder_info=decoder_info)
-    model = model.to(device)
+    model = model.to(DEVICE)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)
     num_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -41,7 +41,7 @@ def train_vae(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
         # mini-batch loop
         train_loss, train_llh, nbatch = 0., 0., 0
         for x_batch, _ in train_loader:
-            x_batch = x_batch.to(device)
+            x_batch = x_batch.to(DEVICE)
             mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
             optimizer.zero_grad()
@@ -99,7 +99,7 @@ def valid_vae(inputs, valid_loader, llh_func, eval_mode):
     valid_loss, valid_llh, nbatch = 0., 0., 0
     for x_batch, _ in valid_loader:
         with torch.no_grad():
-            x_batch = x_batch.to(device)
+            x_batch = x_batch.to(DEVICE)
             mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
             loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
 
