@@ -10,15 +10,12 @@
 
 The up-to-date <a href="./__resources__/ICA/main.pdf" target="_blank">write-up</a> and the <a href="https://www.overleaf.com/project/62e45e862465cfc8d3bc6aed" target="_blank">overleaf</a> project.
 
-Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/params.py
-
-Numerical integration via `Monte Carlo`: https://github.com/JerryLiuMY/ICA/blob/main/likelihood/llh_mc.py
-
-Numerical integration via `Sparse Grid`: https://github.com/JerryLiuMY/ICA/blob/main/likelihood/llh_grid.py
+- Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/params.py
+- Numerical integration via `Monte Carlo`: https://github.com/JerryLiuMY/ICA/blob/main/likelihood/llh_mc.py
+- Numerical integration via `Sparse Grid`: https://github.com/JerryLiuMY/ICA/blob/main/likelihood/llh_grid.py
 
 ## Data Information
 <a href="https://drive.google.com/drive/folders/1OnsuFWZwtcZhROKImRHxXBBkdrAlD5Ti?usp=sharing" target="_blank">Repository</a> for the generated `weight` and `bias` of the single-layer MLP.
-
 
 ```python
 from torch import nn
@@ -58,8 +55,9 @@ from vae.training import valid_vae
 from vae.simulation import simu_vae
 from likelihoods.llh_mc import get_llh_mc
 
-outputs, train_loss = train_vae(m, n, train_loader, valid_loader, train_s2=False, llh_func=get_llh_mc)
-valid_loss = valid_vae(outputs, valid_loader, llh_func, eval_mode=True)
+outputs, train_loss = train_vae(m, n, train_loader, valid_loader, train_s2=False, decoder_info=[True, "ReLU"], 
+                                llh_func=get_llh_mc)
+valid_loss = valid_vae(outputs, valid_loader, llh_func=get_llh_mc, eval_mode=True)
 recon_df = simu_vae(outputs, simu_loader)
 ```
 
@@ -74,7 +72,6 @@ Setting with `m=2, n=20, sigma^2=1` for different types of activation functions 
 
 - #### Learning Curve
 ![alt text](./__resources__/vae/callback_m2_n20_mc.jpg?raw=true "Title")
-
 
 ### Setting with `m=2, n=2`
 Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
@@ -94,18 +91,18 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 
 ```python
 from mle.training import train_mle
-from mle.training import valid_mleauto
+from mle.training import valid_mle
 from mle.simulation import simu_mle
 from likelihoods.llh_mc import get_llh_mc
 
-outputs, train_loss = train_mle(m, n, train_loader, valid_loader, train_s2=False, decoder_info=, llh_func=get_llh_mc,
-                                grad_method="auto")
-valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
+outputs, train_loss = train_mle(m, n, train_loader, valid_loader, train_s2=False, decoder_info=[True, "ReLU"],
+                                llh_func=get_llh_mc, grad_method="auto")
+valid_loss = valid_mle(outputs, valid_loader, llh_func=get_llh_mc, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```
 
 ### Setting with `m=2, n=10`
-Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
+Setting with `m=2, n=10, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
 ![alt text](./__resources__/mleauto/recon_m2_n10.jpg?raw=true "Title")
@@ -114,24 +111,26 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 ![alt text](./__resources__/mleauto/callback_m2_n10_mc.jpg?raw=true "Title")
 
 
-## MLE with SGD
-<a href="https://drive.google.com/drive/folders/1gYz0fbDiakBBkP9M5x2MRjwWtB0ucSBk?usp=sharing" target="_blank">Folder</a> for the trained MLE SGD models. <a href="./mle">Link</a> to the model architecture, training loop and simulation.
+## Appendix: MLE with SGD
+<a href="./mle">Link</a> to the model architecture, training loop and simulation.
 
 ```python
 from mle.training import train_mle
-from mle.training import valid_mleauto
+from mle.training import valid_mle
 from mle.simulation import simu_mle
 from likelihoods.llh_mc import get_llh_mc
 
-outputs, train_loss = train_mle(m, n, train_loader, valid_loader, train_s2=False, decoder_info=, llh_func=get_llh_mc,
-                                grad_method="sgd")
-valid_loss = valid_mleauto(outputs, valid_loader, llh_func, eval_mode=True)
+outputs, train_loss = train_mle(m, n, train_loader, valid_loader, train_s2=False, decoder_info=[True, "ReLU"],
+                                llh_func=get_llh_mc, grad_method="sgd")
+valid_loss = valid_mle(outputs, valid_loader, llh_func=get_llh_mc, eval_mode=True)
 recon_df = simu_mle(outputs, simu_loader)
 ```
+
+### Setting with `m=2, n=10`
+Setting with `m=2, n=10, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
 ![alt text](./__resources__/mlesgd/recon_m2_n10.jpg?raw=true "Title")
 
 - #### Learning Curve
 ![alt text](./__resources__/mlesgd/callback_m2_n10_mc.jpg?raw=true "Title")
-

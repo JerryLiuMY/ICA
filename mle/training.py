@@ -82,7 +82,7 @@ def train_mle(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
         train_llh_li.append(train_llh)
 
         # get validation loss
-        valid_llh = valid_mleauto([model, logs2], valid_loader, llh_func, eval_mode=False)
+        valid_llh = valid_mle([model, logs2], valid_loader, llh_func, eval_mode=False)
         valid_llh_li.append(valid_llh)
 
     # return train/valid history and log-likelihoods
@@ -93,7 +93,7 @@ def train_mle(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
     return [model, logs2], callback
 
 
-def valid_mleauto(inputs, valid_loader, llh_func, eval_mode):
+def valid_mle(inputs, valid_loader, llh_func, eval_mode):
     """ Training VAE with the specified image dataset
     :param inputs: trained VAE model and log of the fitted s2
     :param valid_loader: validation dataset loader
