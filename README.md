@@ -13,7 +13,7 @@ The up-to-date <a href="./__resources__/ICA/main.pdf" target="_blank">write-up</
 - Dictionary of parameters: https://github.com/JerryLiuMY/ICA/blob/main/params/params.py
 - Numerical integration via `Monte Carlo`: https://github.com/JerryLiuMY/ICA/blob/main/likelihood/llh_mc.py
 - Numerical integration via `Sparse Grid`: https://github.com/JerryLiuMY/ICA/blob/main/likelihood/llh_grid.py
-- <a href="./__resources__/reference/Lecture_2">Reference</a> for Procrustes analysis and <a href="./__resources__/reference/Lecture_5">reference</a> for CCA
+- <a href="./__resources__/reference/Lecture_2.pdf">Reference</a> for Procrustes analysis and <a href="./__resources__/reference/Lecture_5.pdf">reference</a> for CCA
 
 
 
