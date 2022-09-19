@@ -37,3 +37,10 @@ PATH_DICT = {
     "vae": VAE_PATH, "mleauto": MLEAUTO_PATH, "mlesgd": MLESGD_PATH,
     "vae_exp": VAE_EXP_PATH, "mleauto_exp": MLEAUTO_EXP_PATH, "mlesgd_exp": MLESGD_EXP_PATH
 }
+
+
+# standardize the generated samples
+# for VAE get mean working
+# get Procrustes analysis and CCA
+# make the plotting function work
+# scale up experiments

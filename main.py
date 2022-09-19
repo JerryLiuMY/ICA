@@ -3,6 +3,7 @@ from likelihoods.llh_grid import get_llh_grid
 from likelihoods.llh_null import get_llh_null
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
+from params.params import get_m_n
 from vae.training import train_vae
 from mle.training import train_mle
 from vae.simulation import simu_vae
@@ -28,13 +29,17 @@ def experiments(model_name, exp_path, train_s2, decoder_dgp, llh_method="mc"):
     :param llh_method: method for numerical integration
     """
 
-    m_li, n_li = [2], list(np.round(np.exp(np.linspace(np.log(2), np.log(500), 15))).astype(int))
+    m_n_li, m_li_n = get_m_n(model_name)
+    m_n_iter = list(itertools.product(*m_n_li))
+    m_iter_n = list(itertools.product(*m_li_n))
+    m_iter_n = [_ for _ in m_iter_n if _ not in m_n_iter]
+    iter_m_n = m_n_iter + m_iter_n
     activation_li = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.LeakyReLU()]
-    for m, n in itertools.product(*[m_li, n_li]):
+
+    for m, n in iter_m_n:
         for activation in activation_li:
             experiment(m, n, activation, model_name=model_name, exp_path=exp_path,
                        train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, exp_mode=True)
-        plotting(m, n, model_name=model_name, exp_path=exp_path, llh_method=llh_method)
 
 
 def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, llh_method="mc", exp_mode=False):
