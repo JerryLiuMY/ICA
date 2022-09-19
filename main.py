@@ -1,4 +1,3 @@
-from global_settings import PATH_DICT
 from likelihoods.llh_mc import get_llh_mc
 from likelihoods.llh_grid import get_llh_grid
 from likelihoods.llh_null import get_llh_null
@@ -14,16 +13,36 @@ from visualization.recon import plot_recon_2d
 from functools import partial
 import numpy as np
 import torch
+from torch import nn
 import re
 import os
 
 
-def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method, exp_mode=False):
+def experiments(model_name, exp_path, train_s2, decoder_dgp, llh_method="mc"):
+    """ Perform experiments for non-linear ICA
+    :param model_name: name of the model to run
+    :param exp_path: path for experiment
+    :param train_s2: whether to train s2 or not
+    :param decoder_dgp: whether to use the same decoder as dgp
+    :param llh_method: method for numerical integration
+    """
+
+    m_li = [2]
+    n_li = [2, 10, 30, 15]
+    activation_li = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.LeakyReLU()]
+
+    for m, n, activation in m_li, n_li, activation_li:
+        experiment(m=m, n=n, activation=activation, model_name=model_name, exp_path=exp_path,
+                   train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, exp_mode=True)
+
+
+def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, llh_method="mc", exp_mode=False):
     """ Perform experiments for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param activation: activation function for mlp
     :param model_name: name of the model to run
+    :param exp_path: path for experiment
     :param train_s2: whether to train s2 or not
     :param decoder_dgp: whether to use the same decoder as dgp
     :param llh_method: method for numerical integration
@@ -33,7 +52,7 @@ def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method, exp_mo
     # define path and load parameters
     train_size, valid_size, simu_size = exp_dict["train_size"], exp_dict["valid_size"], exp_dict["simu_size"]
     activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
-    model_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_{activation_name}")
+    model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
 
@@ -77,16 +96,17 @@ def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method, exp_mo
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
 
-def plotting(m, n, model_name, llh_method):
+def plotting(m, n, model_name, exp_path, llh_method="mc"):
     """ Plot original space, latent space and callback
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param model_name: model name
+    :param exp_path: path for experiment
     :param llh_method: method for numerical integration
     """
 
     # define path and load parameters
-    figure_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_figure")
+    figure_path = os.path.join(exp_path, f"m{m}_n{n}_figure")
     if not os.path.isdir(figure_path):
         os.mkdir(figure_path)
 
@@ -95,12 +115,3 @@ def plotting(m, n, model_name, llh_method):
     callback.savefig(os.path.join(figure_path, f"callback_m{m}_n{n}_{llh_method}.pdf"), bbox_inches="tight")
     recon = plot_recon_2d(m, n, model_name)
     recon.savefig(os.path.join(figure_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")
-
-
-if __name__ == "__main__":
-    from torch import nn
-    main(m=2, n=2, activation=nn.ReLU(), model_name="mleauto", train_s2=False, decoder_dgp=True, llh_method="mc")
-    # main(m=2, n=10, activation=nn.Sigmoid(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
-    # main(m=2, n=10, activation=nn.Tanh(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
-    # main(m=2, n=10, activation=nn.LeakyReLU(), model_name="vae", train_s2=False, decoder_dgp=True, llh_method="mc")
-    # plotting(m=2, n=10, model_name="mleauto", llh_method="mc")
