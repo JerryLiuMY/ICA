@@ -1,6 +1,7 @@
 from global_settings import PATH_DICT
 from likelihoods.llh_mc import get_llh_mc
 from likelihoods.llh_grid import get_llh_grid
+from likelihoods.llh_null import get_llh_null
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae
@@ -17,7 +18,7 @@ import re
 import os
 
 
-def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method):
+def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method, exp_mode=False):
     """ Perform experiments for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
@@ -26,6 +27,7 @@ def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method):
     :param train_s2: whether to train s2 or not
     :param decoder_dgp: whether to use the same decoder as dgp
     :param llh_method: method for numerical integration
+    :param exp_mode: whether in experiment model
     """
 
     # define path and load parameters
@@ -40,10 +42,10 @@ def main(m, n, activation, model_name, train_s2, decoder_dgp, llh_method):
     train_mlesgd = partial(train_mle, grad_method="sgd")
     train_dict = {"vae": train_vae, "mleauto": train_mleauto, "mlesgd": train_mlesgd}
     simu_dict = {"vae": simu_vae, "mleauto": simu_mle, "mlesgd": simu_mle}
-    llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid}
+    llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid, "null": get_llh_null}
     train_func = train_dict[model_name]
     simu_func = simu_dict[model_name]
-    llh_func = llh_dict[llh_method]
+    llh_func = llh_dict["null"] if exp_mode and model_name == "vae" else llh_dict[llh_method]
 
     # training and validation
     train_df = generate_data(m, n, activation, train_size)
