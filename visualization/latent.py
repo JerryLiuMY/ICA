@@ -15,11 +15,11 @@ palette = sns.color_palette()
 tqdm.pandas()
 
 
-def plot_latent_2d(m, n, model_name):
+def plot_latent_2d(m, n, exp_path):
     """ Visualize the reconstructed 2D latent space
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
-    :param model_name: model name
+    :param exp_path: path for experiment
     :return: dataframe of z and x
     """
 
@@ -28,7 +28,7 @@ def plot_latent_2d(m, n, model_name):
     for ax, activation in zip(axes, activations):
         # build simu_df (num. of samples per datapoint set to 1)
         activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
-        model_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_{activation_name}")
+        model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
         simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"), index_col=0)
         temp_df = simu_df[[col for col in simu_df.columns if "x" in col]]
         post_df = temp_df.progress_apply(lambda _: simu_post(_.values, m, n, activation), axis=1)

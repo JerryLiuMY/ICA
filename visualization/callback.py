@@ -1,5 +1,4 @@
 from visualization.procrustes import get_procrustes
-from global_settings import PATH_DICT
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from torch import nn
@@ -10,11 +9,12 @@ import os
 sns.set()
 
 
-def plot_callback(m, n, model_name, llh_method):
+def plot_callback(m, n, model_name, exp_path, llh_method):
     """ Plot training and validation history
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param model_name: model name
+    :param exp_path: path for experiment
     :param llh_method: method for numerical integration
     :return: dataframe of z and x
     """
@@ -25,7 +25,7 @@ def plot_callback(m, n, model_name, llh_method):
 
     for ax, activation in zip(axes, activations):
         activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
-        model_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_{activation_name}")
+        model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
         train_llh = np.load(os.path.join(model_path, f"train_llh_{llh_method}.npy"))
         valid_llh = np.load(os.path.join(model_path, f"valid_llh_{llh_method}.npy"))
 

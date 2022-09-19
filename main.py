@@ -112,7 +112,7 @@ def plotting(m, n, model_name, exp_path, llh_method="mc"):
         os.mkdir(figure_path)
 
     # plot recon, latent and callback
-    callback = plot_callback(m, n, model_name, llh_method=llh_method)
+    callback = plot_callback(m, n, model_name, exp_path, llh_method=llh_method)
+    recon = plot_recon_2d(m, n, exp_path)
     callback.savefig(os.path.join(figure_path, f"callback_m{m}_n{n}_{llh_method}.pdf"), bbox_inches="tight")
-    recon = plot_recon_2d(m, n, model_name)
     recon.savefig(os.path.join(figure_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")
