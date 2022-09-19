@@ -1,4 +1,4 @@
-from visualization.procrustes import get_procrustes
+from visualization.metrics import get_procrustes
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from torch import nn
@@ -37,9 +37,8 @@ def plot_callback(m, n, model_name, exp_path, llh_method):
         ax.set_ylabel("Log-Likelihood")
 
         # calculate disparity score
-        w_disp, b_disp = get_procrustes(m, n, activation, model_name)
-        handle_w_disp = mpatches.Patch(color=sns.color_palette()[7], label=f"w_disp = {round(w_disp, 3)}", alpha=0.8)
-        handle_b_disp = mpatches.Patch(color=sns.color_palette()[7], label=f"b_disp = {round(b_disp, 3)}", alpha=0.8)
+        disp = get_procrustes(m, n, activation, exp_path)
+        handle_disp = mpatches.Patch(color=sns.color_palette()[7], label=f"w_disp = {round(disp, 3)}", alpha=0.8)
 
         ax_ = ax.twinx()
         ax_.grid(False)
@@ -53,11 +52,11 @@ def plot_callback(m, n, model_name, exp_path, llh_method):
             handles, labels = ax.get_legend_handles_labels()
             handles_, labels_ = ax_.get_legend_handles_labels()
             ax.legend(handles + handles_, labels + labels_, loc="upper right")
-            ax_.legend(handles=[handle_w_disp, handle_b_disp], loc="lower right", handlelength=0.2, handletextpad=0.5)
+            ax_.legend(handles=[handle_disp], loc="lower right", handlelength=0.2, handletextpad=0.5)
         elif "mle" in model_name:
             handles, labels = ax.get_legend_handles_labels()
             ax.legend(handles, labels, loc="upper right")
-            ax_.legend(handles=[handle_w_disp, handle_b_disp], loc="lower right", handlelength=0.2, handletextpad=0.5)
+            ax_.legend(handles=[handle_disp], loc="lower right", handlelength=0.2, handletextpad=0.5)
         else:
             raise ValueError("Invalid model name")
 

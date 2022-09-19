@@ -8,12 +8,12 @@ import os
 import re
 
 
-def get_procrustes(m, n, activation, model_name):
+def get_procrustes(m, n, activation, exp_path):
     """ Get disparity from procrustes analysis
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param activation: activation function for mlp
-    :param model_name: name of the model to run
+    :param exp_path: path for experiment
     :return: trained model and training loss history
     """
 
@@ -24,7 +24,7 @@ def get_procrustes(m, n, activation, model_name):
 
     # load fitted w_hat and b_hat
     activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
-    model_path = os.path.join(PATH_DICT[model_name], f"m{m}_n{n}_{activation_name}")
+    model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
     model = torch.load(os.path.join(model_path, "model.pth"))
     w_hat = model["decoder.fc.weight"].numpy().astype(np.float64)
     b_hat = model["decoder.fc.bias"].numpy().astype(np.float64)
