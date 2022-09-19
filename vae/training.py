@@ -6,14 +6,15 @@ import numpy as np
 import torch
 
 
-def train_vae(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func):
+def train_vae(m, n, activation, train_loader, valid_loader, train_s2, decoder_dgp, llh_func):
     """ Training VAE with the specified image dataset
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
+    :param activation: activation function for mlp
     :param train_loader: training dataset loader
     :param valid_loader: validation dataset loader
     :param train_s2: whether to train s2 or not
-    :param decoder_info: whether to use the same decoder as dgp and activation
+    :param decoder_dgp: whether to use the same decoder as dgp
     :param llh_func: function for numerical integration
     :return: trained model and training loss history
     """
@@ -22,7 +23,7 @@ def train_vae(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
     epochs, lr, beta = train_dict["epochs"], train_dict["lr"], train_dict["beta"]
 
     # building VAE
-    model = VAE(m, n, fit_s2=train_s2, decoder_info=decoder_info)
+    model = VAE(m, n, activation, fit_s2=train_s2, decoder_dgp=decoder_dgp)
     model = model.to(DEVICE)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.995)
@@ -42,8 +43,8 @@ def train_vae(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
         train_loss, train_llh, nbatch = 0., 0., 0
         for x_batch, _ in train_loader:
             x_batch = x_batch.to(DEVICE)
-            mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
-            loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
+            x_recon_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
+            loss = elbo_gaussian(x_batch, x_recon_batch, logs2_batch, mu_batch, logvar_batch, beta)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -100,8 +101,8 @@ def valid_vae(inputs, valid_loader, llh_func, eval_mode):
     for x_batch, _ in valid_loader:
         with torch.no_grad():
             x_batch = x_batch.to(DEVICE)
-            mean_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
-            loss = elbo_gaussian(x_batch, mean_batch, logs2_batch, mu_batch, logvar_batch, beta)
+            x_recon_batch, logs2_batch, mu_batch, logvar_batch = model(x_batch)
+            loss = elbo_gaussian(x_batch, x_recon_batch, logs2_batch, mu_batch, logvar_batch, beta)
 
             loss_batch = loss.item()
             llh_sample = llh_func(m, n, x_batch, model, logs2_batch)

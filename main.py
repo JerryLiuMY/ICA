@@ -77,9 +77,8 @@ def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, ll
     valid_df = generate_data(m, n, activation, valid_size)
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
-    decoder_info = [decoder_dgp, activation_name]
 
-    outputs, callback = train_func(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func)
+    outputs, callback = train_func(m, n, activation, train_loader, valid_loader, train_s2, decoder_dgp, llh_func)
     model = outputs[0]
     torch.save(model.state_dict(), os.path.join(model_path, "model.pth"))
     if len == 2:
