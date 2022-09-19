@@ -9,7 +9,7 @@ num_trials = 1000
 # model
 batch_size = 128
 vae_dict = {"epochs": 200, "lr": 0.001, "beta": 1}
-mle_dict = {"epochs": 200, "lr": 0.001}
+mle_dict = {"epochs": 50, "lr": 0.001}
 exp_dict = {"train_size": 10000, "valid_size": 2000, "simu_size": 5000}
 
 # numerical integration

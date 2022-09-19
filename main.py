@@ -11,9 +11,10 @@ from params.params import exp_dict
 from visualization.callback import plot_callback
 from visualization.recon import plot_recon_2d
 from functools import partial
-import numpy as np
-import torch
 from torch import nn
+import numpy as np
+import itertools
+import torch
 import re
 import os
 
@@ -27,11 +28,10 @@ def experiments(model_name, exp_path, train_s2, decoder_dgp, llh_method="mc"):
     :param llh_method: method for numerical integration
     """
 
-    m_li = [2]
-    n_li = [2, 10, 30, 15]
+    n_li, m_li = [2], list(np.round(np.exp(np.linspace(np.log(2), np.log(500), 15))).astype(int))
     activation_li = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.LeakyReLU()]
-
-    for m, n, activation in m_li, n_li, activation_li:
+    m_n_activation_li = [n_li, m_li, activation_li]
+    for m, n, activation in itertools.product(*m_n_activation_li):
         experiment(m=m, n=n, activation=activation, model_name=model_name, exp_path=exp_path,
                    train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, exp_mode=True)
 
