@@ -30,10 +30,11 @@ def experiments(model_name, exp_path, train_s2, decoder_dgp, llh_method="mc"):
 
     n_li, m_li = [2], list(np.round(np.exp(np.linspace(np.log(2), np.log(500), 15))).astype(int))
     activation_li = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.LeakyReLU()]
-    m_n_activation_li = [n_li, m_li, activation_li]
-    for m, n, activation in itertools.product(*m_n_activation_li):
-        experiment(m=m, n=n, activation=activation, model_name=model_name, exp_path=exp_path,
-                   train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, exp_mode=True)
+    for m, n in itertools.product(*[n_li, m_li]):
+        for activation in activation_li:
+            experiment(m, n, activation, model_name=model_name, exp_path=exp_path,
+                       train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, exp_mode=True)
+        plotting(m, n, model_name=model_name, exp_path=exp_path, llh_method=llh_method)
 
 
 def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, llh_method="mc", exp_mode=False):

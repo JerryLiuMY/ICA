@@ -13,7 +13,4 @@ def get_llh_null(m, n, x, model, logs2):
 
     llh_sample = torch.zeros(x.shape[0])
 
-    print(x.shape)
-    print(llh_sample.shape)
-
     return llh_sample

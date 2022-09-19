@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 # experiments
-num_trials = 1000
+num_trials = 25
 
 # model
 batch_size = 128
