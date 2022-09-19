@@ -1,5 +1,4 @@
 import torch
-from torch.nn import functional
 from torch import nn
 
 
@@ -39,12 +38,12 @@ class Encoder(Block):
 
 
 class DecoderDGP(Block):
-    def __init__(self, m, n, fit_s2, activation_name):
+    def __init__(self, m, n, fit_s2, activation):
         super(DecoderDGP, self).__init__(m, n)
 
         # linear layer
         self.fit_s2 = fit_s2
-        self.activation_name = activation_name
+        self.activation = activation
         self.inter_dim = self.output_dim
         self.fc = nn.Linear(in_features=self.latent_dim, out_features=self.inter_dim)
 
@@ -55,14 +54,7 @@ class DecoderDGP(Block):
 
     def forward(self, z):
         # decoder layers
-        functional_dict = {
-            "ReLU": torch.relu,
-            "Sigmoid": torch.sigmoid,
-            "Tanh": torch.tanh,
-            "LeakyReLU": functional.leaky_relu
-        }
-        activation_func = functional_dict[self.activation_name]
-        inter = activation_func(self.fc(z))
+        inter = self.activation(self.fc(z))
 
         if not self.fit_s2:
             mean = self.dec_mean(inter)

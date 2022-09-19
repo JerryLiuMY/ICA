@@ -9,13 +9,14 @@ import os
 
 
 class VAE(nn.Module):
-    def __init__(self, m, n, fit_s2, decoder_info):
+    def __init__(self, m, n, activation, fit_s2, decoder_dgp):
         super(VAE, self).__init__()
         self.name, self.m, self.n, self.fit_s2 = "vae", m, n, fit_s2
-        self.decoder_dgp, self.activation_name = decoder_info
+        self.activation, self.decoder_dgp = activation, decoder_dgp
+
         self.encoder = Encoder(m, n)
         if self.decoder_dgp:
-            self.decoder = DecoderDGP(m, n, fit_s2=self.fit_s2, activation_name=self.activation_name)
+            self.decoder = DecoderDGP(m, n, fit_s2=self.fit_s2, activation=self.activation)
         else:
             self.decoder = Decoder(m, n, fit_s2=self.fit_s2)
 
@@ -50,8 +51,8 @@ def elbo_gaussian(x, x_recon, logs2, mu, logvar, beta):
     :param x: original image
     :param x_recon: reconstruction in the output layer
     :param logs2: log of the variance in the output layer
-    :param mu: mean in the hidden layer
-    :param logvar: log of the variance in the hidden layer
+    :param mu: mean in the fitted variational distribution
+    :param logvar: log of the variance in the variational distribution
     :param beta: beta
     :return: reconstruction loss + KL
     """
