@@ -13,7 +13,7 @@ def build_mc(m, n, x, model, logs2):
     :param x: inputs related to the observation x data
     :param model: trained model
     :param logs2: log of the estimated s2
-    :return: x, x_recon, s2_cov_tril
+    :return:
     """
 
     # define input
@@ -27,7 +27,7 @@ def build_mc(m, n, x, model, logs2):
     sampler = MultivariateNormal(loc=mu_mc, scale_tril=var_tril_mc)
     z_mc = sampler.sample()
     z_mc = z_mc.to(DEVICE)
-    x_recon = model.decoder(z_mc)[0]
+    mean = model.decoder(z_mc)[0]
 
     # get covariance -- data_size x mc x n x n
     s2_sqrt = logs2.exp().sqrt()
@@ -41,7 +41,7 @@ def build_mc(m, n, x, model, logs2):
     # get input x -- data_size x mc x n
     x = x.repeat(1, mc).reshape(data_size, mc, n)
 
-    return x, model, logs2, x_recon, s2_cov_tril
+    return x, model, logs2, mean, s2_cov_tril
 
 
 def get_llh_mc(m, n, x, model, logs2):
@@ -55,8 +55,8 @@ def get_llh_mc(m, n, x, model, logs2):
     """
 
     # perform numerical integration for llh
-    x, model, logs2, x_recon, s2_cov_tril = build_mc(m, n, x, model, logs2)
-    llh = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
+    x, model, logs2, mean, s2_cov_tril = build_mc(m, n, x, model, logs2)
+    llh = get_normal_lp(x, loc=mean, cov_tril=s2_cov_tril)
     llh = llh.to(torch.float64)
     llh_sample = llh.exp().sum(dim=1).log()
     llh_sample = torch.nan_to_num(llh_sample, neginf=np.log(torch.finfo(torch.float64).tiny))

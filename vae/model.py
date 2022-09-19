@@ -23,9 +23,9 @@ class VAE(nn.Module):
         mu, logvar = self.encoder(x)
         latent = self.latent_sample(mu, logvar)
         if self.fit_s2:
-            mean, logs2 = self.decoder(latent)
+            x_recon, logs2 = self.decoder(latent)
         else:
-            mean = self.decoder(latent)
+            x_recon = self.decoder(latent)
             params_path = os.path.join(DATA_PATH, f"params_{self.m}_{self.n}.pkl")
             with open(params_path, "rb") as handle:
                 params = pickle.load(handle)
@@ -33,7 +33,7 @@ class VAE(nn.Module):
             logs2 = np.repeat(np.log(sigma ** 2), x.shape[0]).reshape(x.shape[0], 1)
             logs2 = torch.tensor(logs2, requires_grad=False).to(DEVICE)
 
-        return mean, logs2, mu, logvar
+        return x_recon, logs2, mu, logvar
 
     def latent_sample(self, mu, logvar):
         # the re-parameterization trick
@@ -45,10 +45,10 @@ class VAE(nn.Module):
             return mu
 
 
-def elbo_gaussian(x, mean, logs2, mu, logvar, beta):
+def elbo_gaussian(x, x_recon, logs2, mu, logvar, beta):
     """ Calculating loss for variational autoencoder
     :param x: original image
-    :param mean: mean in the output layer
+    :param x_recon: reconstruction in the output layer
     :param logs2: log of the variance in the output layer
     :param mu: mean in the hidden layer
     :param logvar: log of the variance in the hidden layer
@@ -60,7 +60,9 @@ def elbo_gaussian(x, mean, logs2, mu, logvar, beta):
     kl_div = - 0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
 
     # reconstruction loss
-    recon_loss = - torch.sum(logs2.mul(x.size(dim=1)/2) + torch.norm(x - mean, 2, dim=1).pow(2).div(logs2.exp().mul(2)))
+    recon_loss = - torch.sum(
+        logs2.mul(x.size(dim=1)/2) + torch.norm(x - x_recon, 2, dim=1).pow(2).div(logs2.exp().mul(2))
+    )
 
     # loss
     loss = - beta * kl_div + recon_loss

@@ -32,7 +32,7 @@ def build_grid(m, n, x, model, logs2):
     grid_size = z_grid.shape[0]
     z_grid = z_grid.repeat(data_size, 1, 1).reshape(data_size, grid_size, m)
     z_grid = z_grid.to(DEVICE)
-    x_recon = model.decoder(z_grid)[0]
+    mean = model.decoder(z_grid)[0]
 
     # get covariance -- data_size x grid_size x n x n
     s2_sqrt = logs2.exp().sqrt()
@@ -46,7 +46,7 @@ def build_grid(m, n, x, model, logs2):
     # get input x -- data_size x grid_size x n
     x = x.repeat(1, grid_size).reshape(data_size, grid_size, n)
 
-    return x, model, logs2, x_recon, s2_cov_tril, z_grid, volume
+    return x, model, logs2, mean, s2_cov_tril, z_grid, volume
 
 
 def get_llh_grid(m, n, x, model, logs2):
@@ -60,10 +60,10 @@ def get_llh_grid(m, n, x, model, logs2):
     """
 
     # perform numerical integration for llh
-    x, model, logs2, x_recon, s2_cov_tril, z_grid, volume = build_grid(m, n, x, model, logs2)
+    x, model, logs2, mean, s2_cov_tril, z_grid, volume = build_grid(m, n, x, model, logs2)
 
     # perform numerical integration
-    log_prob_1 = get_normal_lp(x, loc=x_recon, cov_tril=s2_cov_tril)
+    log_prob_1 = get_normal_lp(x, loc=mean, cov_tril=s2_cov_tril)
     log_prob_2 = get_normal_lp(z_grid, loc=torch.zeros(z_grid.shape[-1]), cov_tril=torch.eye(z_grid.shape[-1]))
     log_prob_3 = torch.log(volume)
     llh = log_prob_1 + log_prob_2 + log_prob_3
