@@ -21,7 +21,7 @@ def simu_mle(inputs, simu_loader):
     for _, z_batch in simu_loader:
         with torch.no_grad():
             z_batch = z_batch.to(DEVICE)
-            mean_batch = model(z_batch)
+            mean_batch = model.decoder(z_batch)
             mean = torch.cat([mean, mean_batch], dim=0)
             nbatch += 1
 
