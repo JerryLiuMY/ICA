@@ -39,8 +39,6 @@ PATH_DICT = {
 }
 
 
-# standardize the generated samples
 # for VAE get mean working
 # get Procrustes analysis and CCA
 # make the plotting function work
-# scale up experiments
