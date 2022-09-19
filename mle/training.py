@@ -59,7 +59,7 @@ def train_mle(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
                 optimizer.zero_grad()
                 objective.backward()
                 optimizer.step()
-                llh_batch = - objective.cpu().detach().numpy().tolist()
+                llh_batch = objective.neg().cpu().detach().numpy().tolist()
             elif grad_method == "sgd":
                 objective = - llh_func(m, n, x_batch, model, logs2_batch).exp()
                 likelihood = - torch.clone(objective)
@@ -67,8 +67,7 @@ def train_mle(m, n, train_loader, valid_loader, train_s2, decoder_info, llh_func
                 optimizer.zero_grad()
                 objective.backward(gradient=gradient)
                 optimizer.step()
-                llh_batch = - objective.log().sum(dim=0).cpu().detach().numpy().tolist()
-                print(llh_batch)
+                llh_batch = objective.neg().log().sum(dim=0).cpu().detach().numpy().tolist()
             else:
                 raise ValueError("Invalid backpropagation method")
 
