@@ -39,5 +39,5 @@ PATH_DICT = {
 }
 
 
-# make the plotting function work
 # typical speed of gaussian nose vector
+# scale up experiments

@@ -40,6 +40,7 @@ def experiments(model_name, exp_path, train_s2, decoder_dgp, llh_method="mc"):
         for activation in activation_li:
             experiment(m, n, activation, model_name=model_name, exp_path=exp_path,
                        train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, exp_mode=True)
+        plotting(m, n, model_name=model_name, exp_path=exp_path, llh_method=llh_method)
 
 
 def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, llh_method="mc", exp_mode=False):

@@ -18,7 +18,11 @@ min_lim, max_lim, space = -2.5, 2.5, 51
 # experiments
 num_trials = 25
 num_lin = 15
-m_n_dict = {"vae": [[2, 500], [2, 100]], "mle": [[2, 20], [2, 20]]}
+m_n_dict = {
+    "vae": [[2, 500], [2, 100]],
+    "mleauto": [[2, 20], [2, 20]],
+    "mleagd": [[2, 20], [2, 20]]
+}
 
 
 def save_params(m, n):
