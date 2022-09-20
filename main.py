@@ -16,6 +16,7 @@ from torch import nn
 import numpy as np
 import itertools
 import torch
+import json
 import re
 import os
 
@@ -117,7 +118,9 @@ def plotting(m, n, model_name, exp_path, llh_method="mc"):
         os.mkdir(figure_path)
 
     # plot recon, latent and callback
-    callback = plot_callback(m, n, model_name, exp_path, llh_method=llh_method)
-    recon = plot_recon_2d(m, n, exp_path)
+    callback, metrics = plot_callback(m, n, model_name, exp_path, llh_method=llh_method)
     callback.savefig(os.path.join(figure_path, f"callback_m{m}_n{n}_{llh_method}.pdf"), bbox_inches="tight")
+    with open(os.path.join(figure_path, f"metrics.json"), "w") as handle:
+        json.dump(callback, handle)
+    recon = plot_recon_2d(m, n, exp_path)
     recon.savefig(os.path.join(figure_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")

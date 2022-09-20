@@ -15,7 +15,7 @@ def get_metrics(m, n, activation, exp_path):
     :return: trained model and training loss history
     """
 
-    # Procrustes analysis
+    # Procruste's analysis
     # - Rows of the matrix: set of points or vectors
     # - Columns of the matrix: dimension of the space
     # Given two identically sized matrices, procrustes standardizes both such that:
