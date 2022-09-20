@@ -1,4 +1,4 @@
-from visualization.metrics import get_procrustes
+from visualization.metrics import get_metrics
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from torch import nn
@@ -37,7 +37,7 @@ def plot_callback(m, n, model_name, exp_path, llh_method):
         ax.set_ylabel("Log-Likelihood")
 
         # calculate disparity score
-        disp = get_procrustes(m, n, activation, exp_path)
+        disp = get_metrics(m, n, activation, exp_path)
         handle_disp = mpatches.Patch(color=sns.color_palette()[7], label=f"w_disp = {round(disp, 3)}", alpha=0.8)
 
         ax_ = ax.twinx()
