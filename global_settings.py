@@ -39,6 +39,5 @@ PATH_DICT = {
 }
 
 
-# get Procrustes analysis and CCA
 # make the plotting function work
 # typical speed of gaussian nose vector

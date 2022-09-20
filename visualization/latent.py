@@ -1,5 +1,4 @@
 import matplotlib.patches as mpatches
-from global_settings import PATH_DICT
 from data_prep.posterior import simu_post
 import matplotlib.pyplot as plt
 from torch import nn

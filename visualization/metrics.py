@@ -27,13 +27,11 @@ def get_metrics(m, n, activation, exp_path):
     # - The function was not designed to handle datasets with different number of rows (number of datapoints)
     # - The function was able to handle datasets with different number of columns (dimensionality), add columns of zeros
 
-    # load dataframes simu_df & recon_df
+    # load x and mean
     activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
     model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
     simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"))
-
-    # load x and predicted mean
     x = simu_df.loc[:, [_ for _ in simu_df.columns if "x" in _]]
     mean = recon_df.loc[:, [_ for _ in recon_df.columns if "mean" in _]]
 
