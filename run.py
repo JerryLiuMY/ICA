@@ -8,12 +8,12 @@ from params.params import get_iter_m_n
 import os
 
 
-if __name__ == "__main__":
-    m, n = 2, 10
-    model_name = "mleauto"
-    exp_path = get_dir(PATH_DICT[model_name])
-
-    run_experiment_multi(m, n, model_name=model_name, exp_path=exp_path, train_s2=False, decoder_dgp=True)
+# if __name__ == "__main__":
+#     m, n = 2, 10
+#     model_name = "mleauto"
+#     exp_path = get_dir(PATH_DICT[model_name])
+#
+#     run_experiment_multi(m, n, model_name=model_name, exp_path=exp_path, train_s2=False, decoder_dgp=True)
 
 
 if __name__ == "__main__":

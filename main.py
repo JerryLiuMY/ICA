@@ -1,5 +1,7 @@
 from experiment.experiment import experiment
 from experiment.summary import summarize
+from multiprocessing import Pool
+from functools import partial
 from torch import nn
 import re
 import os
@@ -18,13 +20,14 @@ def run_experiments(iter_m_n, model_name, exp_path, train_s2, decoder_dgp, llh_m
 
     seed = int(exp_path.split("/")[-1].split("_")[-1])
     llh_method = "null" if model_name == "vae" else llh_method
+
     for m, n in iter_m_n:
         run_experiment_multi(m, n, model_name=model_name, exp_path=exp_path,
                              train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
 
 
 def run_experiment_multi(m, n, model_name, exp_path, train_s2, decoder_dgp, llh_method="mc", seed=0):
-    """ Perform experiments for non-linear ICA with multi-processing
+    """ Perform experiments for non-linear ICA with multiprocessing
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param model_name: name of the model to run
@@ -36,9 +39,13 @@ def run_experiment_multi(m, n, model_name, exp_path, train_s2, decoder_dgp, llh_
     """
 
     activation_li = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.LeakyReLU()]
-    for activation in activation_li:
-        run_experiment(m, n, activation, model_name=model_name, exp_path=exp_path,
-                       train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
+    experiment_func = partial(run_experiment, model_name=model_name, exp_path=exp_path,
+                              train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
+
+    iterable = [(m, n, activation) for activation in activation_li]
+    with Pool(processes=4) as pool:
+        pool.starmap(experiment_func, iterable=iterable)
+
     run_summary(m, n, model_name=model_name, exp_path=exp_path, llh_method=llh_method)
 
 
