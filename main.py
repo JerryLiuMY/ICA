@@ -58,6 +58,7 @@ def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, ll
     """
 
     # define path and load parameters
+    seed = int(exp_path.split("/")[-1].split("_")[-1]) if "trial" in exp_path else 0
     train_size, valid_size, simu_size = exp_dict["train_size"], exp_dict["valid_size"], exp_dict["simu_size"]
     activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
     model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
@@ -75,8 +76,8 @@ def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, ll
     llh_func = llh_dict["null"] if exp_mode and model_name == "vae" else llh_dict[llh_method]
 
     # training and validation
-    train_df = generate_data(m, n, activation, train_size)
-    valid_df = generate_data(m, n, activation, valid_size)
+    train_df = generate_data(m, n, activation, train_size, seed=seed)
+    valid_df = generate_data(m, n, activation, valid_size, seed=seed)
     train_loader = load_data(train_df)
     valid_loader = load_data(valid_df)
 
@@ -96,7 +97,7 @@ def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, ll
         np.save(os.path.join(model_path, "valid_loss.npy"), valid_loss)
 
     # run simulation and reconstruction
-    simu_df = generate_data(m, n, activation, simu_size)
+    simu_df = generate_data(m, n, activation, simu_size, seed=seed)
     simu_loader = load_data(simu_df)
     recon_df = simu_func(outputs, simu_loader)
     simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
@@ -113,14 +114,14 @@ def summarize(m, n, model_name, exp_path, llh_method="mc"):
     """
 
     # define path and load parameters
-    figure_path = os.path.join(exp_path, f"m{m}_n{n}_summary")
-    if not os.path.isdir(figure_path):
-        os.mkdir(figure_path)
+    log_path = os.path.join(exp_path, f"m{m}_n{n}_log")
+    if not os.path.isdir(log_path):
+        os.mkdir(log_path)
 
     # plot recon, latent and callback
     callback, metrics = plot_callback(m, n, model_name, exp_path, llh_method=llh_method)
-    callback.savefig(os.path.join(figure_path, f"callback_m{m}_n{n}_{llh_method}.pdf"), bbox_inches="tight")
-    with open(os.path.join(figure_path, f"metrics.json"), "w") as handle:
+    callback.savefig(os.path.join(log_path, f"callback_m{m}_n{n}_{llh_method}.pdf"), bbox_inches="tight")
+    with open(os.path.join(log_path, f"metrics.json"), "w") as handle:
         json.dump(metrics, handle)
     recon = plot_recon_2d(m, n, exp_path)
-    recon.savefig(os.path.join(figure_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")
+    recon.savefig(os.path.join(log_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")

@@ -1,11 +1,9 @@
 from params.base import Encoder, DecoderDGP, Decoder
-from global_settings import DATA_PATH
 from global_settings import DEVICE
-import pickle5 as pickle
+from params.params import sigma
 import torch.nn as nn
 import numpy as np
 import torch
-import os
 
 
 class VAE(nn.Module):
@@ -27,10 +25,7 @@ class VAE(nn.Module):
             x_recon, logs2 = self.decoder(latent)
         else:
             x_recon = self.decoder(latent)
-            params_path = os.path.join(DATA_PATH, f"params_{self.m}_{self.n}.pkl")
-            with open(params_path, "rb") as handle:
-                params = pickle.load(handle)
-                sigma = params["sigma"]
+
             logs2 = np.repeat(np.log(sigma ** 2), x.shape[0]).reshape(x.shape[0], 1)
             logs2 = torch.tensor(logs2, requires_grad=False).to(DEVICE)
 

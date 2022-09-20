@@ -7,16 +7,18 @@ import torch
 import os
 
 
-def simu_post(x, m, n, activation):
+def simu_post(x, m, n, activation, seed):
     """ Get latent variables from MCMC
     :param x: observed variable x
     :param m: dimension of the latent variable
     :param n:dimension of the observed variable
     :param activation: activation function for mlp
+    :param seed: random seed for dgp
     :return:
     """
 
-    sampler = EnsembleSampler(nwalkers=2*m, ndim=m, log_prob_fn=get_log_prob, threads=8, args=(x, m, n, activation))
+    args = (x, m, n, activation, seed)
+    sampler = EnsembleSampler(nwalkers=2*m, ndim=m, log_prob_fn=get_log_prob, threads=8, args=args)
     p0 = np.random.randn(2*m, m)
     sampler.run_mcmc(p0, skip_initial_state_check=True, nsteps=250)
     post = sampler.get_last_sample().coords[0, :]
@@ -24,18 +26,20 @@ def simu_post(x, m, n, activation):
     return post
 
 
-def get_log_prob(z, x, m, n, activation):
+def get_log_prob(z, x, m, n, activation, seed):
     """ Get log-probability of the joint
     :param z: latent variable z
     :param x: observed variable x
     :param m: dimension of the latent variable
     :param n: dimension of the observed variable
     :param activation: activation function for mlp
+    :param seed: random seed for dgp
     :return:
     """
 
-    params_path = os.path.join(DATA_PATH, f"params_{m}_{n}.pkl")
-    with open(params_path, "rb") as handle:
+    params_path = os.path.join(DATA_PATH, f"params_{m}_{n}")
+    params_file = os.path.join(params_path, f"seed_{seed}.pkl")
+    with open(params_file, "rb") as handle:
         params = pickle.load(handle)
         sigma = params["sigma"]
         w = params["w"]

@@ -11,7 +11,7 @@ mle_dict = {"epochs": 50, "lr": 0.001}
 exp_dict = {"train_size": 10000, "valid_size": 2000, "simu_size": 5000}
 
 # numerical integration
-mc = 1000
+sigma, mc = 1., 1000
 min_lim, max_lim, space = -2.5, 2.5, 51
 
 
@@ -33,13 +33,14 @@ def save_params(m, n, seed):
     :return:
     """
 
-    sigma = 1.
     np.random.seed(seed)
     w = 3 * np.random.rand(n, m)
     b = 1 * np.random.rand(n)
     params = {"sigma": sigma, "w": w, "b": b}
 
-    with open(os.path.join(DATA_PATH, f"params_{m}_{n}.pkl"), "wb") as handle:
+    params_path = os.path.join(DATA_PATH, f"params_{m}_{n}")
+    params_file = os.path.join(params_path, f"seed_{seed}.pkl")
+    with open(params_file, "wb") as handle:
         pickle.dump(params, handle)
 
 

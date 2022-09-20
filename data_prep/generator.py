@@ -15,7 +15,7 @@ def generate_data(m, n, activation, size, seed=0):
     :param n: dimension of the target variable
     :param activation: activation function for mlp
     :param size: number of samples to generate
-    :param seed: random seed for generating the variables
+    :param seed: random seed for dgp
     :return: dataframe of z and x
     """
 
@@ -24,11 +24,15 @@ def generate_data(m, n, activation, size, seed=0):
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Building data with m={m}, n={n} "
           f"with activation={activation_name}")
 
-    params_path = os.path.join(DATA_PATH, f"params_{m}_{n}.pkl")
-    if not os.path.isfile(params_path):
+    params_path = os.path.join(DATA_PATH, f"params_{m}_{n}")
+    if not os.path.isdir(params_path):
+        os.mkdir(params_path)
+
+    params_file = os.path.join(params_path, f"seed_{seed}.pkl")
+    if not os.path.isfile(params_file):
         save_params(m, n, seed)
 
-    with open(params_path, "rb") as handle:
+    with open(params_file, "rb") as handle:
         params = pickle.load(handle)
         sigma = params["sigma"]
         w = params["w"]

@@ -1,12 +1,10 @@
 from params.params import mle_dict as train_dict
-from global_settings import DATA_PATH
 from global_settings import DEVICE
+from params.params import sigma
 from datetime import datetime
 from mle.model import MLE
-import pickle5 as pickle
 import numpy as np
 import torch
-import os
 
 
 def train_mle(m, n, activation, train_loader, valid_loader, train_s2, decoder_dgp, llh_func, grad_method):
@@ -31,10 +29,6 @@ def train_mle(m, n, activation, train_loader, valid_loader, train_s2, decoder_dg
     if train_s2:
         logs2 = torch.tensor([0.], requires_grad=True).to(DEVICE)
     else:
-        params_path = os.path.join(DATA_PATH, f"params_{m}_{n}.pkl")
-        with open(params_path, "rb") as handle:
-            params = pickle.load(handle)
-            sigma = params["sigma"]
         logs2 = torch.tensor([np.log(sigma**2)], requires_grad=False).to(DEVICE)
 
     optimizer = torch.optim.AdamW([*model.parameters(), logs2], lr=lr, weight_decay=1e-5)
