@@ -112,6 +112,10 @@ Setting with `m=2, n=10, sigma^2=1` for different types of activation functions 
 ![alt text](./__resources__/mleauto/callback_m2_n10_mc.jpg?raw=true "Title")
 
 
+## 3. Procrustes Analysis & CCA 
+<a href="https://drive.google.com/drive/folders/1nUQk3jQKnUR7PesoTgd9avfzrWgA6Exy?usp=sharing" target="_blank">Folder</a> for VAE experiments and <a href="https://drive.google.com/drive/folders/1nP6OMehe0v2SsmmZzV_rHeA9PDzOlHs4?usp=sharing" target="_blank">folder</a> for MLE AutoGrad experiments. 
+
+
 ## Appendix: MLE with SGD
 <a href="./mle">Link</a> to the model architecture, training loop and simulation.
 
