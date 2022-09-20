@@ -25,15 +25,16 @@ m_n_dict = {
 }
 
 
-def save_params(m, n):
+def save_params(m, n, seed):
     """ save parameters for neural network
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
+    :param seed: random seed for generating the variables
     :return:
     """
 
     sigma = 1.
-    np.random.seed(10)
+    np.random.seed(seed)
     w = 3 * np.random.rand(n, m)
     b = 1 * np.random.rand(n)
     params = {"sigma": sigma, "w": w, "b": b}

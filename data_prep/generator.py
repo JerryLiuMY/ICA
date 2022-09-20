@@ -9,12 +9,13 @@ import os
 import re
 
 
-def generate_data(m, n, activation, size=1000):
+def generate_data(m, n, activation, size, seed=0):
     """ Generate data for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param activation: activation function for mlp
     :param size: number of samples to generate
+    :param seed: random seed for generating the variables
     :return: dataframe of z and x
     """
 
@@ -25,7 +26,7 @@ def generate_data(m, n, activation, size=1000):
 
     params_path = os.path.join(DATA_PATH, f"params_{m}_{n}.pkl")
     if not os.path.isfile(params_path):
-        save_params(m, n)
+        save_params(m, n, seed)
 
     with open(params_path, "rb") as handle:
         params = pickle.load(handle)
@@ -34,7 +35,7 @@ def generate_data(m, n, activation, size=1000):
         b = params["b"]
 
     # generate z and x
-    np.random.seed(10)
+    np.random.seed(seed)
     z = np.empty(shape=(0, m))
     x = np.empty(shape=(0, n))
 
