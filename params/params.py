@@ -52,7 +52,9 @@ def get_m_n(model_name):
     """
 
     [[n_min, n_max], [m_min, m_max]] = m_n_dict[model_name]
-    m_n_li = [[n_min], list(np.round(np.exp(np.linspace(np.log(n_min), np.log(n_max), num_lin))).astype(int))]
-    m_li_n = [list(np.round(np.exp(np.linspace(np.log(m_min), np.log(m_max), num_lin))).astype(int)), [m_max]]
+    n_li = list(np.round(np.exp(np.linspace(np.log(n_min), np.log(n_max), num_lin))).astype(int))
+    m_li = list(np.round(np.exp(np.linspace(np.log(m_min), np.log(m_max), num_lin))).astype(int))
+    m_n_li = [[n_min], [*set(n_li)]]
+    m_li_n = [[*set(m_li)], [m_max]]
 
     return m_n_li, m_li_n

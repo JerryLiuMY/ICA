@@ -39,5 +39,5 @@ PATH_DICT = {
 }
 
 
-# plot for correlation and disparity
+# plot for disparity
 # typical speed of gaussian noise vector
