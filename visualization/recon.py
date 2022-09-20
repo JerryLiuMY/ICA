@@ -16,7 +16,7 @@ def plot_recon_2d(m, n, exp_path):
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param exp_path: path for experiment
-    :return: dataframe of z and x
+    :return:
     """
 
     fig, axes = plt.subplots(1, 4, figsize=(16, 4))

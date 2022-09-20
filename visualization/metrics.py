@@ -6,6 +6,19 @@ import os
 import re
 
 
+# Procruste's analysis
+# - Rows of the matrix: set of points or vectors
+# - Columns of the matrix: dimension of the space
+# Given two identically sized matrices, procrustes standardizes both such that:
+# - tr(AA^T)=1
+# - Both sets of points are centered around the origin
+# Procrustes then applies the optimal transform to the second matrix (scaling/dilation, rotations, and reflections)
+# to minimize the sum of the squares of the point-wise differences between the two input datasets
+#                                       M^2=\sum(data_1 - data_2)^2
+# - The function was not designed to handle datasets with different number of rows (number of datapoints)
+# - The function was able to handle datasets with different number of columns (dimensionality), add columns of zeros
+
+
 def get_metrics(m, n, activation, exp_path):
     """ Get disparity from procrustes analysis and correlation from canonical correlation analysis
     :param m: dimension of the latent variable
@@ -14,18 +27,6 @@ def get_metrics(m, n, activation, exp_path):
     :param exp_path: path for experiment
     :return: trained model and training loss history
     """
-
-    # Procruste's analysis
-    # - Rows of the matrix: set of points or vectors
-    # - Columns of the matrix: dimension of the space
-    # Given two identically sized matrices, procrustes standardizes both such that:
-    # - tr(AA^T)=1
-    # - Both sets of points are centered around the origin
-    # Procrustes then applies the optimal transform to the second matrix (scaling/dilation, rotations, and reflections)
-    # to minimize the sum of the squares of the point-wise differences between the two input datasets
-    #                                       M^2=\sum(data_1 - data_2)^2
-    # - The function was not designed to handle datasets with different number of rows (number of datapoints)
-    # - The function was able to handle datasets with different number of columns (dimensionality), add columns of zeros
 
     # load x and mean
     activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])

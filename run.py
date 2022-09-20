@@ -18,7 +18,7 @@ import os
 
 if __name__ == "__main__":
     from main import experiments
-    model_name = "vae"
+    model_name = "mleauto"
     for trial in range(num_trials):
         exp_path = os.path.join(PATH_DICT[f"{model_name}_exp"], f"trial_{trial}")
         if not os.path.isdir(exp_path):
