@@ -41,7 +41,7 @@ def experiments(model_name, exp_path, train_s2, decoder_dgp, llh_method="mc"):
         for activation in activation_li:
             experiment(m, n, activation, model_name=model_name, exp_path=exp_path,
                        train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, exp_mode=True)
-        plotting(m, n, model_name=model_name, exp_path=exp_path, llh_method=llh_method)
+        summarize(m, n, model_name=model_name, exp_path=exp_path, llh_method=llh_method)
 
 
 def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, llh_method="mc", exp_mode=False):
@@ -103,7 +103,7 @@ def experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp, ll
     recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
 
-def plotting(m, n, model_name, exp_path, llh_method="mc"):
+def summarize(m, n, model_name, exp_path, llh_method="mc"):
     """ Plot original space, latent space and callback
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
@@ -113,7 +113,7 @@ def plotting(m, n, model_name, exp_path, llh_method="mc"):
     """
 
     # define path and load parameters
-    figure_path = os.path.join(exp_path, f"m{m}_n{n}_figure")
+    figure_path = os.path.join(exp_path, f"m{m}_n{n}_summary")
     if not os.path.isdir(figure_path):
         os.mkdir(figure_path)
 

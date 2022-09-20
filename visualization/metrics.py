@@ -23,7 +23,7 @@ def get_metrics(m, n, activation, exp_path):
     # - Both sets of points are centered around the origin
     # Procrustes then applies the optimal transform to the second matrix (scaling/dilation, rotations, and reflections)
     # to minimize the sum of the squares of the point-wise differences between the two input datasets
-    #                                   M^2=\sum(data_1 - data_2)^2
+    #                                       M^2=\sum(data_1 - data_2)^2
     # - The function was not designed to handle datasets with different number of rows (number of datapoints)
     # - The function was able to handle datasets with different number of columns (dimensionality), add columns of zeros
 
