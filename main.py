@@ -9,6 +9,7 @@ from mle.training import train_mle
 from vae.simulation import simu_vae
 from mle.simulation import simu_mle
 from params.params import exp_dict
+import matplotlib.pyplot as plt
 from visualization.callback import plot_callback
 from visualization.recon import plot_recon_2d
 from functools import partial
@@ -125,3 +126,5 @@ def summarize(m, n, model_name, exp_path, llh_method="mc"):
         json.dump(metrics, handle)
     recon = plot_recon_2d(m, n, exp_path)
     recon.savefig(os.path.join(log_path, f"recon_m{m}_n{n}.pdf"), bbox_inches="tight")
+    plt.close(callback)
+    plt.close(recon)
