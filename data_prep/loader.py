@@ -13,15 +13,15 @@ def load_data(data_df):
     """
 
     # get x and z values for train dataset
-    x_train_cols = [col for col in data_df.columns if "x" in col]
-    z_train_cols = [col for col in data_df.columns if "z" in col]
-    x_train = torch.tensor(data_df[x_train_cols].values.astype(np.float32))
-    z_train = torch.tensor(data_df[z_train_cols].values.astype(np.float32))
-    train_data = TensorDataset(x_train, z_train)
+    x_cols = [col for col in data_df.columns if "x" in col]
+    z_cols = [col for col in data_df.columns if "z" in col]
+    x = torch.tensor(data_df[x_cols].values.astype(np.float32))
+    z = torch.tensor(data_df[z_cols].values.astype(np.float32))
+    dataset = TensorDataset(x, z)
 
-    # build dataloader (reusable)
-    train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
-    input_size = train_data[0][0].shape[0]
-    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Loaded data with input_shape={input_size}")
+    # build dataloader (not shuffled and reusable)
+    data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+    input_size = dataset[0][0].shape[0]
+    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Loaded data with input_size={input_size}")
 
-    return train_loader
+    return data_loader

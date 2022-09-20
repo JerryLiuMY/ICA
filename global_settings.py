@@ -40,4 +40,4 @@ PATH_DICT = {
 
 
 # typical speed of gaussian nose vector
-# scale up experiments
+# plot for correlation and disparity
