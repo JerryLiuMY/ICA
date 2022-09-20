@@ -1,6 +1,4 @@
-from global_settings import DATA_PATH
 from scipy.spatial import procrustes
-import pickle5 as pickle
 import numpy as np
 import torch
 import os
@@ -18,18 +16,13 @@ def get_procrustes(m, n, activation, exp_path):
     to minimize the sum of the squares of the point-wise differences between the two input datasets
                                       M^2=\sum(data_1 - data_2)^2
       - The function was not designed to handle datasets with different number of rows (number of datapoints)
-      - If two data sets have different number of columns (dimensionality), add columns of zeros to the smaller one
+      - The function was able to handle datasets with different number of columns (dimensionality), add columns of zeros
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param activation: activation function for mlp
     :param exp_path: path for experiment
     :return: trained model and training loss history
     """
-
-    # load ground truth w and b
-    with open(os.path.join(DATA_PATH, f"params_{m}_{n}.pkl"), "rb") as handle:
-        params = pickle.load(handle)
-        w, b = params["w"], params["b"]
 
     # load fitted w_hat and b_hat
     activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
