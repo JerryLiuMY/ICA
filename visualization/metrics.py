@@ -1,6 +1,7 @@
+from sklearn.cross_decomposition import CCA
 from scipy.spatial import procrustes
-import numpy as np
-import torch
+import scipy.stats
+import pandas as pd
 import os
 import re
 
@@ -26,15 +27,20 @@ def get_metrics(m, n, activation, exp_path):
     # - The function was not designed to handle datasets with different number of rows (number of datapoints)
     # - The function was able to handle datasets with different number of columns (dimensionality), add columns of zeros
 
-    # load fitted w_hat and b_hat
+    # load dataframes simu_df & recon_df
     activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
     model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
-    model = torch.load(os.path.join(model_path, "model.pth"))
-    w_hat = model["decoder.fc.weight"].numpy().astype(np.float64)
-    b_hat = model["decoder.fc.bias"].numpy().astype(np.float64)
+    simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"))
+    recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"))
 
-    # perform procrustes analysis
-    w_disp = procrustes(w, w_hat)[2]
-    b_disp = procrustes(b, b_hat)[2]
+    # load x and predicted mean
+    x = simu_df.loc[:, [_ for _ in simu_df.columns if "x" in _]]
+    mean = recon_df.loc[:, [_ for _ in recon_df.columns if "mean" in _]]
 
-    return disparity, cca
+    # perform procrustes analysis and cca
+    disp = procrustes(x, mean)[2]
+    cca = CCA(n_components=1)
+    x_c, mean_c = cca.fit_transform(x, mean)
+    corr, _ = scipy.stats.pearsonr(x_c.reshape(-1), mean_c.reshape(-1))
+
+    return disp, corr
