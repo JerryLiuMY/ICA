@@ -47,7 +47,7 @@ Sample distribution of the latent variable `z` and the generated `x`
 
 ![alt text](./__resources__/data_dist.jpg?raw=true "Title")
 
-## Variational Method
+## 1. Variational Method
 <a href="https://drive.google.com/drive/folders/1OpN3lfy2Eew5eH-7AY1A6-2v6GMcxcq1?usp=sharing" target="_blank">Folder</a> for the trained VAE models. <a href="./vae">Link</a> to the model architecture, training loop and simulation (<a href="https://github.com/JerryLiuMY/ICA/blob/8adb6fcbe68ba727bb4856913fe99bbad84640f7/vae/vae.py#L92">ELBO</a> with Gaussian MLP as decoder).
 
 ```python
@@ -62,7 +62,7 @@ valid_loss = valid_vae(outputs, valid_loader, llh_func=get_llh_mc, eval_mode=Tru
 recon_df = simu_vae(outputs, simu_loader)
 ```
 
-### Setting with `m=2, n=20`
+### 1.1 Setting with `m=2, n=20`
 Setting with `m=2, n=20, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
@@ -74,7 +74,7 @@ Setting with `m=2, n=20, sigma^2=1` for different types of activation functions 
 - #### Learning Curve
 ![alt text](./__resources__/vae/callback_m2_n20_mc.jpg?raw=true "Title")
 
-### Setting with `m=2, n=2`
+### 1.2 Setting with `m=2, n=2`
 Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
@@ -87,7 +87,7 @@ Setting with `m=2, n=2, sigma^2=1` for different types of activation functions `
 ![alt text](./__resources__/vae/callback_m2_n2_mc.jpg?raw=true "Title")
 
 
-## MLE with AutoGrad
+## 2. MLE with AutoGrad
 <a href="https://drive.google.com/drive/folders/1APQifN2eF1nH0ztlzVKVGgzKPNpEq0_h?usp=sharing" target="_blank">Folder</a> for the trained MLE AutoGrad models. <a href="./mle">Link</a> to the model architecture, training loop and simulation.
 
 ```python
@@ -102,7 +102,7 @@ valid_loss = valid_mle(outputs, valid_loader, llh_func=get_llh_mc, eval_mode=Tru
 recon_df = simu_mle(outputs, simu_loader)
 ```
 
-### Setting with `m=2, n=10`
+### 2.1 Setting with `m=2, n=10`
 Setting with `m=2, n=10, sigma^2=1` for different types of activation functions `ReLU`, `Sigmoid`, `Tanh` and `GELU`.
 
 - #### Observation and Reconstruction
