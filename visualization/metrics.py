@@ -1,6 +1,5 @@
 from global_settings import DATA_PATH
 from scipy.spatial import procrustes
-from global_settings import PATH_DICT
 import pickle5 as pickle
 import numpy as np
 import torch
@@ -10,6 +9,16 @@ import re
 
 def get_procrustes(m, n, activation, exp_path):
     """ Get disparity from procrustes analysis
+      - Rows of the matrix: set of points or vectors
+      - Columns of the matrix: dimension of the space
+    Given two identically sized matrices, procrustes standardizes both such that:
+      - tr(AA^T)=1
+      - Both sets of points are centered around the origin
+    Procrustes then applies the optimal transform to the second matrix (scaling/dilation, rotations, and reflections)
+    to minimize the sum of the squares of the point-wise differences between the two input datasets
+                                      M^2=\sum(data_1 - data_2)^2
+      - The function was not designed to handle datasets with different number of rows (number of datapoints)
+      - If two data sets have different number of columns (dimensionality), add columns of zeros to the smaller one
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param activation: activation function for mlp
