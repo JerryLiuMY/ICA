@@ -49,6 +49,8 @@ def run_experiment_multi(m, n, model_name, exp_path, train_s2, decoder_dgp, llh_
     iterable = [(m, n, activation) for activation in activation_li]
     with Pool(processes=4) as pool:
         pool.starmap(experiment_func, iterable=iterable)
+        pool.close()
+        pool.join()
 
     run_summary(m, n, model_name=model_name, exp_path=exp_path, llh_method=llh_method)
 
