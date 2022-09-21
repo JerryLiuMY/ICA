@@ -21,8 +21,8 @@ num_trials = 25
 num_lin = 15
 m_n_dict = {
     "vae": [[2, 500], [2, 100]],
-    "mleauto": [[2, 20], [2, 20]],
-    "mleagd": [[2, 20], [2, 20]]
+    "mleauto": [[2, 12], [2, 12]],
+    "mleagd": [[2, 12], [2, 12]]
 }
 
 
@@ -53,8 +53,13 @@ def get_li_m_n(model_name):
     """
 
     [[n_min, n_max], [m_min, m_max]] = m_n_dict[model_name]
-    n_li = list(np.round(np.exp(np.linspace(np.log(n_min), np.log(n_max), num_lin))).astype(int))
-    m_li = list(np.round(np.exp(np.linspace(np.log(m_min), np.log(m_max), num_lin))).astype(int))
+    if model_name == "vae":
+        n_li = list(np.round(np.exp(np.linspace(np.log(n_min), np.log(n_max), num_lin))).astype(int))
+        m_li = list(np.round(np.exp(np.linspace(np.log(m_min), np.log(m_max), num_lin))).astype(int))
+    else:
+        n_li = list(np.arange(n_min, n_max + 1).astype(int))
+        m_li = list(np.arange(m_min, m_max + 1).astype(int))
+
     m_n_li = [[n_min], [*set(n_li)]]
     m_li_n = [[*set(m_li)], [m_max]]
 
