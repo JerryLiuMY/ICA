@@ -44,3 +44,4 @@ def get_dir(path):
 
 
 # plot for disparity
+# investigate metrics related to CCA
