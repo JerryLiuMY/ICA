@@ -1,5 +1,5 @@
 from experiment.experiment import experiment
-from experiment.summary import summarize
+from experiment.summary import summary
 from multiprocessing import Pool
 from functools import partial
 from torch import nn
@@ -89,4 +89,4 @@ def run_summary(m, n, model_name, exp_path, llh_method="mc"):
     log_path = os.path.join(exp_path, f"m{m}_n{n}_log")
     if not os.path.isdir(log_path):
         os.mkdir(log_path)
-        summarize(m, n, model_name=model_name, log_path=log_path, exp_path=exp_path, llh_method=llh_method)
+        summary(m, n, model_name=model_name, log_path=log_path, exp_path=exp_path, llh_method=llh_method)

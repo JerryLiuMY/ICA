@@ -5,7 +5,7 @@ import json
 import os
 
 
-def summarize(m, n, model_name, log_path, exp_path, llh_method):
+def summary(m, n, model_name, log_path, exp_path, llh_method):
     """ Plot original space, latent space and callback
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
