@@ -1,12 +1,12 @@
 from global_settings import DATA_PATH
 from params.params import save_params
 from datetime import datetime
+from utils.tools import activation2name
 import pickle5 as pickle
 import numpy as np
 import pandas as pd
 import torch
 import os
-import re
 
 
 def generate_data(m, n, activation, size, seed=0):
@@ -20,7 +20,7 @@ def generate_data(m, n, activation, size, seed=0):
     """
 
     # load parameters
-    activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
+    activation_name = activation2name(activation)
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} Building data with m={m}, n={n} "
           f"with activation={activation_name}")
 

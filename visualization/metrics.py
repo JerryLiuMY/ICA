@@ -1,9 +1,9 @@
 from sklearn.cross_decomposition import CCA
 from scipy.spatial import procrustes
+from utils.tools import activation2name
 import scipy.stats
 import pandas as pd
 import os
-import re
 
 
 def get_metrics(m, n, activation, exp_path):
@@ -29,7 +29,7 @@ def get_metrics(m, n, activation, exp_path):
     """
 
     # load x and mean
-    activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
+    activation_name = activation2name(activation)
     model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
     simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"))
     recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"))
