@@ -48,7 +48,7 @@ def run_experiment_multi(m, n, model_name, exp_path, train_s2, decoder_dgp, llh_
                               train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
     iterable = [(m, n, activation) for activation in activation_li]
     pool = Pool(processes=len(iterable))
-    pool.starmap_async(experiment_func, iterable=iterable)
+    pool.starmap(experiment_func, iterable=iterable)
     pool.close()
     pool.join()
 
