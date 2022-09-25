@@ -15,12 +15,11 @@ exp_dict = {"train_size": 10000, "valid_size": 2000, "simu_size": 5000}
 sigma, mc = 1., 1000
 min_lim, max_lim, space = -2.5, 2.5, 51
 
-
 # experiments
 num_trials = 25
 num_lin = 15
 m_n_dict = {
-    "vae": [[2, 500], [2, 100]],
+    "vae": [[2, 500], [2, 75]],
     "mleauto": [[2, 12], [2, 12]],
     "mleagd": [[2, 12], [2, 12]]
 }
