@@ -23,7 +23,6 @@ def plot_callback(m, n, model_name, exp_path, llh_method):
     fig, axes = plt.subplots(2, 2, figsize=(14, 7))
     activations = [nn.ReLU(), nn.Sigmoid(), nn.Tanh(), nn.LeakyReLU()]
     axes = [ax for sub_axes in axes for ax in sub_axes]
-    metrics = dict()
 
     for ax, activation in zip(axes, activations):
         activation_name = activation2name(activation)
@@ -44,7 +43,6 @@ def plot_callback(m, n, model_name, exp_path, llh_method):
         disp, corr = get_metrics(simu_df, recon_df)
         handle_disp = mpatches.Patch(color=sns.color_palette()[7], label=f"disp = {round(disp, 3)}", alpha=0.8)
         handle_corr = mpatches.Patch(color=sns.color_palette()[7], label=f"corr = {round(corr, 3)}", alpha=0.8)
-        metrics[activation_name] = [disp, corr]
 
         ax_ = ax.twinx()
         ax_.grid(False)
