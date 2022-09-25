@@ -54,6 +54,7 @@ def plot_recon_2d(m, n, exp_path):
         # make legend for metrics
         ax_ = ax.twinx()
         ax_.grid(False)
+        ax_.axis("off")
         disp, corr = get_metrics(m, n, activation, exp_path)
         handle_disp = mpatches.Patch(color=sns.color_palette()[7], label=f"disp = {round(disp, 3)}", alpha=0.8)
         handle_corr = mpatches.Patch(color=sns.color_palette()[7], label=f"corr = {round(corr, 3)}", alpha=0.8)
