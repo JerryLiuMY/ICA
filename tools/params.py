@@ -10,7 +10,7 @@ batch_size = 128
 vae_dict = {"epochs": 200, "lr": 0.001, "beta": 1}
 mle_dict = {"epochs": 50, "lr": 0.001}
 exp_dict = {"train_size": 10000, "valid_size": 2000, "simu_size": 5000}
-simu_params = [["random", 1], ["uniform", 4]]
+simu_params = [["normal", 1], ["uniform", 4]]
 
 # numerical integration
 sigma, mc = 1., 1000
