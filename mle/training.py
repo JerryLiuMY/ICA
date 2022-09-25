@@ -26,6 +26,7 @@ def train_mle(m, n, activation, train_loader, valid_loader, train_s2, decoder_dg
 
     # building Autograd
     model = MLE(m, n, activation, fit_s2=False, decoder_dgp=decoder_dgp)
+    model = model.to(DEVICE)
     if train_s2:
         logs2 = torch.tensor([0.], requires_grad=True).to(DEVICE)
     else:
