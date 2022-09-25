@@ -12,9 +12,9 @@ def simu_vae(inputs, simu_loader):
 
     # load parameters and initialize
     [model] = inputs
-    x_recon, logs2 = torch.empty(size=(0, model.n)), torch.empty(size=(0, 1))
-    mu, logvar = torch.empty(size=(0, model.m)), torch.empty(size=(0, model.m))
-    mean = torch.empty(size=(0, model.n))
+    x_recon, logs2 = torch.empty(size=(0, model.n)).to(DEVICE), torch.empty(size=(0, 1)).to(DEVICE)
+    mu, logvar = torch.empty(size=(0, model.m)).to(DEVICE), torch.empty(size=(0, model.m)).to(DEVICE)
+    mean = torch.empty(size=(0, model.n)).to(DEVICE)
 
     # perform simulation
     model.eval()

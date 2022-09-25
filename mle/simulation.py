@@ -13,7 +13,7 @@ def simu_mle(inputs, simu_loader):
 
     # load parameters and initialize
     [model, logs2] = inputs
-    mean = torch.empty(size=(0, model.n))
+    mean = torch.empty(size=(0, model.n)).to(DEVICE)
 
     # perform simulation
     model.eval()
