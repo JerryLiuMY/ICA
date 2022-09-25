@@ -9,13 +9,15 @@ import torch
 import os
 
 
-def generate_data(m, n, activation, size, seed=0):
+def generate_data(m, n, activation, size, seed=0, dist="normal", scale=1):
     """ Generate data for non-linear ICA
     :param m: dimension of the latent variable
     :param n: dimension of the target variable
     :param activation: activation function for mlp
     :param size: number of samples to generate
     :param seed: random seed for dgp
+    :param dist: distribution function for generating z
+    :param scale: scale of the distribution for generating z
     :return: dataframe of z and x
     """
 
@@ -39,12 +41,16 @@ def generate_data(m, n, activation, size, seed=0):
         b = params["b"]
 
     # generate z and x
-    np.random.seed(seed)
     z = np.empty(shape=(0, m))
     x = np.empty(shape=(0, n))
 
     for _ in range(size):
-        z_ = np.random.multivariate_normal(mean=np.zeros(m), cov=np.eye(m))
+        if dist == "normal":
+            z_ = np.random.multivariate_normal(mean=np.zeros(m), cov=(scale**2)*np.eye(m))
+        elif dist == "uniform":
+            z_ = np.array([np.random.uniform(-scale, scale) for _ in range(m)])
+        else:
+            raise ValueError("Invalid distribution type for simulating z")
         f_ = activation(torch.tensor(w @ z_ + b)).numpy()
         x_ = np.random.multivariate_normal(mean=f_, cov=(sigma**2)*np.eye(n))
         z = np.concatenate([z, z_.reshape(1, -1)], axis=0)
