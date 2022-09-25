@@ -36,6 +36,7 @@ def simu_vae(inputs, simu_loader):
     # simulation dataframe
     x_recon, logs2 = x_recon.cpu().detach().numpy(), logs2.cpu().detach().numpy()
     mu, logvar = mu.cpu().detach().numpy(), logvar.cpu().detach().numpy()
+    mean = mean.cpu().detach().numpy()
     x_recon_dict = {f"x_recon{i}": x_recon[:, i].reshape(-1) for i in range(x_recon.shape[1])}
     logs2_dict = {f"logs2": logs2[:, 0].reshape(-1)}
     mu_dict = {f"mu{i}": mu[:, i].reshape(-1) for i in range(mu.shape[1])}
