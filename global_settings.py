@@ -3,7 +3,7 @@ import torch
 import os
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cpu")
 
 
 # define OUTPUT_PATH
