@@ -8,6 +8,7 @@ from vae.simulation import simu_vae
 from vae.training import train_vae
 from mle.training import train_mle
 from tools.params import exp_dict
+from tools.params import simu_params
 from functools import partial
 import numpy as np
 import torch
@@ -58,8 +59,8 @@ def experiment(m, n, activation, model_name, model_path, train_s2, decoder_dgp, 
         np.save(os.path.join(model_path, "train_loss.npy"), train_loss)
         np.save(os.path.join(model_path, "valid_loss.npy"), valid_loss)
 
-    simulation(m, n, activation, model_name, model_path, outputs, seed)
-    simulation(m, n, activation, model_name, model_path, outputs, seed, dist="uniform", scale=4)
+    for dist, scale in simu_params:
+        simulation(m, n, activation, model_name, model_path, outputs, seed, dist=dist, scale=scale)
 
 
 def simulation(m, n, activation, model_name, model_path, outputs, seed, dist="normal", scale=1):
