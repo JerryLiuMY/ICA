@@ -1,5 +1,6 @@
 from experiment.experiment import experiment
 from experiment.summary import summary
+import multiprocessing as mp
 from multiprocessing import Pool
 from functools import partial
 from torch import nn
@@ -47,6 +48,7 @@ def run_experiment_multi(m, n, model_name, exp_path, train_s2, decoder_dgp, llh_
     experiment_func = partial(run_experiment, model_name=model_name, exp_path=exp_path,
                               train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
     iterable = [(m, n, activation) for activation in activation_li]
+    mp.set_start_method("spawn", force=True)
     pool = Pool(processes=len(iterable))
     pool.starmap(experiment_func, iterable=iterable)
     pool.close()
