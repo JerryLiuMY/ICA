@@ -1,5 +1,4 @@
 from experiment.experiment import experiment
-from experiment.simulation import simulation
 from experiment.summary import summary
 from multiprocessing import Pool
 from functools import partial
@@ -76,12 +75,8 @@ def run_experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp
     # perform experiment and simulation
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
-        outputs = experiment(m, n, activation, model_name=model_name, model_path=model_path,
-                             train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
-        simu_df, recon_df = simulation(m, n, activation, model_name=model_name, outputs=outputs,
-                                       seed=seed, dist="normal", scale=1)
-        simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
-        recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
+        experiment(m, n, activation, model_name=model_name, model_path=model_path,
+                   train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
 
 
 def run_summary(m, n, model_name, exp_path, llh_method="mc"):

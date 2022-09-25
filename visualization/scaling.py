@@ -1,6 +1,6 @@
 from tools.params import get_li_m_n
 from tools.utils import activation2name
-from experiment.simulation import simulation
+from experiment.experiment import simulation
 import matplotlib.pyplot as plt
 from torch import nn
 import numpy as np

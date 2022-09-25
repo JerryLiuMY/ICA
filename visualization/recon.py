@@ -2,6 +2,7 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from tools.utils import activation2name
+from visualization.metrics import get_metrics
 from torch import nn
 import numpy as np
 import pandas as pd
@@ -49,6 +50,14 @@ def plot_recon_2d(m, n, exp_path):
         ax.set_title(f"Reconstruction of {activation_name}")
         ax.set_xlabel("PC0")
         ax.set_ylabel("PC1")
+
+        # make legend for metrics
+        ax_ = ax.twinx()
+        ax_.grid(False)
+        disp, corr = get_metrics(m, n, activation, exp_path)
+        handle_disp = mpatches.Patch(color=sns.color_palette()[7], label=f"disp = {round(disp, 3)}", alpha=0.8)
+        handle_corr = mpatches.Patch(color=sns.color_palette()[7], label=f"corr = {round(corr, 3)}", alpha=0.8)
+        ax_.legend(handles=[handle_disp, handle_corr], loc="lower right", handlelength=0.2, handletextpad=0.5)
 
     plt.tight_layout()
 

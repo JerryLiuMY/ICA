@@ -1,6 +1,4 @@
-from visualization.metrics import get_metrics
 from tools.utils import activation2name
-import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import seaborn as sns
 from torch import nn
@@ -37,10 +35,6 @@ def plot_callback(m, n, model_name, exp_path, llh_method):
         ax.set_ylabel("Log-Likelihood")
 
         # calculate disparity score
-        disp, corr = get_metrics(m, n, activation, exp_path)
-        handle_disp = mpatches.Patch(color=sns.color_palette()[7], label=f"disp = {round(disp, 3)}", alpha=0.8)
-        handle_corr = mpatches.Patch(color=sns.color_palette()[7], label=f"corr = {round(corr, 3)}", alpha=0.8)
-
         ax_ = ax.twinx()
         ax_.grid(False)
         if model_name == "vae":
@@ -53,11 +47,9 @@ def plot_callback(m, n, model_name, exp_path, llh_method):
             handles, labels = ax.get_legend_handles_labels()
             handles_, labels_ = ax_.get_legend_handles_labels()
             ax.legend(handles + handles_, labels + labels_, loc="upper right")
-            ax_.legend(handles=[handle_disp, handle_corr], loc="lower right", handlelength=0.2, handletextpad=0.5)
         elif "mle" in model_name:
             handles, labels = ax.get_legend_handles_labels()
             ax.legend(handles, labels, loc="upper right")
-            ax_.legend(handles=[handle_disp, handle_corr], loc="lower right", handlelength=0.2, handletextpad=0.5)
         else:
             raise ValueError("Invalid model name")
 
