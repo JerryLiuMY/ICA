@@ -1,13 +1,35 @@
 from sklearn.cross_decomposition import CCA
+from tools.utils import activation2name
 from scipy.spatial import procrustes
+import pandas as pd
 import scipy.stats
+import os
 
 
-def get_metrics(simu_df, recon_df):
+def get_metrics(m, n, activation, exp_path):
     """ Get disparity from procrustes analysis and correlation from canonical correlation analysis
+    :param m: dimension of the latent variable
+    :param n: dimension of the target variable
+    :param activation: activation function for mlp
+    :param exp_path: path for experiment
+    :return: disparity score and correlation
+    """
+
+    # load x and mean
+    activation_name = activation2name(activation)
+    model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
+    simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"))
+    recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"))
+    disp, corr = compute_metrics(simu_df, recon_df)
+
+    return disp, corr
+
+
+def compute_metrics(simu_df, recon_df):
+    """ Compute disparity from procrustes analysis and correlation from canonical correlation analysis
     :param simu_df: simulation df for the original data
     :param recon_df: reconstruction df for the reconstructed data
-    :return: trained model and training loss history
+    :return: disparity score and correlation
     """
 
     """ Procruste's analysis

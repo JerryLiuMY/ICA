@@ -1,6 +1,6 @@
-from params.base import Encoder, DecoderDGP, Decoder
+from tools.base import Encoder, DecoderDGP, Decoder
 from global_settings import DEVICE
-from params.params import sigma
+from tools.params import sigma
 import torch.nn as nn
 import numpy as np
 import torch

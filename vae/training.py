@@ -1,5 +1,5 @@
 from vae.model import VAE, elbo_gaussian
-from params.params import vae_dict as train_dict
+from tools.params import vae_dict as train_dict
 from global_settings import DEVICE
 from datetime import datetime
 import numpy as np

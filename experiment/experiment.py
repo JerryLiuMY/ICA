@@ -5,7 +5,7 @@ from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae
 from mle.training import train_mle
-from params.params import exp_dict
+from tools.params import exp_dict
 from functools import partial
 import numpy as np
 import torch
@@ -46,6 +46,7 @@ def experiment(m, n, activation, model_name, model_path, train_s2, decoder_dgp, 
     if len == 2:
         logs2 = outputs[1].cpu().detach()
         torch.save(logs2, os.path.join(model_path, "logs2.pt"))
+
     if "llh" in callback.keys():
         [train_llh, valid_llh] = callback["llh"]
         np.save(os.path.join(model_path, f"train_llh_{llh_method}.npy"), train_llh)

@@ -1,7 +1,7 @@
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from mle.simulation import simu_mle
-from params.params import exp_dict
+from tools.params import exp_dict
 from vae.simulation import simu_vae
 
 

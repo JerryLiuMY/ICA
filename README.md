@@ -22,7 +22,8 @@ The up-to-date <a href="./__resources__/ICA/main.pdf" target="_blank">write-up</
 from torch import nn
 from data_prep.generator import generate_data
 from data_prep.loader import load_data
-from params.params import exp_dict
+from tools.params import exp_dict
+
 m, n, activation = 10, 20, nn.ReLU()
 
 # training data

@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from global_settings import DEVICE
 from likelihoods.dist import get_normal_lp
-from params.params import min_lim, max_lim, space
+from tools.params import min_lim, max_lim, space
 
 
 def build_grid(m, n, x, model, logs2):

@@ -1,4 +1,4 @@
-from params.params import batch_size
+from tools.params import batch_size
 from datetime import datetime
 from torch.utils.data import TensorDataset
 from torch.utils.data import DataLoader

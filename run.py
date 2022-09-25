@@ -2,9 +2,9 @@ from global_settings import PATH_DICT
 from global_settings import get_dir
 from main import run_experiment_multi
 from main import run_experiments
-from params.params import num_trials
-from params.params import get_li_m_n
-from params.params import get_iter_m_n
+from tools.params import num_trials
+from tools.params import get_li_m_n
+from tools.params import get_iter_m_n
 import os
 
 

@@ -1,5 +1,5 @@
 import matplotlib.patches as mpatches
-from utils.tools import activation2name
+from tools.utils import activation2name
 from data_prep.posterior import simu_post
 import matplotlib.pyplot as plt
 from torch import nn

@@ -1,7 +1,7 @@
 from torch.distributions import MultivariateNormal
 from likelihoods.dist import get_normal_lp
 from global_settings import DEVICE
-from params.params import mc
+from tools.params import mc
 import numpy as np
 import torch
 

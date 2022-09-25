@@ -1,4 +1,4 @@
-from params.base import DecoderDGP, Decoder
+from tools.base import DecoderDGP, Decoder
 import torch.nn as nn
 
 

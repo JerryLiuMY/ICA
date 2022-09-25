@@ -1,11 +1,10 @@
 from visualization.metrics import get_metrics
-from utils.tools import activation2name
+from tools.utils import activation2name
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import seaborn as sns
 from torch import nn
 import numpy as np
-import pandas as pd
 import os
 sns.set()
 
@@ -38,9 +37,7 @@ def plot_callback(m, n, model_name, exp_path, llh_method):
         ax.set_ylabel("Log-Likelihood")
 
         # calculate disparity score
-        simu_df = pd.read_csv(os.path.join(model_path, "simu_df.csv"))
-        recon_df = pd.read_csv(os.path.join(model_path, "recon_df.csv"))
-        disp, corr = get_metrics(simu_df, recon_df)
+        disp, corr = get_metrics(m, n, activation, exp_path)
         handle_disp = mpatches.Patch(color=sns.color_palette()[7], label=f"disp = {round(disp, 3)}", alpha=0.8)
         handle_corr = mpatches.Patch(color=sns.color_palette()[7], label=f"corr = {round(corr, 3)}", alpha=0.8)
 

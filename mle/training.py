@@ -1,6 +1,6 @@
-from params.params import mle_dict as train_dict
+from tools.params import mle_dict as train_dict
 from global_settings import DEVICE
-from params.params import sigma
+from tools.params import sigma
 from datetime import datetime
 from mle.model import MLE
 import numpy as np

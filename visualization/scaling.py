@@ -1,12 +1,11 @@
-from params.params import get_li_m_n
-from utils.tools import activation2name
+from tools.params import get_li_m_n
+from tools.utils import activation2name
+from experiment.simulation import simulation
 import matplotlib.pyplot as plt
 from torch import nn
 import numpy as np
 import seaborn as sns
 import itertools
-import json
-import os
 sns.set()
 
 
@@ -82,10 +81,8 @@ def build_metric_dicts(iterable, exp_path):
     corr_dict = {activation_name: [] for activation_name in activation_name_li}
 
     for m, n in iterable:
-        log_path = os.path.join(exp_path, f"m{m}_n{n}_log")
-        with open(os.path.join(log_path, "metrics.json"), "r") as handle:
-            metrics = json.load(handle)
-        for activation_name in activation_name_li:
+        for activation in activation_li:
+            simulation(m, n, activation, model_name, outputs, seed, dist, scale)
             disp_dict[activation_name].append(metrics[activation_name][0])
             corr_dict[activation_name].append(metrics[activation_name][1])
 
