@@ -1,4 +1,5 @@
 from experiment.experiment import experiment
+from experiment.simulation import simulation
 from experiment.summary import summary
 from multiprocessing import Pool
 from functools import partial
@@ -72,11 +73,15 @@ def run_experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp
     activation_name = ''.join([_ for _ in re.sub("[\(\[].*?[\)\]]", "", str(activation)) if _.isalpha()])
     model_path = os.path.join(exp_path, f"m{m}_n{n}_{activation_name}")
 
-    # perform experiment
+    # perform experiment and simulation
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
-        experiment(m, n, activation, model_name=model_name, model_path=model_path,
-                   train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
+        outputs = experiment(m, n, activation, model_name=model_name, model_path=model_path,
+                             train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
+        simu_df, recon_df = simulation(m, n, activation, model_name=model_name, outputs=outputs,
+                                       seed=seed, dist="normal", scale=1)
+        simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
+        recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
 
 
 def run_summary(m, n, model_name, exp_path, llh_method="mc"):

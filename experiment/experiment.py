@@ -5,8 +5,6 @@ from data_prep.generator import generate_data
 from data_prep.loader import load_data
 from vae.training import train_vae
 from mle.training import train_mle
-from vae.simulation import simu_vae
-from mle.simulation import simu_mle
 from params.params import exp_dict
 from functools import partial
 import numpy as np
@@ -27,15 +25,13 @@ def experiment(m, n, activation, model_name, model_path, train_s2, decoder_dgp, 
     :param seed: random seed for dgp
     """
 
-    # define training/simulation functions
-    train_size, valid_size, simu_size = exp_dict["train_size"], exp_dict["valid_size"], exp_dict["simu_size"]
+    # define training functions
+    train_size, valid_size = exp_dict["train_size"], exp_dict["valid_size"]
     train_mleauto = partial(train_mle, grad_method="auto")
     train_mlesgd = partial(train_mle, grad_method="sgd")
     train_dict = {"vae": train_vae, "mleauto": train_mleauto, "mlesgd": train_mlesgd}
-    simu_dict = {"vae": simu_vae, "mleauto": simu_mle, "mlesgd": simu_mle}
     llh_dict = {"mc": get_llh_mc, "grid": get_llh_grid, "null": get_llh_null}
     train_func = train_dict[model_name]
-    simu_func = simu_dict[model_name]
     llh_func = llh_dict[llh_method]
 
     # training and validation
@@ -59,9 +55,4 @@ def experiment(m, n, activation, model_name, model_path, train_s2, decoder_dgp, 
         np.save(os.path.join(model_path, "train_loss.npy"), train_loss)
         np.save(os.path.join(model_path, "valid_loss.npy"), valid_loss)
 
-    # run simulation and reconstruction
-    simu_df = generate_data(m, n, activation, simu_size, seed=seed)
-    simu_loader = load_data(simu_df)
-    recon_df = simu_func(outputs, simu_loader)
-    simu_df.to_csv(os.path.join(model_path, "simu_df.csv"))
-    recon_df.to_csv(os.path.join(model_path, "recon_df.csv"))
+    return outputs
