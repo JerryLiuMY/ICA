@@ -4,6 +4,8 @@ import multiprocessing as mp
 from multiprocessing import Pool
 from functools import partial
 from torch import nn
+import numpy as np
+import time
 import re
 import os
 
@@ -77,6 +79,7 @@ def run_experiment(m, n, activation, model_name, exp_path, train_s2, decoder_dgp
     # perform experiment and simulation
     if not os.path.isdir(model_path):
         os.mkdir(model_path)
+        time.sleep(np.random.uniform(low=0.0, high=0.5))
         experiment(m, n, activation, model_name=model_name, model_path=model_path,
                    train_s2=train_s2, decoder_dgp=decoder_dgp, llh_method=llh_method, seed=seed)
 
