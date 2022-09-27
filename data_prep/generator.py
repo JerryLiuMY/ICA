@@ -5,6 +5,7 @@ from tools.utils import activation2name
 import pickle5 as pickle
 import numpy as np
 import pandas as pd
+import time
 import torch
 import os
 
@@ -27,6 +28,7 @@ def generate_data(m, n, activation, size, seed=0, dist="normal", scale=1):
           f"with activation={activation_name}")
 
     params_path = os.path.join(DATA_PATH, f"params_{m}_{n}")
+    time.sleep(np.random.uniform(low=0.0, high=0.05))
     if not os.path.isdir(params_path):
         os.mkdir(params_path)
 
