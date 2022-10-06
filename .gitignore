@@ -1,7 +1,7 @@
 .DS_Store
 .idea/
-.ipynb_checkpoints
+__doc__/
 __pycache__
-__reference__/reference
+.ipynb_checkpoints
 *.pyc
-/*.ipynb
+*.ipynb
