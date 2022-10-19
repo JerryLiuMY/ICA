@@ -1,32 +1,60 @@
 \section{Introduction}
 \subsection{Problem Setup}
 Suppose $X \in \mathbb{R}^{n}$ and $Z \in \mathbb{R}^{m}$ with $X=f(Z)+\varepsilon$, where $f: \mathbb{R}^{m} \rightarrow \mathbb{R}^{n}$ and $\varepsilon \sim N\left(0, \sigma^{2} I_{n}\right)$. Assuming $Z$ is normally distributed with independent marginals, this is equivalent to the following latent variable model (a special case of the well-known \textit{nonlinear ICA} model):
-\begin{equation*}
+\begin{equation} \label{eq:1}
 \begin{aligned}
 Z & \sim N\left(0, I\right) \\
 X \mid Z & \sim N\left(f(Z), \sigma^{2} I\right) .
 \end{aligned}
-\end{equation*}
+\end{equation}
 
 Let $\varphi(u ; \mu, \Sigma)$ denote the density of a $N(\mu, \Sigma)$ random variable and $p_{\theta, \sigma^{2}}(x, z)$ denote the joint density under the model. It is easy to see that
-\begin{equation*}
+\begin{equation} \label{eq:2}
 \begin{aligned}
 p_{\theta, \sigma^{2}}\left(x, z\right) &=p_{\theta, \sigma^{2}} \left(x \mid z\right) p(z)=\varphi\left(x ; f(z), \sigma^{2} I\right) \varphi(z ; 0, I) \\
 L \left(\theta, \sigma^{2} ; x\right) &= p_{\theta, \sigma^{2}}\left(x\right) =\int \varphi\left(x ; f(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz
 \end{aligned}
-\end{equation*}
+\end{equation}
 
 \subsection{Objective Function}
 Now, suppose we let $g_{\theta}$ denote a family of deep neural network distributions parametrized by $\theta$. To approximate the marginal density $p(x)$, we replace $f$ with $g_{\theta}$ and try to find the choice of $\theta$ that maximizes the observed data likelihood. Given $k$ observations $x^{(i)} \stackrel{i.i.d}{\sim} p(x)$, we wish to solve the following maximum likelihood problem:
-\begin{equation*}
+\begin{equation} \label{eq:3}
 \max_{\theta, \sigma^{2}} \underbrace{\sum_{i=1}^{k} \log \int \varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right) \varphi(z ; 0, I) dz}_{:=\ell(\theta, \sigma^{2})}
-\end{equation*}
+\end{equation}
 
-\subsection{Nonlinear ICA \cite{nonlinear_ICA}}
-Now we show how the model above is closely related to previous work on nonlinear ICA. In nonlinear ICA, we assume observations $x \in \mathbb{R}^{d}$, which are the result of an unknown (but invertible) transformation $f$ of latent variables $z \in \mathbb{R}^{d}$:
+\section{Previous Literature}
+It was widely believed in previous literature that directly optimizing the marginal likelihood in latent variable models is hard, without making common simplifying assumptions about the marginal or posterior probabilities. In particular, we are interested in the intractability settings as described by \cite{vae}, where
+
+\begin{itemize}
+\item The integral of the marginal likelihood $p_\theta(x)=$ $\int p_{\boldsymbol{\theta}}(z) p_{\boldsymbol{\theta}} \left(x \mid z\right) d z$ is intractable (so we cannot evaluate or differentiate the marginal likelihood)
+\item The true posterior density $p_{\boldsymbol{\theta}}\left(z \mid x\right)=p_{\boldsymbol{\theta}}(x \mid z) p_{\boldsymbol{\theta}}(z) / p_{\boldsymbol{\theta}}(x)$ is intractable (so the EM algorithm cannot be used)
+\item The required integrals for any reasonable mean-field VB algorithm are also intractable.
+\end{itemize}
+
+The intractability condition is very common, and can be easily established for moderately complicated likelihood functions $p_{\boldsymbol{\theta}}(x \mid z)$ (e.g. a neural network with a nonlinear hidden layer). Under the intractabilities, the direct MLE method is hard:
+
+\begin{itemize}
+\item \cite{helmholtz} established that the log probability of generating a particular example $d$, from a model with parameters $\theta$ is
+$$
+\log p(d \mid \theta)=\log \left[\sum_\alpha p(\alpha \mid \theta) p(d \mid \alpha, \theta)\right]
+$$
+where the $\alpha$ are explanations. The posterior probability of an explanation given $d$ and $\theta$ is related to its energy by the equilibrium or Boltzmann distribution, which at a temperature of 1 gives
+$$
+P_\alpha(\theta, d)=\frac{p(\alpha \mid \theta) p(d \mid \alpha, \theta)}{\sum_{\alpha^{\prime}} p\left(\alpha^{\prime} \mid \theta\right) p\left(d \mid \alpha^{\prime}, \theta\right)}=\frac{e^{-E_\alpha}}{\sum_{\alpha^{\prime}} e^{-E_{\alpha^{\prime}}}}
+$$
+However, it was claimed in the paper that the posterior distribution is computationally intractable. It has exponentially many terms and cannot be factored into a product of simpler distributions.
+
+\item \cite{vae} established the naïve Monte Carlo gradient estimator
 \begin{equation*}
-x=f(z)
+\begin{aligned}
+\nabla_\phi \mathbb{E}_{q_\phi(z)}[f(z)]&=\mathbb{E}_{q_\phi(z)}\left[f(z) \nabla_{q_\phi(z)} \log q_\phi(z)\right]\\ &\simeq \frac{1}{L} \sum_{l=1}^L f(z) \nabla_{q_\phi\left(z^{(l)}\right)} \log q_\phi\left(z^{(l)}\right)
+\end{aligned}
 \end{equation*}
-where $z$ are assumed to follow a factorized (but typically unknown) distribution $p(z)=\prod_{i=1}^{d} p_{i} \left(z_{i}\right)$. This model is essentially a deep generative model.
+where $z^{(l)} \sim q_\phi\left(z \mid x^{(i)}\right)$ exhibits very high variance and is impractical for the purposes of learning \cite{BJP12}.
+\end{itemize}
 
-The difference to the definition above is mainly in the lack of noise and the equality of the dimensions: the transformation $f$ is deterministic and invertible. Thus, any posteriors would be degenerate. The goal is then to recover (identify) $f^{-1}$, which gives the independent components as $z=f^{-1}(x)$, based on a dataset of observations of $x$ alone.
+In addition to the hardness proposed in previous literature, we have demonstrated in our own experiments that directly optimizing likelihood \ref{eq:1} is computationally challenging due to the following two facts:
+\begin{itemize}
+  \item The density $\varphi\left(x^{(i)} ; g_{\theta}(z), \sigma^{2} I\right)$ becomes vanishingly small when the dimension of the observed space becomes large, incuring numerical underflow when performing evaluation of the likelihood and computing optimization
+  \item Approximating the integral with numerical integration is challenging -- which requires large number of Monte-Carlo samples such that the integral can be evaluted to the precision desired. In contrast, \cite{vae} has found that the number of Monte-Carlo samples from the latent space can be set to one, as long as the minibatch size $M$ is large enough -- this avoids the computational burden of large number of Monte-Carlo samples.
+\end{itemize}
