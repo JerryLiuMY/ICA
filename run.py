@@ -17,7 +17,7 @@ import os
 
 
 if __name__ == "__main__":
-    model_name = "vae"
+    model_name = "mleauto"
     m_n_li, m_li_n = get_li_m_n(model_name)
     iter_m_n = get_iter_m_n(m_n_li, m_li_n)
 
